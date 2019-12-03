@@ -15,7 +15,8 @@ Assume that you have an empty repository in GitHub and no project starter anywhe
 12. commit and push
 
 Assume that your teammates have created some project starter for you 
-1. copy the clone url
-2. in Spring Tool Suite, Git perspective
-	click on Clone a Git Repository and add the clone to the view
-3. Follow the steps
+2. Clone a repository into the local device (can use GitHub Desktop to do it)
+3. in Spring Tool Suite, Git perspective
+	click on add an existing local Git Repository to this view
+4. Select the local repository that you have cloned earlier
+5. Pull
