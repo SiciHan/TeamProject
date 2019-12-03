@@ -8,3 +8,7 @@
 6. Go the the Java Perspective
 7. Right click on the project -> Team->share project
 8. Select the repository added to the view earlier
+9. make changes
+10. select unstaged changes and add to staged changes
+11. write commit message
+12. commit and push
