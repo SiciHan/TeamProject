@@ -21,3 +21,4 @@ Assume that your teammates have created some project starter for you
 	click on add an existing local Git Repository to this view
 3. Select the local repository that you have cloned earlier
 4. Pull
+5. Import Maven project
