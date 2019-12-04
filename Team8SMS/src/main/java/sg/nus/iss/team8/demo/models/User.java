@@ -1,12 +1,11 @@
 package sg.nus.iss.team8.demo.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.*;
 
 @Entity
-public class AllUser {
-	
+@Table(name = "AllUsers")
+public class User {
 	@Id
 	@Column(length = 30)
 	private String username;
@@ -20,7 +19,7 @@ public class AllUser {
 	@Column(nullable = false)
 	private int id;
 	
-	public AllUser() {
+	public User() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
