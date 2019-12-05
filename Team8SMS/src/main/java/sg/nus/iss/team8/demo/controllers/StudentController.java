@@ -22,20 +22,20 @@ public class StudentController {
 		this.ss=ssi;
 	}
 	@GetMapping("/applycourse")
-	public String applyCourse(int id, Model model) {
+	public String applyCourse(Model model) {
+		
+		  Integer id=101;
 		
 		  ArrayList<CourserunStudent> courses1=ss.findAvailableCourserunStudents(id);
 		  ArrayList<CourserunStudent> courses2=ss.findPendingCourserunStudents(id);
-		  ArrayList<CourserunStudent>
-		  courses3=ss.findRejectedAndApprovedCourserunStudents(id);
+		  ArrayList<CourserunStudent> courses3=ss.findRejectedAndApprovedCourserunStudents(id);
 		  
 		  model.addAttribute("courses1",courses1);
 		  model.addAttribute("courses2",courses2);
 		  model.addAttribute("courses3",courses3);
-		
-		return "applycourse";
-		
+		  return "applycourse";
 	}
+	
 	@GetMapping("/applycoursetest")
 	public String applyCourseTest(){
 		return "applycourse";
