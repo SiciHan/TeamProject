@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Student Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Student Management</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="#">Page 1</a></li>
+					<li><a href="#">Page 2</a></li>
+					<li><a href="#">Page 3</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	<br/>
+	<h1>List of Students</h1>
+
+	<a href="studentform.html" th:href="@{/administrator/addstudent}">Add
+		Student</a>
+
+	<table class="container">
+		<tr>
+			<td>Id</td>
+			<td>Name</td>
+			<td>Gender</td>
+			<td>DOB</td>
+			<td>Degree</td>
+			<td>Address</td>
+			<td>Mobile</td>
+			<td>Email</td>
+			<td>Status</td>
+			<td>Semester</td>
+		</tr>
+		<tr th:each="student:${students}">
+			<td th:text=${student.studentId}>Id</td>
+			<td th:text=${student.name}>Name</td>
+			<td th:text=${student.gender}>Gender</td>
+			<td th:text=${student.birthDate}>DOB</td>
+			<td th:text=${student.degree}>Degree</td>
+			<td th:text=${student.address}>Address</td>
+			<td th:text=${student.mobile}>Mobile</td>
+			<td th:text=${student.email}>Email</td>
+			<td th:text=${student.status.label}>Status</td>
+			<td th:text=${student.semester.label}>Semester</td>
+			<!-- <td><a href="enrolledcourses.html"
+				th:href="@{/product/edit/}+${product.id}"> Enrolled Courses </a></td>
+			<td><a href="editstudent.html"
+				th:href="@{/product/delete/}+${product.id}"> Edit </a></td>
+			<td><a href="DeleteProduct.html"
+				th:href="@{/product/delete/}+${product.id}"> Delete </a></td> -->
+			<td><a href="#"> Courses </a></td>
+			<td><a href="#"
+				th:href="@{/administrator/editstudent/}+${student.studentId}">
+					Edit </a></td>
+			<td><a href="#"
+				th:href="@{/administrator/deletestudent/}+${student.studentId}">
+					Delete </a></td>
+		</tr>
+	</table>
+</body>
+</html>
