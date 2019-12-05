@@ -2,22 +2,31 @@ package sg.nus.iss.team8.demo.services;
 import java.util.ArrayList;
 import java.util.logging.Filter;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
+=======
+>>>>>>> branch 'master' of https://github.com/SiciHan/TeamProject.git
 import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD
 import sg.nus.iss.team8.demo.models.Student;
+=======
+>>>>>>> branch 'master' of https://github.com/SiciHan/TeamProject.git
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
 import sg.nus.iss.team8.demo.repositories.StudentRepository;
  
 @Service 
 public class StudentServiceImplementation implements StudentService{
+<<<<<<< HEAD
 	@Resource
+=======
+>>>>>>> branch 'master' of https://github.com/SiciHan/TeamProject.git
 	private StudentRepository studentRepository;
 	private CourserunStudentRepository courserunStudentRepository;
 	
@@ -41,6 +50,7 @@ public class StudentServiceImplementation implements StudentService{
 	}
 	
 	@Override
+<<<<<<< HEAD
 	@Transactional
 	public Student findStudent(int id) {
 		return studentRepository.findById(id).orElse(null);
@@ -77,6 +87,15 @@ public class StudentServiceImplementation implements StudentService{
 	public void removeStudent(Student student) {
 		studentRepository.delete(student);
 	}
+=======
+	public ArrayList<CourserunStudent> findPendingCourserunStudents(int studentid) {
+		// TODO Auto-generated method stub
+		//statusid 4 = Pending
+		ArrayList<CourserunStudent> courses = (ArrayList<CourserunStudent>) courserunStudentRepository.findCourseByIdAndStatus(studentid,4);
+		return courses;
+	}
+	
+>>>>>>> branch 'master' of https://github.com/SiciHan/TeamProject.git
 	@Override
 	public ArrayList<CourserunStudent> findRejectedAndApprovedCourserunStudents(int studentid) {
 		// TODO Auto-generated method stub
