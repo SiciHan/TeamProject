@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "CourserunStudents")
+@Table(name = "Courserunstudents")
 public class CourserunStudent {
 	@EmbeddedId
 	private CourserunStudent_PK id;

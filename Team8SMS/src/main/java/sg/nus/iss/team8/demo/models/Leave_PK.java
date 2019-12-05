@@ -9,9 +9,10 @@ public class Leave_PK implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Temporal(TemporalType.DATE)
+	@Column(name="startdate")
 	private Date startDate;
 	
-	@Column(length = 50)
+	@Column(length = 50, name="usertype")
 	private String userType;
 	
 	private int id;

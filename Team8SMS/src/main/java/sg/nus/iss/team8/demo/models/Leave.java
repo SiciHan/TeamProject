@@ -10,7 +10,7 @@ public class Leave {
 	private Leave_PK id;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(nullable = false)
+	@Column(nullable = false, name="enddate")
 	private Date endDate;
 	
 	@Column(length = 100, nullable = false)

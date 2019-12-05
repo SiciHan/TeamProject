@@ -7,17 +7,18 @@ import java.util.*;
 @Table(name = "Courseruns")
 public class Courserun {
 	@Id
-	@Column(length = 50)
+	@Column(length = 50, name="coursename")
+	
 	private String courseName;
 	
-	@Column(length = 8, nullable = false)
+	@Column(length = 8, nullable = false, name="coursecode")
 	private String courseCode;
 	
-	@Column(nullable = false)
+	@Column(nullable = false,name="courseunit")
 	private int courseUnit;
 	
 	@ManyToOne
-	@JoinColumn(name = "faculityId", nullable = false)
+	@JoinColumn(name = "facultyid", nullable = false)
 	private Faculty faculty;
 	
 	@ManyToOne

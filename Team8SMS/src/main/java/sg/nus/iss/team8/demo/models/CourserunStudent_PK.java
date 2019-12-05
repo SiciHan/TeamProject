@@ -9,11 +9,11 @@ public class CourserunStudent_PK implements Serializable {
 	private static final long serialVersionUID = 2L;
 
 	@ManyToOne
-	@JoinColumn(name = "studentId")
+	@JoinColumn(name = "studentid")
 	private Student student;
 	
 	@ManyToOne
-	@JoinColumn(name = "courseName")
+	@JoinColumn(name = "coursename")
 	private Courserun courserun;
 
 	@Override

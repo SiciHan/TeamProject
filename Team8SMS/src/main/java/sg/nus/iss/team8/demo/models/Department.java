@@ -4,9 +4,10 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "Departments")
+@Table(name = "Department")
 public class Department {
 	@Id
+	@Column(name="id")
 	private int departmentId;
 	
 	@Column(length = 50, nullable = false)

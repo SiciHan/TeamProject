@@ -7,6 +7,7 @@ import java.util.*;
 @Table(name = "Status")
 public class Status {
 	@Id
+	@Column(name="statusid")
 	private int status;
 	
 	@Column(length = 45, nullable = false)

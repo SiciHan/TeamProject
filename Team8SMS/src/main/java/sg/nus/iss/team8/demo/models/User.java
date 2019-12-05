@@ -4,16 +4,16 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "AllUsers")
+@Table(name = "allusers")
 public class User {
 	@Id
 	@Column(length = 30)
 	private String username;
 	
-	@Column(length = 30, nullable = false)
+	@Column(length = 30, nullable = false,name="passwordhash")
 	private String passwordHash;
 	
-	@Column(length = 50, nullable = false)
+	@Column(length = 50, nullable = false, name="usertype")
 	private String userType;
 	
 	@Column(nullable = false)
