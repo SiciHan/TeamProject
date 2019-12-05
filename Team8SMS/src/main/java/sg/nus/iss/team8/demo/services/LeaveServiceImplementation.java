@@ -21,6 +21,7 @@ public class LeaveServiceImplementation implements LeaveService {
 	@Override
 	public void applyForLeave(String userType, int id, Date startDate, Date endDate, String reason) {
 		// TODO Auto-generated method stub
+		// implementation goes here
 
 	}
 

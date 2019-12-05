@@ -4,4 +4,5 @@ import java.util.Date;
 
 public interface LeaveService {
 	public void applyForLeave(String userType, int id, Date startDate, Date endDate, String reason);
+	//more methods here
 }
