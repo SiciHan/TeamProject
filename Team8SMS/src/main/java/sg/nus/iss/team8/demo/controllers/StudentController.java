@@ -24,15 +24,18 @@ public class StudentController {
 	@GetMapping("/applycourse")
 	public String applyCourse(Model model) {
 		
-		  Integer id=101;
+		  Integer id=10013;//hardcoded. need to use userid
 		
 		  ArrayList<CourserunStudent> courses1=ss.findAvailableCourserunStudents(id);
 		  ArrayList<CourserunStudent> courses2=ss.findPendingCourserunStudents(id);
 		  ArrayList<CourserunStudent> courses3=ss.findRejectedAndApprovedCourserunStudents(id);
 		  
+		  String m1="Not found";
+
 		  model.addAttribute("courses1",courses1);
 		  model.addAttribute("courses2",courses2);
 		  model.addAttribute("courses3",courses3);
+		  model.addAttribute("message",m1);
 		  return "applycourse";
 	}
 	
