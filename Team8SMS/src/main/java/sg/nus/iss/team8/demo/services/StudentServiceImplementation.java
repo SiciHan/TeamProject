@@ -1,5 +1,6 @@
 package sg.nus.iss.team8.demo.services;
 import java.util.ArrayList;
+import java.util.logging.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.stereotype.Service;
@@ -21,23 +22,31 @@ public class StudentServiceImplementation implements StudentService{
 	@Autowired
 	public void setCourserunStudentRepository(CourserunStudentRepository courserunStudentRepository) {
 		this.courserunStudentRepository=courserunStudentRepository;
+		
 	}
 	
 	@Override
 	public ArrayList<CourserunStudent> findAvailableCourserunStudents(int studentid) {
 		// TODO Auto-generated method stub
-		return null;
+		//Available =Cancelled; Status =5
+		ArrayList<CourserunStudent> courses = (ArrayList<CourserunStudent>) courserunStudentRepository.findCourseByIdAndStatus(studentid, 5);
+		return courses;
 	}
 	
 	@Override
 	public ArrayList<CourserunStudent> findPendingCourserunStudents(int studentid) {
 		// TODO Auto-generated method stub
-		return null;
+		//statusid 4 = Pending
+		ArrayList<CourserunStudent> courses = (ArrayList<CourserunStudent>) courserunStudentRepository.findCourseByIdAndStatus(studentid,4);
+		return courses;
 	}
 	
 	@Override
 	public ArrayList<CourserunStudent> findRejectedAndApprovedCourserunStudents(int studentid) {
 		// TODO Auto-generated method stub
-		return null;
+		//status id 7 =rejected, statusid 6 =Approved
+		ArrayList<CourserunStudent> courses = (ArrayList<CourserunStudent>) courserunStudentRepository.findCourseByIdAndStatus(studentid, 6);
+		courses.addAll(courserunStudentRepository.findCourseByIdAndStatus(studentid,7));
+		return courses;
 	}	
 }
