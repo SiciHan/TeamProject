@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
+import sg.nus.iss.team8.demo.models.Leave;
 import sg.nus.iss.team8.demo.services.StudentService;
 import sg.nus.iss.team8.demo.services.StudentServiceImplementation;
 
@@ -73,6 +74,14 @@ public class StudentController {
 
 		return "redirect:/student/applycourse";
 		
+	}
+	
+	@GetMapping("/movementregister")
+	public String MovementRegister(Model model) {
+		
+		ArrayList<Leave> leaves=ss.findAllLeaves();
+		model.addAttribute("leaves",leaves);
+		return "movementregister";
 	}
 
 	
