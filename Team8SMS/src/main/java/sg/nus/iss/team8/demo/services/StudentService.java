@@ -2,6 +2,8 @@ package sg.nus.iss.team8.demo.services;
 
 import java.util.ArrayList;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import sg.nus.iss.team8.demo.models.Courserun;
@@ -29,6 +31,8 @@ public interface StudentService {
 	public void setStatusToCancelled(int id, String courseCode, int semesterid);
 	
 	ArrayList<Student> findAllStudents();
+
+	Page<Student> pageAllStudents(Pageable pageable);
 	
 	Student findStudent(int id);
 	
