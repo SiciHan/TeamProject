@@ -1,13 +1,14 @@
-
-  package sg.nus.iss.team8.demo.repositories;
+package sg.nus.iss.team8.demo.repositories;
   
-  import org.springframework.data.jpa.repository.JpaRepository; import
-  org.springframework.stereotype.Repository;
+import java.util.ArrayList;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import sg.nus.iss.team8.demo.models.Student;
   
-  import sg.nus.iss.team8.demo.models.Student;
-  
-  @Repository 
-  public interface StudentRepository extends JpaRepository<Student,Integer>{
-  
-  }
+@Repository 
+public interface StudentRepository extends JpaRepository<Student,Integer>{
+	@Query("select cs.id.student from CourserunStudent cs where cs.id.courserun.courseName = ?1")
+	public ArrayList<Student> findStudentsByCourseName(String name);
+}
  

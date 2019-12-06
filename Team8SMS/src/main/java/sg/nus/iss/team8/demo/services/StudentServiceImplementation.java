@@ -3,12 +3,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import sg.nus.iss.team8.demo.models.Courserun;
+import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.CourserunStudent_PK;
-import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.repositories.CourserunRepository;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
 import sg.nus.iss.team8.demo.repositories.SemesterRepository;
@@ -17,6 +20,7 @@ import sg.nus.iss.team8.demo.repositories.StudentRepository;
  
 @Service 
 public class StudentServiceImplementation implements StudentService{
+	@Resource
 	private StudentRepository studentRepository;
 	private CourserunStudentRepository courserunStudentRepository;
 	private CourserunRepository courserunRepository;
@@ -56,6 +60,30 @@ public class StudentServiceImplementation implements StudentService{
 	}
 	
 	@Override
+	@Transactional
+	public Student findStudent(int id) {
+		return studentRepository.findById(id).orElse(null);
+	}
+	
+	@Override
+	@Transactional
+	public ArrayList<Student> findAllStudents(){
+		ArrayList<Student> sl = (ArrayList<Student>) studentRepository.findAll();
+		return sl;
+	}
+	
+	@Override
+	@Transactional
+	public Student createStudent(Student student) {
+		return studentRepository.saveAndFlush(student);
+	}
+	
+	@Override
+	@Transactional
+	public Student updateStudent(Student student) {
+		return studentRepository.saveAndFlush(student);
+	}
+	@Override
 	public ArrayList<CourserunStudent> findPendingCourserunStudents(int studentid) {
 		// TODO Auto-generated method stub
 		//statusid 4 = Pending
@@ -63,6 +91,12 @@ public class StudentServiceImplementation implements StudentService{
 		return courses;
 	}
 	
+	@Override
+	@Transactional
+	public void removeStudent(Student student) {
+		studentRepository.delete(student);
+	}
+
 	@Override
 	public ArrayList<CourserunStudent> findRejectedAndApprovedCourserunStudents(int studentid) {
 		// TODO Auto-generated method stub
@@ -141,4 +175,10 @@ public class StudentServiceImplementation implements StudentService{
 		String coursename=courserunRepository.findByCourseCodeAndSemester(courseCode, semesterRepository.getOne(semesterid)).getCourseName();
 		courserunStudentRepository.setStatus(id,coursename,5);//5 is cancelled
 	}
+	
+	@Override
+	public ArrayList<Student> findStudentsByCourseName(String courseName){
+		return (ArrayList<Student>)studentRepository.findStudentsByCourseName(courseName);
+	}
+	
 }
