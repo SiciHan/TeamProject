@@ -42,10 +42,16 @@ public class HomeController {
 		return "home";
 	}
 	
-	@GetMapping("/login")
-	public String getLoginPage(Model model) {
+	@GetMapping("/login/student")
+	public String getStudentLoginPage(Model model) {
 		model.addAttribute("user", new UserSession());
-		return "login";
+		return "studentLogin";
+	}
+	
+	@GetMapping("/login/staff")
+	public String getStaffLoginPage(Model model) {
+		model.addAttribute("user", new UserSession());
+		return "staffLogin";
 	}
 	
 	@GetMapping("/logout")
@@ -54,8 +60,8 @@ public class HomeController {
 		return "home";
 	}
 	
-	@PostMapping("/authenticate")
-	public String getAuthentication(@ModelAttribute("user") UserSession user, BindingResult bindingResult) {
+	@PostMapping("/auth")
+	public String getStaffAuthentication(@ModelAttribute("user") UserSession user, BindingResult bindingResult) {
 		String view =""; 
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		
@@ -75,14 +81,61 @@ public class HomeController {
 			{	
 				if (passwordEncoder.matches(password, usr.getPasswordHash()))
 				  { view= "redirect:/administrator/facultymanagement"; }
+				
 			}
-			/*// reserve for student 
-			 * if (input.equals(usr.getUsername()) ) { if (passwordEncoder.matches(password,
-			 * usr.getPasswordHash())) { if(usr.getUserType() == "Student") view=
-			 * "redirect:/student/applycourse"; } }
-			 */
+//			if (input.equals(usr.getUsername())) {
+//				if (passwordEncoder.matches(password, usr.getPasswordHash())) {
+//					if (usr.getUserType() == "Student")
+//						view = "redirect:/student/applycourse";
+//				}
+//			}
 			
-			/*// reserve for faculty 
+			
+			/*   reserve for faculty 
+			 * if (input.equals(usr.getUsername()) ) { if (passwordEncoder.matches(password,
+			 * usr.getPasswordHash())) { if(usr.getUserType() == "Faculty") view=
+			 * "redirect:/faculty/faculty_home"; } }
+			 */
+			else
+			{
+				view = "login";
+			}
+		}
+		return view;
+	}
+	
+	
+	@PostMapping("/authe")
+	public String getStudentAuthentication(@ModelAttribute("user") UserSession user, BindingResult bindingResult) {
+		String view =""; 
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		
+	
+		if ( bindingResult.hasErrors())
+		{
+			view = "login";
+		}
+		else 
+		{
+			String input = user.getName();
+			String password = user.getPassword();
+			sg.nus.iss.team8.demo.models.User usr = us.findUser(user.getName());
+			System.out.println(password);
+			
+			if (input.equals(usr.getUsername()) )
+			{	
+				if (passwordEncoder.matches(password, usr.getPasswordHash()))
+				  { view= "redirect:/student/applycourse"; }
+			}
+//			if (input.equals(usr.getUsername())) {
+//				if (passwordEncoder.matches(password, usr.getPasswordHash())) {
+//					if (usr.getUserType() == "Student")
+//						view = "redirect:/student/applycourse";
+//				}
+//			}
+			
+			
+			/*   reserve for faculty 
 			 * if (input.equals(usr.getUsername()) ) { if (passwordEncoder.matches(password,
 			 * usr.getPasswordHash())) { if(usr.getUserType() == "Faculty") view=
 			 * "redirect:/faculty/faculty_home"; } }

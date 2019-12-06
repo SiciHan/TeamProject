@@ -4,13 +4,13 @@
 <meta charset="ISO-8859-1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="w3.css">
-<title>Login</title>
+<title>Student Login</title>
 </head>
 <body>
 <div th:insert="~{home :: home}">Home</div>
-	<h1>Login Page</h1>
+	<h1>Student Login Page</h1>
 
-	<form th:object="${user}" th:action="@{/authenticate}" method="post"
+	<form th:object="${user}" th:action="@{/authe}" method="post"
 		class="w3-container">
 		<fieldset>
 			<p>
