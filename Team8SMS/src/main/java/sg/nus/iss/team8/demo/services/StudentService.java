@@ -14,6 +14,7 @@ public interface StudentService {
 	public ArrayList<CourserunStudent> findPendingCourserunStudents(int studentid);
 
 	public ArrayList<CourserunStudent> findRejectedAndApprovedCourserunStudents(int studentid);
+	
 	ArrayList<Student> findAllStudents();
 	
 	Student findStudent(int id);
@@ -23,4 +24,6 @@ public interface StudentService {
 	Student updateStudent(Student student);
 	
 	void removeStudent(Student student);
+	
+	ArrayList<Student> findStudentsByCourseName(String courseName);
 }

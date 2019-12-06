@@ -51,7 +51,7 @@ public class FacultyController {
 	
 	@GetMapping("/applyleave")
 	public String getLeave() {
-		return "leave";
+		return "faculty_apply_leave";
 	}
 	
 }

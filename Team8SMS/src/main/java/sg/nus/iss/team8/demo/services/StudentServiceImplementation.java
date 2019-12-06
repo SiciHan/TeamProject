@@ -83,5 +83,12 @@ public class StudentServiceImplementation implements StudentService{
 		ArrayList<CourserunStudent> courses = (ArrayList<CourserunStudent>) courserunStudentRepository.findCourseByIdAndStatus(studentid, 6);
 		courses.addAll(courserunStudentRepository.findCourseByIdAndStatus(studentid,7));
 		return courses;
-	}	
+	}
+	
+	@Override
+	public ArrayList<Student> findStudentsByCourseName(String courseName){
+		return (ArrayList<Student>)studentRepository.findStudentsByCourseName(courseName);
+	}
+	
+	
 }
