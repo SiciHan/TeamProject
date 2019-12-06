@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
+import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 @Service
 public interface StudentService {
@@ -12,4 +13,16 @@ public interface StudentService {
 	public ArrayList<CourserunStudent> findPendingCourserunStudents(int studentid);
 
 	public ArrayList<CourserunStudent> findRejectedAndApprovedCourserunStudents(int studentid);
+	
+	public ArrayList<Courserun> findAvailableCourserun(int studentid);
+
+	public ArrayList<CourserunStudent> findCancelledCourserunStudents(int id);
+
+	public boolean courserunStudentExist(int id, String courseCode, int semesterid);
+
+	public void setStatusToPending(int id, String courseCode, int semesterid);
+
+	public void createCourserunStudent(int id, String courseCode, int semesterid);
+
+	public void setStatusToCancelled(int id, String courseCode, int semesterid);
 }

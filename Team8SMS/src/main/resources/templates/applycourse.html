@@ -20,20 +20,20 @@
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<a class="navbar-brand"
-						href="http://localhost:8080/student/applycourse#">Student
+						href="http://localhost:8080/student/applycourse">Student
 						Education Record</a>
 				</div>
 				<ul class="nav navbar-nav">
-					<li><a href="http://localhost:8080/student/applycourse#">My
+					<li><a href="http://localhost:8080/student/mycourses">My
 							Courses</a></li>
 					<li class="active"><a
-						href="http://localhost:8080/student/applycourse#">Apply
+						href="http://localhost:8080/student/applycourse">Apply
 							Courses</a></li>
-					<li><a href="http://localhost:8080/student/applycourse#">My
+					<li><a href="http://localhost:8080/student/transcript">My
 							Transcript</a></li>
-					<li><a href="http://localhost:8080/student/applycourse#">Movement
+					<li><a href="http://localhost:8080/student/movementregister#">Movement
 							Record</a></li>
-					<li><a href="http://localhost:8080/student/applycourse#">Log
+					<li><a href="http://localhost:8080/home/logout">Log
 							Out</a></li>
 				</ul>
 			</div>
@@ -46,13 +46,26 @@
 
 	</div>
 	<div th:if="${courses1 != null and !courses1.isEmpty()}">
-		<table>
+		<table class="table table-striped">
+			<tr>
+			<th>Course Name</th>
+			<th>Action</th>
+			</tr>
 			<tr th:each="course:${courses1}">
 				<td th:text="${course.id.courserun.courseName}"></td>
+				<td><a th:href="${'/student/apply/' + studentId+'/'+course.id.courserun.courseCode+'/'+ course.id.courserun.semester.semester}" class="btn btn-danger">Apply</a></td>
 			</tr>
 		</table>
 	</div>
-	<div th:unless="${courses1 != null and !courses1.isEmpty()}">
+	<div th:if="${courses1a != null and !courses1a.isEmpty()}">
+		<table class="table table-striped">
+			<tr th:each="course:${courses1a}">
+				<td th:text="${course.courseName}"></td>
+				<td><a th:href="${'/student/apply/' + studentId+'/'+course.courseCode+'/'+course.semester.semester}" class="btn btn-danger">Apply</a></td>
+			</tr>
+		</table>
+	</div>
+	<div th:if="${(courses1 == null or courses1.isEmpty()) and (courses1a ==null or courses1a.isEmpty())}">
 		<span th:text=${message}></span>
 	</div>
 	<!-- Middel Part, display all pending courserun application with Cancel button -->
@@ -61,9 +74,10 @@
 		<h2>Pending Course Applications</h2>
 	</div>
 	<div th:if="${courses2 != null and !courses2.isEmpty()}">
-		<table>
+		<table class="table table-striped">
 			<tr th:each="course:${courses2}">
 				<td th:text="${course.id.courserun.courseName}"></td>
+				<td><a th:href="${'/student/cancelapplication/' + studentId+'/'+course.id.courserun.courseCode+'/'+ course.id.courserun.semester.semester}" class="btn btn-danger">Cancel</a></td>
 			</tr>
 		</table>
 	</div>
@@ -77,9 +91,9 @@
 		<h2>Rejected Course Applications</h2>
 	</div>
 	<div th:if="${courses3 != null and !courses3.isEmpty()}">
-		<table>
+		<table class="table table-striped">
 			<tr th:each="course:${courses3}">
-				<td th:text="${course.id.courserun.courseName}"></td>
+				<td th:text="${course.id.courserun.course}"></td>
 			</tr>
 		</table>
 	</div>
