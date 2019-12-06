@@ -3,11 +3,17 @@ package sg.nus.iss.team8.demo.controllers;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import sg.nus.iss.team8.demo.models.Faculty;
 import sg.nus.iss.team8.demo.models.Student;
@@ -29,26 +36,27 @@ import sg.nus.iss.team8.demo.services.StudentService;
 @Controller
 @RequestMapping("/administrator")
 public class AdminController {
-	
+
 	private FacultyService fservice;
-	
-	//injection of faculty service
+
+	// injection of faculty service
 	@Autowired
 	public void setFacultyService(FacultyServiceImplementation fserviceimplementation) {
 		this.fservice = fserviceimplementation;
 	}
+
 	@InitBinder
 	private void initUserBinder(WebDataBinder binder) {
 	}
-	
+
 	@GetMapping("/facultymanagement")
 	public String getFacultyManagement(Model model) {
 		ArrayList<Faculty> flist = new ArrayList<Faculty>();
 		flist.addAll(fservice.findAllFaculty());
 		model.addAttribute("faculty", flist);
-		return"facultymanagement";
+		return "facultymanagement";
 	}
-	
+
 	@GetMapping("/addfaculty")
 	public String addFaculty(Model model) {
 		ArrayList<Faculty> flist = new ArrayList<Faculty>();
@@ -58,7 +66,7 @@ public class AdminController {
 		model.addAttribute("faculty", f);
 		return "facultyform";
 	}
-	
+
 	@PostMapping("/savefaculty")
 	public String saveFaculty(@Valid @ModelAttribute Faculty faculty, BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
@@ -66,18 +74,21 @@ public class AdminController {
 		fservice.saveFaculty(faculty);
 		return "redirect:/administrator/facultymanagement";
 	}
+
 	@GetMapping("/editfaculty/{id}")
 	public String editFaculty(Model model, @PathVariable("id") Integer id) {
 		Faculty f = fservice.findFacultyById(id);
 		model.addAttribute("faculty", f);
 		return "facultyform";
 	}
+
 	@GetMapping("/deletefaculty/{id}")
 	public String deleteFaculty(Model model, @PathVariable("id") Integer id) {
 		Faculty f = fservice.findFacultyById(id);
 		fservice.deleteFaculty(f);
 		return "redirect:/administrator/facultymanagement";
 	}
+
 	@Autowired
 	private StudentService sService;
 
@@ -94,11 +105,23 @@ public class AdminController {
 //	}
 
 	@GetMapping("/studentmanagement")
-	public String listAllStudents(Model model) {
-		ArrayList<Student> slist = new ArrayList<Student>();
-		slist.addAll(sService.findAllStudents());
-		model.addAttribute("students", slist);
-		return "studentmanagement";
+	public String listAllStudents(Model model, @RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size) {
+
+		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(5);
+
+		Page<Student> studentPage = sService.pageAllStudents(PageRequest.of(currentPage - 1, pageSize));
+
+		model.addAttribute("studentPage", studentPage);
+		
+		int totalPages = studentPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        
+        return "studentmanagement";
 	}
 
 	@GetMapping("/addstudent")
