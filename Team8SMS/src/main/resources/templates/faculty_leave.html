@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/daterangepicker.min.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	<script src="/moment.min.js"></script>
+	<script src="/jquery.daterangepicker.min.js"></script>
+
+	<title>Faculty/leave</title>
+</head>
+
+<body>
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<h2 style="color: #000000">Hello, UserName</h2>
+			<ul class="nav nav-pills">
+				<li><a href="http://localhost:8080/faculty/home" class="glyphicon glyphicon-home"> <span>Home</span>
+					</a></li>
+				<li><a href="http://localhost:8080/faculty/courses" class="glyphicon glyphicon-list-alt">
+						<span>Course</span></a></li>
+				<li><a href="http://localhost:8080/faculty/courses" class="glyphicon glyphicon-oil">
+						<span>Grade</span></a></li>
+				<li><a href="#" class="glyphicon glyphicon-stats"> <span>Report</span></a></li>
+				<li><a href="#" class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="container" style="margin-top: 3%;">
+		<div class="col-md-12">
+			<form class="form-horizontal">
+				<h3>Leave Application</h5>
+					<div class="form-group" style="margin-top: 3%;">
+						<label for="datepicker" class="col-sm-2 control-label">Leave Duration</label>
+						<div class="input-group col-sm-10">
+							<input class="form-control" type="text" id="datepicker" value="">
+							<div class="input-group-addon"><span class="glyphicon glyphicon-calendar"
+									aria-hidden="true"></span></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="select" class="col-sm-2 control-label">Leave Reason</label>
+						<div class="input-group col-sm-10">
+							<select class="form-control" id="select">
+								<option value="">-</option>
+								<option value="Paid leave">Paid leave</option>
+								<option value="Unpaid leave">Unpaid leave</option>
+								<option value="Medical leave">Medical leave</option>
+								<option value="Medical leave">No reason</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group" style="margin-top: 3%;">
+						<div class="input-group col-sm-3 col-sm-offset-9">
+							<button type="submit" name="btn_dark" id="btn_apply" class="btn btn-primary"
+								style="width: 40%; float: right;">Apply</button>
+							<button name="btn_dark" id="btn_cancel" class="btn btn-dark"
+								style="margin-right: 3%; width: 40%; float: right;">Cancel</button>
+						</div>
+					</div>
+			</form>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	// 		$(function() {
+	// 			$('#datetimepicker6').datetimepicker();
+	// 			$('#datetimepicker7').datetimepicker({
+	// 				useCurrent : false
+	// 			});
+	// 			$("#datetimepicker6").on("dp.change", function(e) {
+	// 				$('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+	// 			});
+	// 			$("#datetimepicker7").on("dp.change", function(e) {
+	// 				$('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+	// 			});
+	// 		});
+	$('#datepicker')
+		.dateRangePicker()
+		.bind('datepicker-change', function (event, obj) {
+			console.log(obj);
+			// obj will be something like this:
+			// {
+			//      date1: (Date object of the earlier date),
+			//      date2: (Date object of the later date),
+			//      value: "2013-06-05 to 2013-06-07"
+			// }
+		})
+		.bind('datepicker-apply', function (event, obj) {
+			console.log(obj);
+		})
+		.bind('datepicker-close', function () {
+			console.log('close');
+		});   
+</script>
+
+</html>
