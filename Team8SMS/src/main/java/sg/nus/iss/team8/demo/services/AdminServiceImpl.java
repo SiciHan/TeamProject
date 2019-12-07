@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Faculty;
 import sg.nus.iss.team8.demo.models.Semester;
 import sg.nus.iss.team8.demo.models.Student;
@@ -161,6 +162,34 @@ public class AdminServiceImpl implements AdminService {
 		ArrayList<Semester> allSems = (ArrayList<Semester>)semesterRepository.findAll();
 		Semester currentSemester = Collections.max(allSems, Comparator.comparingInt(Semester::getSemester));
 		return currentSemester;
+	}
+	
+	@Override
+	public Page<CourserunStudent> pagePendingStudents(Pageable pageable) {
+		ArrayList<CourserunStudent> pendingStudents = (ArrayList<CourserunStudent>)courserunStudentRepository.findCourseByStatus(4);
+
+		int pageSize = pageable.getPageSize();
+		int currentPage = pageable.getPageNumber();
+		int startItem = currentPage * pageSize;
+		List<CourserunStudent> newCrsList;
+
+		if (pendingStudents.size() < startItem) {
+			newCrsList = Collections.emptyList();
+		} else {
+			int toIndex = Math.min(startItem + pageSize, pendingStudents.size());
+			newCrsList = pendingStudents.subList(startItem, toIndex);
+		}
+
+		Page<CourserunStudent> studentPage = new PageImpl<CourserunStudent>(newCrsList, PageRequest.of(currentPage, pageSize),
+				pendingStudents.size());
+
+		return studentPage;
+	} 
+	
+	@Override
+	public void setCourserunStudentStatus(int id, String courseCode, int semesterid, int status) {
+		String coursename=courserunRepository.findByCourseCodeAndSemester(courseCode, semesterRepository.getOne(semesterid)).getCourseName();
+		courserunStudentRepository.setStatus(id,coursename,status);
 	}
 
 }
