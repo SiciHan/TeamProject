@@ -17,6 +17,7 @@ import sg.nus.iss.team8.demo.models.Faculty;
 import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.repositories.CourserunRepository;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
+import sg.nus.iss.team8.demo.repositories.DepartmentRepository;
 import sg.nus.iss.team8.demo.repositories.FacultyRepository;
 import sg.nus.iss.team8.demo.repositories.LeaveRepository;
 import sg.nus.iss.team8.demo.repositories.SemesterRepository;
@@ -33,6 +34,7 @@ public class AdminServiceImpl implements AdminService {
 	private StatusRepository statusRepository;
 	private LeaveRepository leaveRepository;
 	private FacultyRepository fr;
+	private DepartmentRepository departmentRepository;
 
 	@Autowired
 	public void setFacultyRepository(FacultyRepository fr) {
@@ -67,6 +69,11 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	public void setLeaveRepository(LeaveRepository leaveRepository) {
 		this.leaveRepository = leaveRepository;
+	}
+
+	@Autowired
+	public void setDepartmentRepository(DepartmentRepository departmentRepository) {
+		this.departmentRepository = departmentRepository;
 	}
 
 	@Override
