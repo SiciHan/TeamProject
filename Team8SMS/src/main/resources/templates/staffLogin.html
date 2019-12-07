@@ -10,7 +10,7 @@
 <div th:insert="~{home :: home}">Home</div>
 	<h1>Staff Login Page</h1>
 
-	<form th:object="${user}" th:action="@{/auth}" method="post"
+	<form th:object="${user}" th:action="@{/authenticate}" method="post"
 		class="w3-container">
 
 		<fieldset>
