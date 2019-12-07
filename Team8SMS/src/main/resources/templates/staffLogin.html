@@ -12,15 +12,16 @@
 
 	<form th:object="${user}" th:action="@{/auth}" method="post"
 		class="w3-container">
+
 		<fieldset>
-			<p>
-				Name: <input type="text" th:field="${user.name}" class="w3-input">
-			</p>
+			Name: <input type="text" th:field="*{name}">
+			<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Username is required.</p>
 		</fieldset>
 		<fieldset>
 			<p>
-				Password: <input type="password" th:field="${user.password}"
+			Password: <input type="password" th:field="*{password}"
 					class="w3-input">
+			<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password cannot be empty.</p>
 			</p>
 		</fieldset>
 		<fieldset>

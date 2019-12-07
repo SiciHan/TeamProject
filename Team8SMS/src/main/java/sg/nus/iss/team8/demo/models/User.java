@@ -1,6 +1,8 @@
 package sg.nus.iss.team8.demo.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+
 import java.util.*;
 
 @Entity
@@ -11,6 +13,7 @@ public class User {
 	private String username;
 	
 	@Column(length = 30, nullable = false,name="passwordhash")
+	@NotEmpty
 	private String passwordHash;
 	
 	@Column(length = 50, nullable = false, name="usertype")

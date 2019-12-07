@@ -1,6 +1,8 @@
 package sg.nus.iss.team8.demo.controllers;
 
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,10 +39,11 @@ public class HomeController {
 		//binder.addValidators(new ProductValidator());
 	  }
 	
-	@GetMapping("/home")
+	@GetMapping("/")
 	public String getHome() {
-		return "home";
+		return "index";
 	}
+	
 	
 	@GetMapping("/login/student")
 	public String getStudentLoginPage(Model model) {
@@ -61,14 +64,14 @@ public class HomeController {
 	}
 	
 	@PostMapping("/auth")
-	public String getStaffAuthentication(@ModelAttribute("user") UserSession user, BindingResult bindingResult) {
+	public String getStaffAuthentication(@Valid @ModelAttribute("user") UserSession user, BindingResult binder) {
 		String view =""; 
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		
 	
-		if ( bindingResult.hasErrors())
+		if ( binder.hasErrors())
 		{
-			view = "login";
+			view = "staffLogin";
 		}
 		else 
 		{
@@ -77,28 +80,22 @@ public class HomeController {
 			sg.nus.iss.team8.demo.models.User usr = us.findUser(user.getName());
 			System.out.println(password);
 			
-			if (input.equals(usr.getUsername()) )
+			if (input.equals("issl") )
 			{	
 				if (passwordEncoder.matches(password, usr.getPasswordHash()))
-				  { view= "redirect:/administrator/facultymanagement"; }
+				  { view = "forward:/administrator/facultymanagement"; }
 				
 			}
-//			if (input.equals(usr.getUsername())) {
-//				if (passwordEncoder.matches(password, usr.getPasswordHash())) {
-//					if (usr.getUserType() == "Student")
-//						view = "redirect:/student/applycourse";
-//				}
-//			}
 			
-			
-			/*   reserve for faculty 
-			 * if (input.equals(usr.getUsername()) ) { if (passwordEncoder.matches(password,
-			 * usr.getPasswordHash())) { if(usr.getUserType() == "Faculty") view=
-			 * "redirect:/faculty/faculty_home"; } }
-			 */
+			else if (input.equals(usr.getUsername()) )
+			{	
+				if (passwordEncoder.matches(password, usr.getPasswordHash()))
+				  { view = "forward:/administrator/addfaculty"; } // for faculty home 
+				
+			}
 			else
 			{
-				view = "login";
+				view = "staffLogin";
 			}
 		}
 		return view;
@@ -106,14 +103,15 @@ public class HomeController {
 	
 	
 	@PostMapping("/authe")
-	public String getStudentAuthentication(@ModelAttribute("user") UserSession user, BindingResult bindingResult) {
+	public String getStudentAuthentication(@ModelAttribute("user") UserSession user, BindingResult bindingResult,Model model) {
 		String view =""; 
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		
 	
 		if ( bindingResult.hasErrors())
 		{
-			view = "login";
+			model.addAttribute("user", user);
+			view = "studentLogin";
 		}
 		else 
 		{
@@ -125,7 +123,7 @@ public class HomeController {
 			if (input.equals(usr.getUsername()) )
 			{	
 				if (passwordEncoder.matches(password, usr.getPasswordHash()))
-				  { view= "redirect:/student/applycourse"; }
+				  { view= "forward:/student/applycourse"; }
 			}
 //			if (input.equals(usr.getUsername())) {
 //				if (passwordEncoder.matches(password, usr.getPasswordHash())) {
@@ -142,7 +140,7 @@ public class HomeController {
 			 */
 			else
 			{
-				view = "login";
+				view = "studentLogin";
 			}
 		}
 		return view;
