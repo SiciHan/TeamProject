@@ -1,6 +1,10 @@
 package sg.nus.iss.team8.demo.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import java.util.*;
 
 @Entity
@@ -9,12 +13,15 @@ public class Student {
 	@Id
 	private int studentId;
 	
+	@Size(min=2, max=50, message="Name should be between 2 and 50 characters")
 	@Column(length = 50, nullable = false)
 	private String name;
 	
+	@NotNull(message="Please pick a gender")
 	@Column(length = 10, nullable = false)
 	private String gender;
 	
+	@NotNull(message="Please enter a date")
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
 	private Date birthDate;
@@ -28,6 +35,7 @@ public class Student {
 	@Column(length = 12, nullable = false)
 	private String mobile;
 	
+	@Email(regexp="^(.+)@(.+)$", message="Invalid email")
 	@Column(length = 45, nullable = false)
 	private String email;
 	

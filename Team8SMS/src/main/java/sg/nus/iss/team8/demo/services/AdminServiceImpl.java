@@ -2,6 +2,7 @@ package sg.nus.iss.team8.demo.services;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import sg.nus.iss.team8.demo.models.Faculty;
+import sg.nus.iss.team8.demo.models.Semester;
 import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.repositories.CourserunRepository;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
@@ -144,6 +146,21 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void deleteFaculty(Faculty f) {
 		fr.delete(f);
+	}
+	
+	@Override
+	public int newStudentId() {
+		ArrayList<Student> students = findAllStudents();
+		Student student = Collections.max(students, Comparator.comparingInt(Student::getStudentId));
+		int newStudentId = student.getStudentId() + 1;
+		return newStudentId;
+	}
+	
+	@Override
+	public Semester currentSemester() {
+		ArrayList<Semester> allSems = (ArrayList<Semester>)semesterRepository.findAll();
+		Semester currentSemester = Collections.max(allSems, Comparator.comparingInt(Semester::getSemester));
+		return currentSemester;
 	}
 
 }

@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,12 +27,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import sg.nus.iss.team8.demo.models.Faculty;
+import sg.nus.iss.team8.demo.models.Semester;
 import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.services.AdminService;
 import sg.nus.iss.team8.demo.services.AdminServiceImpl;
-import sg.nus.iss.team8.demo.services.FacultyService;
-import sg.nus.iss.team8.demo.services.FacultyServiceImplementation;
-import sg.nus.iss.team8.demo.services.StudentService;
 
 @Controller
 @RequestMapping("/administrator")
@@ -53,7 +50,7 @@ public class AdminController {
 	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
-		// binder.addValidators(new ProductValidator());
+//		binder.addValidators(studentValidator);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
 	}
 
@@ -125,7 +122,11 @@ public class AdminController {
 	@GetMapping("/addstudent")
 	public String showAddStudentForm(Model model) {
 		Student student = new Student();
+		Integer newStudentId = aService.newStudentId();
+		Semester currentSemester = aService.currentSemester();
 		model.addAttribute("student", student);
+		model.addAttribute("newStudentId", newStudentId);
+		model.addAttribute("currentSemester", currentSemester);
 		return "studentform";
 	}
 

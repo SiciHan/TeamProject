@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import sg.nus.iss.team8.demo.models.Faculty;
+import sg.nus.iss.team8.demo.models.Semester;
 import sg.nus.iss.team8.demo.models.Student;
 
 @Service
@@ -30,4 +31,8 @@ public interface AdminService {
 	void deleteFaculty(Faculty f);
 
 	Faculty saveFaculty(Faculty f);
+	
+	int newStudentId();
+	
+	Semester currentSemester();
 }
