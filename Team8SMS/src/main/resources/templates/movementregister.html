@@ -26,15 +26,14 @@
 				<ul class="nav navbar-nav">
 					<li><a href="http://localhost:8080/student/mycourses">My
 							Courses</a></li>
-					<li ><a
-						href="http://localhost:8080/student/applycourse">Apply
+					<li><a href="http://localhost:8080/student/applycourse">Apply
 							Courses</a></li>
 					<li><a href="http://localhost:8080/student/transcript">My
 							Transcript</a></li>
-					<li class="active"><a href="http://localhost:8080/student/movementregister">Movement
+					<li class="active"><a
+						href="http://localhost:8080/student/movementregister">Movement
 							Record</a></li>
-					<li><a href="http://localhost:8080/home/logout">Log
-							Out</a></li>
+					<li><a href="http://localhost:8080/home/logout">Log Out</a></li>
 				</ul>
 			</div>
 		</nav>
@@ -45,6 +44,36 @@
 
 	</div>
 
+	<!-- display details of all students and faculty on leave during the current month -->
+	<!-- users can also navigate to the previous and next month using the drop down choice list -->
+
+	<form action="http://localhost:8080/student/movementregister/" method="get">
+		<select id="yearmonth" name="yearmonth">
+			<option th:each="yearmonth:${yearMonths}" th:value="${yearmonth}"
+				th:text="${yearmonth}" th:selected="${yearmonth==selectedmonth}"></option>
+		</select> <input type="submit">
+	</form>
+
+	<div th:if="${leaves != null and !leaves.isEmpty()}">
+		<table class="table table-striped">
+			<tr>
+				<th>start date</th>
+				<th>User Type</th>
+				<th>User ID</th>
+				<th>End Date</th>
+				<th>Reason</th>
+				<th>Status</th>
+			</tr>
+			<tr th:each="leave:${leaves}">
+				<td th:text="${leave.id.startDate}"></td>
+				<td th:text="${leave.id.UserType}"></td>
+				<td th:text="${leave.id.id}"></td>
+				<td th:text="${leave.endDate}"></td>
+				<td th:text="${leave.reason}"></td>
+				<td th:text="${leave.status.status}"></td>
+			</tr>
+		</table>
+	</div>
 
 </body>
 </html>

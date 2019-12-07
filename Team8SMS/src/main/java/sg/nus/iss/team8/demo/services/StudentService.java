@@ -1,14 +1,12 @@
 package sg.nus.iss.team8.demo.services;
 
 import java.util.ArrayList;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
-import sg.nus.iss.team8.demo.models.Leave;
 import sg.nus.iss.team8.demo.models.Student;
 
 @Service
@@ -43,7 +41,5 @@ public interface StudentService {
 	void removeStudent(Student student);
 	
 	ArrayList<Student> findStudentsByCourseName(String courseName);
-
-	public ArrayList<Leave> findAllLeaves();
 
 }
