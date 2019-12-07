@@ -30,12 +30,19 @@
 	<br/>
 	<h1>List of Students</h1>
 
-	<a href="studentform.html" th:href="@{/administrator/addstudent}">Add
-		Student</a>
 
 	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
-
+			<a class="btn btn-primary" href="studentform.html" th:href="@{/administrator/addstudent}" role="button">Add
+				Student</a>
+			<br/>
+			<div th:if="${studentPage.totalPages > 0}" class="pagination"
+   				 th:each="pageNumber : ${pageNumbers}">
+			    <a th:href="@{/administrator/studentmanagement(size=${studentPage.size}, page=${pageNumber})}"
+		        	th:text=${pageNumber}
+			        th:class="${pageNumber==studentPage.number + 1} ? active"></a>
+			</div>
+			<br/>
 			<table class="table table-hover">
 				<tbody>
 				<thead>
@@ -75,12 +82,7 @@
 				</tbody>
 			</table>
 			
-			<div th:if="${studentPage.totalPages > 0}" class="pagination"
-   				 th:each="pageNumber : ${pageNumbers}">
-			    <a th:href="@{/administrator/studentmanagement(size=${studentPage.size}, page=${pageNumber})}"
-		        	th:text=${pageNumber}
-			        th:class="${pageNumber==studentPage.number + 1} ? active"></a>
-			</div>
+			
 		</div>
 	</div>
 </body>

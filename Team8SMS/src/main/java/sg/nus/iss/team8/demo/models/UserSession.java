@@ -1,12 +1,21 @@
 package sg.nus.iss.team8.demo.models;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 import org.springframework.web.context.annotation.SessionScope;
 
 @SessionScope
 public class UserSession {
 	
+
+	@NotEmpty
 	private String name;
+
 	private String role;
+	
+
+	@NotEmpty
 	private String password;
 	public UserSession() {
 		super();
