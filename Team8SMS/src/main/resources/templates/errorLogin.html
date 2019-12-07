@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body onload="myFunction()">
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var txt;
+  if (confirm("Wrong User Type! Please log in from the correct domain!")) {
+    if ( txt = "OK" )
+    {
+    	location.replace("http://localhost:8080")
+    }
+  } else {
+	  location.replace("http://localhost:8080/login/staff")
+  }
+  document.getElementById("demo").innerHTML = txt;
+}
+</script>
+
+</body>
+</html>
+
+

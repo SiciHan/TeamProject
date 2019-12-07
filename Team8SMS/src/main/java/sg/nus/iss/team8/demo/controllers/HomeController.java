@@ -63,6 +63,7 @@ public class HomeController {
 	public String getAuthentication(@Valid @ModelAttribute("user") UserSession user, BindingResult bindingResult,
 			Model model) {
 		String view = "";
+		String type = "";
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		if (bindingResult.hasErrors()) {
@@ -74,16 +75,28 @@ public class HomeController {
 			String input = user.getName();
 			String password = user.getPassword();
 			sg.nus.iss.team8.demo.models.User usr = us.findUser(user.getName());
+			
+			type = us.findUserType(user.getName());
+			System.out.println(type);
 
-			if (user.getName().equals("issl")) {
-				if (passwordEncoder.matches(password, usr.getPasswordHash())) {
-					view = "redirect:/administrator/facultymanagement";
-				}
+			if (!us.findUserType(user.getName()).equals("Faculty")) {
+			 view = "errorLogin";
 			}
 
-			else if (user.getName().equals(usr.getUsername())) {
-				if (passwordEncoder.matches(password, usr.getPasswordHash())) {
-					view = "redirect:/administrator/addfaculty";
+			
+			 else {
+
+				if (user.getName().equals("issl")) {
+					if (passwordEncoder.matches(password, usr.getPasswordHash())) {
+						view = "redirect:/administrator/facultymanagement";
+					}
+
+				}
+
+				else if (user.getName().equals(usr.getUsername())) {
+					if (passwordEncoder.matches(password, usr.getPasswordHash())) {
+						view = "redirect:/administrator/addfaculty";
+					}
 				}
 			}
 
@@ -104,15 +117,22 @@ public class HomeController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("user", user);
 			view = "studentLogin";
-		} else {
+		}
+		
+		
+		else {
 			String input = user.getName();
 			String password = user.getPassword();
 			sg.nus.iss.team8.demo.models.User usr = us.findUser(user.getName());
 			System.out.println(password);
 
-			if (input.equals(usr.getUsername())) {
-				if (passwordEncoder.matches(password, usr.getPasswordHash())) {
-					view = "redirect:/student/applycourse";
+			if (!us.findUserType(user.getName()).equals("Student")) {
+				view = "errorLogin";
+			} else {
+				if (input.equals(usr.getUsername())) {
+					if (passwordEncoder.matches(password, usr.getPasswordHash())) {
+						view = "redirect:/student/applycourse";
+					}
 				}
 			}
 //			if (input.equals(usr.getUsername())) {
