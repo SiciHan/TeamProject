@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Student Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Student Management</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="#">Page 1</a></li>
+					<li><a href="#">Page 2</a></li>
+					<li><a href="#">Page 3</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	<br/>
+	<h1>List of Students</h1>
+
+
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<a class="btn btn-primary" href="studentform.html" th:href="@{/administrator/addstudent}" role="button">Add
+				Student</a>
+			<br/>
+			<div th:if="${studentPage.totalPages > 0}" class="pagination"
+   				 th:each="pageNumber : ${pageNumbers}">
+			    <a th:href="@{/administrator/studentmanagement(size=${studentPage.size}, page=${pageNumber})}"
+		        	th:text=${pageNumber}
+			        th:class="${pageNumber==studentPage.number + 1} ? active"></a>
+			</div>
+			<br/>
+			<table class="table table-hover">
+				<tbody>
+				<thead>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Gender</th>
+					<th>DOB</th>
+					<th>Degree</th>
+					<th>Address</th>
+					<th>Mobile</th>
+					<th>Email</th>
+					<th>Status</th>
+					<th>Semester</th>
+					<th colspan="3"></th>
+				</thead>
+				<tr th:each="student:${studentPage.content}">
+					<td th:text=${student.studentId}>Id</td>
+					<td th:text=${student.name}>Name</td>
+					<td th:text=${student.gender}>Gender</td>
+					<td th:text=${student.birthDate}>DOB</td>
+					<td th:text=${student.degree}>Degree</td>
+					<td th:text=${student.address}>Address</td>
+					<td th:text=${student.mobile}>Mobile</td>
+					<td th:text=${student.email}>Email</td>
+					<td th:text=${student.status.label}>Status</td>
+					<td th:text=${student.semester.label}>Semester</td>
+					<!-- <td><a href="enrolledcourses.html"
+				th:href="@{/product/edit/}+${product.id}"> Enrolled Courses </a></td>-->
+					<td><a href="#"> Courses </a></td>
+					<td><a href="#"
+						th:href="@{/administrator/editstudent/}+${student.studentId}">
+							Edit </a></td>
+					<td><a href="#"
+						th:href="@{/administrator/deletestudent/}+${student.studentId}">
+							Delete </a></td>
+				</tr>
+				</tbody>
+			</table>
+			
+			
+		</div>
+	</div>
+</body>
+</html>

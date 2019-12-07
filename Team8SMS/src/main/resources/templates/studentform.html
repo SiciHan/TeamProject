@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Student Form</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Student Management</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="#">Page 1</a></li>
+					<li><a href="#">Page 2</a></li>
+					<li><a href="#">Page 3</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	<br/>
+	<h1>Add/Edit Student</h1>
+	
+	<form th:object="${student}" th:action="@{/administrator/savestudent}" method="post">
+		<fieldset>
+			Student ID: <input type="text" th:field="*{studentId}">
+			<p th:if="${#fields.hasErrors('studentId')}" th:errors="*{studentId}"></p>
+		</fieldset>
+		<fieldset>
+			Name: <input type="text" th:field="*{name}">
+			<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+		</fieldset>
+		<fieldset>
+			Gender: <input type="text" th:field="*{gender}">
+			<p th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></p>
+		</fieldset>
+		<fieldset>
+			Date of Birth: <input type="date" th:type="date" th:field="*{birthDate}"
+			th:value="${#dates.format(student.birthDate, 'yyyy-MM-DD')}">
+			<p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></p>
+		</fieldset>
+		<fieldset>
+			Degree: <input type="text" th:field="*{degree}">
+			<p th:if="${#fields.hasErrors('degree')}" th:errors="*{degree}"></p>
+		</fieldset>
+		<fieldset>
+			Address: <input type="text" th:field="*{address}">
+			<p th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
+		</fieldset>
+		<fieldset>
+			Mobile: <input type="text" th:field="*{mobile}">
+			<p th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}"></p>
+		</fieldset>
+		<fieldset>
+			Email: <input type="text" th:field="*{email}">
+			<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+		</fieldset>
+		<fieldset>
+			Semester: <input type="text" th:field="*{semester.semester}">
+			<p th:if="${#fields.hasErrors('semester.semester')}" th:errors="*{semester.semester}"></p>
+		</fieldset>
+		<fieldset>
+			Status: <input type="text" th:field="*{status.status}">
+			<p th:if="${#fields.hasErrors('status.status')}" th:errors="*{status.status}"></p>
+		</fieldset>
+		<fieldset>
+			<button type="submit">Save</button>
+		</fieldset>
+	</form>
+</body>
+</html>

@@ -2,7 +2,6 @@ package sg.nus.iss.team8.demo.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 @Embeddable
 public class CourserunStudent_PK implements Serializable {

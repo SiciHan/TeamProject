@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="ISO-8859-1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<title>Student</title>
+</head>
+<body>
+	<!-- Header and Navigation bar -->
+
+	<h1>Welcome</h1>
+	<div>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand"
+						href="http://localhost:8080/student/applycourse">Student
+						Education Record</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li><a href="http://localhost:8080/student/mycourses">My
+							Courses</a></li>
+					<li class="active"><a
+						href="http://localhost:8080/student/applycourse">Apply
+							Courses</a></li>
+					<li><a href="http://localhost:8080/student/transcript">My
+							Transcript</a></li>
+					<li><a href="http://localhost:8080/student/movementregister#">Movement
+							Record</a></li>
+					<li><a href="http://localhost:8080/home/logout">Log
+							Out</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+
+	<!-- Upper part, display all courserun available with apply button -->
+	<div>
+		<h2>Available Courses</h2>
+
+	</div>
+	<div th:if="${courses1 != null and !courses1.isEmpty()}">
+		<table class="table table-striped">
+			<tr>
+			<th>Course Name</th>
+			<th>Action</th>
+			</tr>
+			<tr th:each="course:${courses1}">
+				<td th:text="${course.id.courserun.courseName}"></td>
+				<td><a th:href="${'/student/apply/' + studentId+'/'+course.id.courserun.courseCode+'/'+ course.id.courserun.semester.semester}" class="btn btn-danger">Apply</a></td>
+			</tr>
+		</table>
+	</div>
+	<div th:if="${courses1a != null and !courses1a.isEmpty()}">
+		<table class="table table-striped">
+			<tr th:each="course:${courses1a}">
+				<td th:text="${course.courseName}"></td>
+				<td><a th:href="${'/student/apply/' + studentId+'/'+course.courseCode+'/'+course.semester.semester}" class="btn btn-danger">Apply</a></td>
+			</tr>
+		</table>
+	</div>
+	<div th:if="${(courses1 == null or courses1.isEmpty()) and (courses1a ==null or courses1a.isEmpty())}">
+		<span th:text=${message}></span>
+	</div>
+	<!-- Middel Part, display all pending courserun application with Cancel button -->
+
+	<div>
+		<h2>Pending Course Applications</h2>
+	</div>
+	<div th:if="${courses2 != null and !courses2.isEmpty()}">
+		<table class="table table-striped">
+			<tr th:each="course:${courses2}">
+				<td th:text="${course.id.courserun.courseName}"></td>
+				<td><a th:href="${'/student/cancelapplication/' + studentId+'/'+course.id.courserun.courseCode+'/'+ course.id.courserun.semester.semester}" class="btn btn-danger">Cancel</a></td>
+			</tr>
+		</table>
+	</div>
+	<div th:unless="${courses2 != null and !courses2.isEmpty()}">
+		<span th:text=${message}></span>
+	</div>
+
+	<!-- lower Part, display all rejected courserun application -->
+
+	<div>
+		<h2>Rejected Course Applications</h2>
+	</div>
+	<div th:if="${courses3 != null and !courses3.isEmpty()}">
+		<table class="table table-striped">
+			<tr th:each="course:${courses3}">
+				<td th:text="${course.id.courserun.courseName}"></td>
+			</tr>
+		</table>
+	</div>
+	<div th:unless="${courses3 != null and !courses3.isEmpty()}">
+		<span th:text=${message}></span>
+	</div>
+
+
+</body>
+</html>

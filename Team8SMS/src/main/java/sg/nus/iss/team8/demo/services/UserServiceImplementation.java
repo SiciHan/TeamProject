@@ -1,29 +1,39 @@
-//package sg.nus.iss.team8.demo.services;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//import sg.nus.iss.team8.demo.repositories.UserRepository;
-//
-//
-//@Service
-//public class UserServiceImplementation implements UserService{
-//
-//	private UserRepository ur;
-//	@Autowired
-//	public void setUserRepository(UserRepository ur) {
-//		this.ur=ur;
-//	}
-//	
-//	
-//	@Override
-//	public boolean isValidUser(String username, String password) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	//@Override
-//	//@Transactional
-//	//override other methods defined in the interface
-//	
-//}
+
+  package sg.nus.iss.team8.demo.services;
+  
+ import javax.annotation.Resource;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import
+  org.springframework.stereotype.Service;
+
+import sg.nus.iss.team8.demo.models.Student;
+import sg.nus.iss.team8.demo.models.User;
+import sg.nus.iss.team8.demo.repositories.UserRepository;
+  
+ 
+  @Service 
+
+  public class UserServiceImplementation implements UserService{
+  
+ @Autowired
+ private UserRepository ur;
+  
+  @Autowired
+  public void setUserRepository(UserRepository ur)
+  { this.ur=ur; }
+
+    @Override
+	@Transactional
+	public User findUser(String name) {
+		return ur.findByUsername(name);
+	}
+  
+  
+
+  
+
+  
+  }
