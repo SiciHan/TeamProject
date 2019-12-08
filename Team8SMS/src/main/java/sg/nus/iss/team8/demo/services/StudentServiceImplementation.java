@@ -226,5 +226,5 @@ public class StudentServiceImplementation implements StudentService {
 		// TODO Auto-generated method stub
 		return (ArrayList<Leave>) leaveRepository.findAll();
 	}
-	
+
 }
