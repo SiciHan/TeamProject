@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body onload="myFunction()">
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var txt;
+  if (confirm("User not Found!Try to LogIn again")) {
+    if ( txt = "OK" )
+    {
+    	location.replace("http://localhost:8080/login/staff")
+    }
+  } else {
+	  location.replace("http://localhost:8080/login/staff")
+  }
+  document.getElementById("demo").innerHTML = txt;
+}
+</script>
+
+</body>
+</html>

@@ -27,7 +27,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import sg.nus.iss.team8.demo.models.CourserunStudent;
+import sg.nus.iss.team8.demo.models.Department;
 import sg.nus.iss.team8.demo.models.Faculty;
+import sg.nus.iss.team8.demo.models.Leave;
+import sg.nus.iss.team8.demo.models.Leave_PK;
+import sg.nus.iss.team8.demo.models.Semester;
+import sg.nus.iss.team8.demo.models.Status;
 import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.services.AdminService;
 import sg.nus.iss.team8.demo.services.AdminServiceImpl;
@@ -35,8 +41,8 @@ import sg.nus.iss.team8.demo.services.FacultyService;
 import sg.nus.iss.team8.demo.services.FacultyServiceImplementation;
 import sg.nus.iss.team8.demo.services.StudentService;
 
+
 @Controller
-@RequestMapping("/administrator")
 public class AdminController {
 
 	private AdminService aService;
@@ -53,6 +59,7 @@ public class AdminController {
 	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
+//		binder.addValidators(studentValidator);
 		// binder.addValidators(new ProductValidator());
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
 	}
@@ -69,6 +76,14 @@ public class AdminController {
 	public String addFaculty(Model model) {
 		ArrayList<Faculty> flist = new ArrayList<Faculty>();
 		flist.addAll(aService.findAllFaculty());
+		//Willis 7thDec
+		ArrayList<Status> slist = new ArrayList<Status>();
+		ArrayList<Department> dlist = new ArrayList<Department>();
+		slist.addAll(aService.findAllStatuses());
+		dlist.addAll(aService.findAllDepartments());
+		model.addAttribute("statuses", slist);
+		model.addAttribute("departments", dlist);
+		//
 		model.addAttribute("faculties", flist);
 		Faculty f = new Faculty();
 		model.addAttribute("faculty", f);
@@ -80,13 +95,20 @@ public class AdminController {
 		if (bindingResult.hasErrors())
 			return "facultyform";
 		aService.saveFaculty(faculty);
-		return "redirect:/administrator/facultymanagement";
+		return "redirect:/facultymanagement";
 	}
 
 	@GetMapping("/editfaculty/{id}")
 	public String editFaculty(Model model, @PathVariable("id") Integer id) {
 		Faculty f = aService.findFacultyById(id);
 		model.addAttribute("faculty", f);
+		//Willis 7th Dec
+		ArrayList<Status> slist = new ArrayList<Status>();
+		ArrayList<Department> dlist = new ArrayList<Department>();
+		slist.addAll(aService.findAllStatuses());
+		dlist.addAll(aService.findAllDepartments());
+		model.addAttribute("statuses", slist);
+		model.addAttribute("departments", dlist);
 		return "facultyform";
 	}
 
@@ -94,13 +116,17 @@ public class AdminController {
 	public String deleteFaculty(Model model, @PathVariable("id") Integer id) {
 		Faculty f = aService.findFacultyById(id);
 		aService.deleteFaculty(f);
-		return "redirect:/administrator/facultymanagement";
+		return "redirect:/facultymanagement";
 	}
+	
+	//Willis 7th Dec
+	public static final String CURRENTSEMESTER = "AY2019/2020Sem2";
 
-//	@GetMapping("/administrator")
-//	public String getAdmin() {
-//		return "administrator";
-//	}
+	@GetMapping("/administrator")
+	public String getAdmin(Model model) {
+		model.addAttribute("currentsemester", CURRENTSEMESTER);
+		return "administrator";
+	}
 
 	@GetMapping("/studentmanagement")
 	public String listAllStudents(Model model, @RequestParam("page") Optional<Integer> page,
@@ -125,6 +151,11 @@ public class AdminController {
 	@GetMapping("/addstudent")
 	public String showAddStudentForm(Model model) {
 		Student student = new Student();
+		Integer newStudentId = aService.newStudentId();
+		Semester currentSemester = aService.currentSemester();
+		model.addAttribute("student", student);
+		model.addAttribute("newStudentId", newStudentId);
+		model.addAttribute("currentSemester", currentSemester);		Student student = new Student();
 		model.addAttribute("student", student);
 		return "studentform";
 	}
@@ -136,7 +167,8 @@ public class AdminController {
 		}
 
 		aService.saveStudent(student);
-		return "redirect:/administrator/studentmanagement";
+		//Willis 7th Dec
+		return "redirect:/studentmanagement";
 	}
 
 	@GetMapping("/editstudent/{id}")
@@ -150,7 +182,65 @@ public class AdminController {
 	public String deleteStudent(Model model, @PathVariable("id") Integer id) {
 		Student student = aService.findStudent(id);
 		aService.removeStudent(student);
-		return "redirect:/administrator/studentmanagement";
+		//Willis 7th Dec
+		return "redirect:/studentmanagement";
+	}
+	@GetMapping("/courseapplication")
+	public String listPendingCourseApplications(Model model, @RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size) {
+		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(5);
+
+		Page<CourserunStudent> pendingPage = aService.pagePendingStudents(PageRequest.of(currentPage - 1, pageSize));
+
+		model.addAttribute("pendingPage", pendingPage);
+		
+		int totalPages = pendingPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pendingPageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+            model.addAttribute("pendingPageNumbers", pendingPageNumbers);
+        }
+        
+        return "courseapplication";
+	}
+	
+	@GetMapping("/{acceptOrReject}/{id}/{courseCode}/{semesterid}")
+	public String rejectCourseApplication(@PathVariable(name="acceptOrReject") String acceptOrReject,
+			@PathVariable(name="id") int id, 
+			@PathVariable(name="courseCode") String courseCode,
+			@PathVariable(name="semesterid") int semesterid) {
+		
+		int status;
+		if(acceptOrReject.equalsIgnoreCase("acceptcourse")) {
+			status = 8; // 8 -> Undergoing
+		} else {
+			status = 7; // 7 -> Rejected
+		}
+		aService.setCourserunStudentStatus(id,courseCode,semesterid, status);
+		return "redirect:/administrator/courseapplication";
+	}
+	
+	//Willis 7th Dec
+	@GetMapping("/leaveapplication")
+	public String leaveApplication(Model model) {
+		ArrayList<Leave> llist = new ArrayList<Leave>();
+		llist.addAll(aService.findAllLeave());
+		model.addAttribute("leaves", llist);
+		return "leaveapplication";
+	}
+	
+	@PostMapping("/approveleave")
+	public String approveLeaveApplication(@Valid Leave leave, BindingResult bindingResult) {
+		if (bindingResult.hasErrors())
+			return "leaveapplication";
+		aService.approveLeave(leave);
+		return "redirect:/leaveapplication";
+	}
+	
+	@PostMapping("/rejectleave")
+	public String rejectLeaveApplication(@ModelAttribute Leave leave) {
+		aService.rejectLeave(leave);
+		return "redirect:/leaveapplication";
 	}
 
 }

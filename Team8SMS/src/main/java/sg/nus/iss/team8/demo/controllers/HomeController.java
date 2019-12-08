@@ -1,6 +1,5 @@
 package sg.nus.iss.team8.demo.controllers;
 
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,136 +19,164 @@ import sg.nus.iss.team8.demo.services.UserServiceImplementation;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 
-
-
 @Controller
 public class HomeController {
-	
-   
-	 
-	 
-	  private UserService us;
-	  
-	  @Autowired 
-	  public void setUserService(UserServiceImplementation usi) {
-	  this.us=usi; }
-	  
-	  @InitBinder
-	  protected void initBinder(WebDataBinder binder) {
-		//binder.addValidators(new ProductValidator());
-	  }
-	
+
+	private UserService us;
+
+	@Autowired
+	public void setUserService(UserServiceImplementation usi) {
+		this.us = usi;
+	}
+
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		// binder.addValidators(new ProductValidator());
+	}
+
 	@GetMapping("/")
 	public String getHome() {
 		return "index";
 	}
 	
-	
+	@GetMapping("/home")
+	public String testHome() {
+		return "home";
+	}
+
 	@GetMapping("/login/student")
 	public String getStudentLoginPage(Model model) {
 		model.addAttribute("user", new UserSession());
 		return "studentLogin";
 	}
-	
+
 	@GetMapping("/login/staff")
 	public String getStaffLoginPage(Model model) {
 		model.addAttribute("user", new UserSession());
 		return "staffLogin";
 	}
-	
+
 	@GetMapping("/logout")
 	public String getLogoutPage(SessionStatus status) {
 		status.setComplete();
 		return "home";
 	}
+
 	
-	@PostMapping("/auth")
-	public String getStaffAuthentication(@Valid @ModelAttribute("user") UserSession user, BindingResult binder) {
-		String view =""; 
+	  
+	@PostMapping("/authenticate")
+	public String getAuthentication(@Valid @ModelAttribute("user") UserSession user, BindingResult bindingResult,
+			Model model) {
+
+		String view = "";
+		String type = "";
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		
-	
-		if ( binder.hasErrors())
-		{
-			view = "staffLogin";
-		}
-		else 
-		{
-			String input = user.getName();
-			String password = user.getPassword();
-			sg.nus.iss.team8.demo.models.User usr = us.findUser(user.getName());
-			System.out.println(password);
-			
-			if (input.equals("issl") )
-			{	
-				if (passwordEncoder.matches(password, usr.getPasswordHash()))
-				  { view = "forward:/administrator/facultymanagement"; }
-				
-			}
-			
-			else if (input.equals(usr.getUsername()) )
-			{	
-				if (passwordEncoder.matches(password, usr.getPasswordHash()))
-				  { view = "forward:/administrator/addfaculty"; } // for faculty home 
-				
-			}
-			else
-			{
+		try {
+
+			if (bindingResult.hasErrors()) {
+				model.addAttribute("user", user);
 				view = "staffLogin";
+			} else
+
+			{
+				String input = user.getName();
+				String password = user.getPassword();
+				sg.nus.iss.team8.demo.models.User usr = us.findUser(user.getName());
+				System.out.println(usr.toString());
+
+				type = us.findUserType(user.getName());
+				System.out.println(type);
+
+				if (!us.findUserType(user.getName()).equals("Faculty")) {
+					view = "errorLogin";
+				}
+
+				else {
+
+					if (user.getName().equals("issl")) {
+						if (passwordEncoder.matches(password, usr.getPasswordHash())) {
+							view = "redirect:/administrator/facultymanagement";
+						}
+
+						else {
+							view = "WrongPasswordStaff";
+						}
+
+					}
+
+					else if (user.getName().equals(usr.getUsername())) {
+						if (passwordEncoder.matches(password, usr.getPasswordHash())) {
+							view = "redirect:/administrator/addfaculty";
+						} else {
+							view = "WrongPasswordStaff";
+
+						}
+					}
+
+				}
+
 			}
 		}
+
+		catch (NullPointerException e) {
+			view = "UserNotFound";
+		}
+
 		return view;
 	}
 	
-	
+
+   
+
 	@PostMapping("/authe")
-	public String getStudentAuthentication(@ModelAttribute("user") UserSession user, BindingResult bindingResult,Model model) {
-		String view =""; 
+	public String getStudentAuthentication(@Valid @ModelAttribute("user") UserSession user, BindingResult bindingResult,
+			Model model) {
+		String view = "";
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		
-	
-		if ( bindingResult.hasErrors())
-		{
-			model.addAttribute("user", user);
-			view = "studentLogin";
-		}
-		else 
-		{
-			String input = user.getName();
-			String password = user.getPassword();
-			sg.nus.iss.team8.demo.models.User usr = us.findUser(user.getName());
-			System.out.println(password);
-			
-			if (input.equals(usr.getUsername()) )
-			{	
-				if (passwordEncoder.matches(password, usr.getPasswordHash()))
-				  { view= "forward:/student/applycourse"; }
+
+		try {
+			if (bindingResult.hasErrors()) {
+				model.addAttribute("user", user);
+				view = "studentLogin";
 			}
+
+			else {
+				String input = user.getName();
+				String password = user.getPassword();
+				sg.nus.iss.team8.demo.models.User usr = us.findUser(user.getName());
+				System.out.println(password);
+
+				if (!us.findUserType(user.getName()).equals("Student")) {
+					view = "errorLogin";
+				} else {
+					if (input.equals(usr.getUsername())) {
+						if (passwordEncoder.matches(password, usr.getPasswordHash())) {
+							view = "redirect:/student/applycourse";
+						} else {
+							view = "WrongPassword";
+
+						}
+					}
+				}
 //			if (input.equals(usr.getUsername())) {
 //				if (passwordEncoder.matches(password, usr.getPasswordHash())) {
 //					if (usr.getUserType() == "Student")
 //						view = "redirect:/student/applycourse";
 //				}
 //			}
-			
-			
-			/*   reserve for faculty 
-			 * if (input.equals(usr.getUsername()) ) { if (passwordEncoder.matches(password,
-			 * usr.getPasswordHash())) { if(usr.getUserType() == "Faculty") view=
-			 * "redirect:/faculty/faculty_home"; } }
-			 */
-			else
-			{
-				view = "studentLogin";
+
+				/*
+				 * reserve for faculty if (input.equals(usr.getUsername()) ) { if
+				 * (passwordEncoder.matches(password, usr.getPasswordHash())) {
+				 * if(usr.getUserType() == "Faculty") view= "redirect:/faculty/faculty_home"; }
+				 * }
+				 */
+
 			}
+		} catch (NullPointerException e) {
+			view = "UserNotFoundStudent";
 		}
 		return view;
 	}
-	
-	
-	
-	
+
 }
-
-	
-

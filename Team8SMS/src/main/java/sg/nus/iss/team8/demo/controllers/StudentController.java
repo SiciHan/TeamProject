@@ -1,6 +1,10 @@
 package sg.nus.iss.team8.demo.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.time.Month;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,10 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Leave;
+import sg.nus.iss.team8.demo.services.LeaveService;
+import sg.nus.iss.team8.demo.services.LeaveServiceImplementation;
 import sg.nus.iss.team8.demo.services.StudentService;
 import sg.nus.iss.team8.demo.services.StudentServiceImplementation;
 
@@ -20,9 +27,14 @@ import sg.nus.iss.team8.demo.services.StudentServiceImplementation;
 public class StudentController {
 
 	private StudentService ss;
+	private LeaveService ls;
 	@Autowired 
 	public void setStudentService(StudentServiceImplementation ssi) {
 		this.ss=ssi;
+	}
+	@Autowired 
+	public void setLeaveService(LeaveServiceImplementation lsi) {
+		this.ls=lsi;
 	}
 	@GetMapping("/applycourse")
 	public String applyCourse(Model model) {
@@ -77,12 +89,19 @@ public class StudentController {
 	}
 	
 	@GetMapping("/movementregister")
-	public String MovementRegister(Model model) {
+	public String movementRegister(Model model, @RequestParam(required=false, name="yearmonth") String ymstring) {
+		YearMonth ym=YearMonth.now();
+		if(ymstring!=null && !ymstring.isEmpty()) {
+			
+			ym=YearMonth.of(Integer.parseInt(ymstring.substring(0,4)),Integer.parseInt(ymstring.substring(5)));
+		}
 		
-		ArrayList<Leave> leaves=ss.findAllLeaves();
+		ArrayList<Leave> leaves=ls.findLeavesByYearMonth(ym);
+		ArrayList<YearMonth> yearMonths=ls.findAllYearMonths(ym);
+		//by default we will display the currentMonth leave
 		model.addAttribute("leaves",leaves);
+		model.addAttribute("yearMonths", yearMonths);
+		model.addAttribute("selectedmonth",ym);
 		return "movementregister";
 	}
-
-	
 }

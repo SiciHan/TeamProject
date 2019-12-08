@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Leave Application</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div>
+		<nav class="navbar navbar-default">
+  			<div class="container-fluid">
+    			<div class="navbar-header">
+      				<a class="navbar-brand" href="#">Apply Course</a>
+    			</div>
+    			<ul class="nav navbar-nav">
+      				<li class="active"><a href="administrator.html" th:href="@{/administrator}">Home</a></li>
+      				<li><a href="#">Page 1</a></li>
+      				<li><a href="#">Page 2</a></li>
+      				<li><a href="#">Page 3</a></li>
+      				<li><a href="#">Logout</a></li>
+    			</ul>
+  			</div>
+		</nav>
+	</div>
+	<h1>Leave Application</h1>
+	<table>
+		<tr>
+			<td>Start date</td>
+			<td>End date</td>
+			<td>User type</td>
+			<td>USer Id</td>
+			<td>Reason</td>
+			<td>Status</td>
+		</tr>
+		<tr th:each="leave:${leaves}">
+			<td th:text=${leave.id.startDate}>StartDate</td>
+			<td th:text=${leave.endDate}>EndDate</td>
+			<td th:text=${leave.id.userType}>UserType</td>
+			<td th:text=${leave.id.id}>StudentId</td>
+			<td th:text="${leave.reason}">Reason</td>
+			<td th:text="${leave.status.label}">Status</td>
+			<td th:if="${leave.status.status == 4}">
+				<form th:object="${leaves}" th:action="@{/approveleave}" method="post">
+					<button value="approve">Approve</button>
+				</form>
+			</td>
+			<td th:if="${leave.status.status == 4}">
+				<form th:object="${leave}" th:action="@{/rejectleave}" method="post">
+				<fieldset>
+				<input type="hidden" id="id.startDate" name="id.startDate" 
+						th:value="*{id.startDate}" th:text="${leave.id.startDate}">
+				</fieldset>
+				<fieldset>
+				<input type="hidden" id="id.userType" name="id.userType" 
+						th:value="*{id.userType}" th:text="${leave.id.userType}">
+				</fieldset>
+				<fieldset>
+				<input type="hidden" id="id.id" name="id.id" 
+						th:value="*{id.id}" th:text="${leave.id.id}">
+				</fieldset> 
+				<fieldset>
+				<input type="hidden" id="endDate" name="endDate" 
+						th:value="*{endDate}" th:text="${leave.endDate}">
+				</fieldset>
+				<fieldset>
+				<input type="hidden" id="reason" name="reason" 
+						th:value="*{reason}" th:text="${leave.reason}">
+				</fieldset>
+				<fieldset>
+				<input type="hidden" id="status.status" name="status.status" 
+						th:value="*{status.status}" th:text="leave.status.status">
+				</fieldset>
+					<!-- <a th:href="@{/rejectleave/}+${leave.id}" th:type="submit">Reject</a> -->
+				<fieldset>
+				<button type="submit">Reject</button>
+				</fieldset>
+				</form>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

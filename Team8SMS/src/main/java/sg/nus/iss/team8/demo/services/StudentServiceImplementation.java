@@ -19,7 +19,6 @@ import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.CourserunStudent_PK;
-import sg.nus.iss.team8.demo.models.Leave;
 import sg.nus.iss.team8.demo.repositories.CourserunRepository;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
 import sg.nus.iss.team8.demo.repositories.LeaveRepository;
@@ -35,8 +34,6 @@ public class StudentServiceImplementation implements StudentService {
 	private CourserunRepository courserunRepository;
 	private SemesterRepository semesterRepository;
 	private StatusRepository statusRepository;
-	private LeaveRepository leaveRepository;
-	
 
 	@Autowired
 	public void setStudentRepository(StudentRepository studentRepository) {
@@ -61,10 +58,6 @@ public class StudentServiceImplementation implements StudentService {
 	public void setStatusRepository(StatusRepository statusRepository) {
 		this.statusRepository = statusRepository;
 	}	
-	@Autowired
-	public void setLeaveRepository(LeaveRepository leaveRepository) {
-		this.leaveRepository = leaveRepository; 
-	}
 	@Override
 	public ArrayList<CourserunStudent> findAvailableCourserunStudents(int studentid) {
 		// TODO Auto-generated method stub
@@ -221,10 +214,4 @@ public class StudentServiceImplementation implements StudentService {
 		return (ArrayList<Student>) studentRepository.findStudentsByCourseName(courseName);
 	}
 
-	@Override
-	public ArrayList<Leave> findAllLeaves() {
-		// TODO Auto-generated method stub
-		return (ArrayList<Leave>) leaveRepository.findAll();
-	}
-	
 }

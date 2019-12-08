@@ -6,7 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import sg.nus.iss.team8.demo.models.CourserunStudent;
+import sg.nus.iss.team8.demo.models.Department;
 import sg.nus.iss.team8.demo.models.Faculty;
+import sg.nus.iss.team8.demo.models.Leave;
+import sg.nus.iss.team8.demo.models.Leave_PK;
+import sg.nus.iss.team8.demo.models.Semester;
+import sg.nus.iss.team8.demo.models.Status;
 import sg.nus.iss.team8.demo.models.Student;
 
 @Service
@@ -30,4 +36,20 @@ public interface AdminService {
 	void deleteFaculty(Faculty f);
 
 	Faculty saveFaculty(Faculty f);
+	
+int newStudentId();
+	
+	Semester currentSemester();
+	
+	Page<CourserunStudent> pagePendingStudents(Pageable pageable);
+	
+	void setCourserunStudentStatus(int id, String courseCode, int semesterid, int status);
+	
+	//Willis added
+	ArrayList<Status> findAllStatuses();
+	ArrayList<Department> findAllDepartments();
+	ArrayList<Leave> findAllLeave();
+	Leave findLeave(Leave_PK id);
+	void approveLeave(Leave leave);
+	void rejectLeave(Leave leave);
 }
