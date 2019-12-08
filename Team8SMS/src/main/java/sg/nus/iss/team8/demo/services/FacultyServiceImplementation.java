@@ -1,7 +1,7 @@
 package sg.nus.iss.team8.demo.services;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import sg.nus.iss.team8.demo.models.Courserun;
+import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Faculty;
 import sg.nus.iss.team8.demo.models.Semester;
+import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
 import sg.nus.iss.team8.demo.repositories.FacultyRepository;
 
 @Service
@@ -19,7 +21,12 @@ public class FacultyServiceImplementation implements FacultyService {
 
 	@Resource
 	private FacultyRepository fr;
+	private CourserunStudentRepository crsr;
 	
+	@Autowired
+	public void setCrsr(CourserunStudentRepository crsr) {
+		this.crsr = crsr;
+	}
 	@Autowired
 	public void setFacultyRepository(FacultyRepository fr) {
 		this.fr = fr;
@@ -51,12 +58,24 @@ public class FacultyServiceImplementation implements FacultyService {
 		fr.delete(f);
 	}
 	@Override
-	public ArrayList<Semester> findAllSemesters() {
-		return fr.findAllSemesters();
-	}
-	@Override
 	public ArrayList<Courserun> findAllCourseruns(){
 		return fr.findAllCourseruns();
+	}
+	public List<CourserunStudent> findAllStudents(String courserunname) {
+		// TODO Auto-generated method stub
+		List<CourserunStudent> result=crsr.findAllByCourserun(courserunname);
+		
+		if(result==null || result.isEmpty()) {
+			return crsr.findAll();
+		}
+		else
+			return result;
+
+	}
+	@Override
+	public ArrayList<Semester> findAllSemesters() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

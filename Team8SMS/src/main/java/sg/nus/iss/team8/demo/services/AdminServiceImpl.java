@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Department;
 import sg.nus.iss.team8.demo.models.Faculty;
@@ -223,6 +225,49 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void rejectLeave(Leave leave) {
 		leaveRepository.setStatus(leave.getId(), 7);
+	}
+
+	@Override
+	public Page<Courserun> pageCourserun(Pageable pageable) {
+		ArrayList<Courserun> courseruns = (ArrayList<Courserun>)courserunRepository.findAll();
+
+		int pageSize = pageable.getPageSize();
+		int currentPage = pageable.getPageNumber();
+		int startItem = currentPage * pageSize;
+		List<Courserun> newCourseList;
+
+		if (courseruns.size() < startItem) {
+			newCourseList = Collections.emptyList();
+		} else {
+			int toIndex = Math.min(startItem + pageSize, courseruns.size());
+			newCourseList = courseruns.subList(startItem, toIndex);
+		}
+
+		Page<Courserun> courserunPage = new PageImpl<Courserun>(newCourseList, PageRequest.of(currentPage, pageSize),
+				courseruns.size());
+
+		return courserunPage;
+	} 
+	
+	@Override
+	public Courserun findCourserun(String courseCode, int semesterid) {
+		Semester semester = semesterRepository.findById(semesterid).orElse(null);
+		return courserunRepository.findByCourseCodeAndSemester(courseCode, semester);
+	}
+
+	@Override
+	public Courserun saveCourserun(Courserun course) {
+		return courserunRepository.saveAndFlush(course);
+	}
+
+	@Override
+	public void removeCourserun(Courserun course) {
+		courserunRepository.delete(course);
+	}
+	
+	@Override
+	public ArrayList<CourserunStudent> findStudentsByCourseName(String courseName) {
+		return (ArrayList<CourserunStudent>) courserunStudentRepository.findStudentsByCourseName(courseName);
 	}
 
 }

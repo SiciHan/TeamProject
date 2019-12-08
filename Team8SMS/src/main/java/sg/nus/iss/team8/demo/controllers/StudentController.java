@@ -2,7 +2,10 @@ package sg.nus.iss.team8.demo.controllers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import java.time.LocalDateTime;
 import java.time.Month;
+
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
@@ -17,6 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Leave;
+
+import sg.nus.iss.team8.demo.models.Student;
+import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
+import sg.nus.iss.team8.demo.repositories.StudentRepository;
+
+import sg.nus.iss.team8.demo.models.User;
+import sg.nus.iss.team8.demo.services.GenerateReportService;
+
 import sg.nus.iss.team8.demo.services.LeaveService;
 import sg.nus.iss.team8.demo.services.LeaveServiceImplementation;
 import sg.nus.iss.team8.demo.services.StudentService;
@@ -25,9 +36,29 @@ import sg.nus.iss.team8.demo.services.StudentServiceImplementation;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
-
+	private StudentRepository srepo;
+	@Autowired
+	public void setSrepo(StudentRepository srepo) {
+		this.srepo = srepo;
+	}
+	public StudentRepository getSrepo() {
+		return srepo;
+	}
+	
+	
+	private CourserunStudentRepository csrepo;
+	@Autowired
+	public void setCsrepo(CourserunStudentRepository csrepo) {
+		this.csrepo = csrepo;
+	}
+	public CourserunStudentRepository getCsrepo() {
+		return csrepo;
+	}
+	
+	
 	private StudentService ss;
 	private LeaveService ls;
+	private GenerateReportService grs;
 	@Autowired 
 	public void setStudentService(StudentServiceImplementation ssi) {
 		this.ss=ssi;
@@ -36,6 +67,12 @@ public class StudentController {
 	public void setLeaveService(LeaveServiceImplementation lsi) {
 		this.ls=lsi;
 	}
+	
+	@Autowired
+	public void setGrs(GenerateReportService grs) {
+		this.grs = grs;
+	}
+
 	@GetMapping("/applycourse")
 	public String applyCourse(Model model) {
 		
@@ -98,10 +135,46 @@ public class StudentController {
 		
 		ArrayList<Leave> leaves=ls.findLeavesByYearMonth(ym);
 		ArrayList<YearMonth> yearMonths=ls.findAllYearMonths(ym);
+		ArrayList<String> username=ls.findAllUserName(leaves);
+		HashMap<String,Leave> usernameLeaves=ls.MergeListToMap(leaves,username);
 		//by default we will display the currentMonth leave
-		model.addAttribute("leaves",leaves);
+		model.addAttribute("leaves",usernameLeaves);
 		model.addAttribute("yearMonths", yearMonths);
 		model.addAttribute("selectedmonth",ym);
 		return "movementregister";
 	}
+
+	@GetMapping("/mycourses")
+	public String MyCourses(Model model){
+		Student s=srepo.findNameById(10006);
+		model.addAttribute("student", s);
+		ArrayList<CourserunStudent>courserunstudentlist=new ArrayList<>();
+		courserunstudentlist.addAll(csrepo.findCourseById(10006));
+		model.addAttribute("courselist", courserunstudentlist);
+		
+		return "mycourses"; 
+	}
+	@GetMapping("/transcript")
+	public String MyTranscript(Model model) {
+		Student s=srepo.findNameById(10006);
+		model.addAttribute("student", s);
+		double points=ss.totalScorePoints(10006);
+		int totalCredits=ss.totalCredits(10006);
+		double cap=points/totalCredits;
+		 cap=Math.round(cap*100.0)/100.0;
+		 String gstatus=ss.graduationStatus(10006);
+		 //Date today = Calendar.getInstance().getTime();
+		 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
+		   LocalDateTime now = LocalDateTime.now();
+		  String today=dtf.format(now);
+		model.addAttribute("totalCredits", totalCredits);
+		model.addAttribute("cap", cap);
+		model.addAttribute("gstatus",gstatus);
+		model.addAttribute("today", today);
+		ArrayList<CourserunStudent>clist= csrepo.findCourseGradebyId(10006);
+		model.addAttribute("clist", clist);
+		
+		return "mytranscript";
+	}
+
 }

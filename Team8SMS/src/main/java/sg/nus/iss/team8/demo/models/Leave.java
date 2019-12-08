@@ -2,6 +2,8 @@ package sg.nus.iss.team8.demo.models;
 
 import javax.persistence.*;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.*;
 
 @Entity
@@ -12,6 +14,7 @@ public class Leave {
 	
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false, name="enddate")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date endDate;
 	
 	@Column(length = 100, nullable = false)

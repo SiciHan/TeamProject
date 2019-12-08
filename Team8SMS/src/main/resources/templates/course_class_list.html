@@ -18,7 +18,7 @@
 			<ul class="nav nav-pills">
 				<li><a href="faculty_home.html" th:href="@{/faculty/home}" class="glyphicon glyphicon-home"> <span>Home</span></a></li>
 				<li class="active"><a href="faculty_courses.html" th:href="@{/faculty/mycourses}" class="glyphicon glyphicon-list-alt"> <span>Course</span></a></li>
-				<li><a href="http://localhost:8080/faculty/grade" class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
+				<li><a href="http://localhost:8080/faculty/courses" class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
 				<li><a href="#" class="glyphicon glyphicon-stats"> <span>Report</span></a></li>
 				<li><a href="#" class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
 			</ul>
@@ -29,20 +29,38 @@
 		<table class="table table-bordered table-hover">
 			<tbody>
 			<thead>
-				<th>COURSE CODE</th>
-				<th>COURSE NAME</th>
+				<th>STUDENT ID</th>
+				<th>NAME</th>
+				<th>BIRTHDATE</th>
+				<th>DEGREE</th>
+				<th>EMAIL</th>
+				<th>GENDER</th>
+				<th>MOBILE</th>
 				<th>SEMESTER</th>
-				<th>COURSES UNIT</th>
+				<th>STATUS</th>
 			</thead>
-			<tr th:each="c : ${faculty.courseruns}">
-				<td th:text="${c.courseCode}">Course Code</td>
-				<td><a href="course_class_list.html" th:href="@{/faculty/this_course?coursename=} + ${c.courseName}" th:text="${c.courseName}" >Course Name</a></td>
-				<td th:text="${c.semester.semester}">Semester</td>
-				<td th:text="${c.courseUnit}">Course Unit</td>
+			<tr th:each="student : ${students}">
+				<td th:text=${student.studentId}>Id</td>
+				<td th:text=${student.name}>Name</td>
+				<td th:text=${student.birthDate}>DOB</td>
+				<td th:text=${student.degree}>Degree</td>
+				<td th:text=${student.email}>Email</td>
+				<td th:text=${student.gender}>Gender</td>
+				<td th:text=${student.mobile}>Mobile</td>
+				<td th:text=${student.semester.label}>Semester</td>
+				<td th:text=${student.status.label}>Status</td>
 			</tr>
 			</tbody>
 		</table>
-		</div>
+	</div>
+	
+	<div class="col-md-12">
+		<ul class="nav nav-pills">
+			<li><a th:href="@{/faculty/downloadCSV/classlist?coursename=} + ${coursename}" class="glyphicon glyphicon-print"><span>Export</span></a></li>
+			
+			<li><a th:href="@{/email/send?coursename=} + ${coursename}" class="glyphicon glyphicon-envelope"><span>Announcement</span></a></li>
+		</ul>
+	</div>
 	</div>
 	<div th:insert="~{home :: copy}">Copy</div>
 </body>
