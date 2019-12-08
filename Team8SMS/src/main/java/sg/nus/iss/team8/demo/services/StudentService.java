@@ -41,5 +41,9 @@ public interface StudentService {
 	void removeStudent(Student student);
 	
 	ArrayList<Student> findStudentsByCourseName(String courseName);
+	
+	public double totalScorePoints(int studentid);
+	public int totalCredits(int studentid);
+	public String graduationStatus(int studentid);
 
 }

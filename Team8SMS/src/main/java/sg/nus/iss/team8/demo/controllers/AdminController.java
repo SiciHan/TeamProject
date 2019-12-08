@@ -118,8 +118,8 @@ public class AdminController {
 		aService.deleteFaculty(f);
 		return "redirect:/facultymanagement";
 	}
-	
-	//Willis 7th Dec
+
+	// Willis 7th Dec
 	public static final String CURRENTSEMESTER = "AY2019/2020Sem2";
 
 	@GetMapping("/administrator")
@@ -138,14 +138,14 @@ public class AdminController {
 		Page<Student> studentPage = aService.pageAllStudents(PageRequest.of(currentPage - 1, pageSize));
 
 		model.addAttribute("studentPage", studentPage);
-		
+
 		int totalPages = studentPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-        
-        return "studentmanagement";
+		if (totalPages > 0) {
+			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+			model.addAttribute("pageNumbers", pageNumbers);
+		}
+
+		return "studentmanagement";
 	}
 
 	@GetMapping("/addstudent")
@@ -166,7 +166,7 @@ public class AdminController {
 		}
 
 		aService.saveStudent(student);
-		//Willis 7th Dec
+		// Willis 7th Dec
 		return "redirect:/studentmanagement";
 	}
 
@@ -181,9 +181,10 @@ public class AdminController {
 	public String deleteStudent(Model model, @PathVariable("id") Integer id) {
 		Student student = aService.findStudent(id);
 		aService.removeStudent(student);
-		//Willis 7th Dec
+		// Willis 7th Dec
 		return "redirect:/studentmanagement";
 	}
+
 	@GetMapping("/courseapplication")
 	public String listPendingCourseApplications(Model model, @RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size) {
@@ -193,33 +194,53 @@ public class AdminController {
 		Page<CourserunStudent> pendingPage = aService.pagePendingStudents(PageRequest.of(currentPage - 1, pageSize));
 
 		model.addAttribute("pendingPage", pendingPage);
-		
+
 		int totalPages = pendingPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pendingPageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
-            model.addAttribute("pendingPageNumbers", pendingPageNumbers);
-        }
-        
-        return "courseapplication";
+		if (totalPages > 0) {
+			List<Integer> pendingPageNumbers = IntStream.rangeClosed(1, totalPages).boxed()
+					.collect(Collectors.toList());
+			model.addAttribute("pendingPageNumbers", pendingPageNumbers);
+		}
+
+		return "courseapplication";
 	}
-	
+
 	@GetMapping("/{acceptOrReject}/{id}/{courseCode}/{semesterid}")
-	public String rejectCourseApplication(@PathVariable(name="acceptOrReject") String acceptOrReject,
-			@PathVariable(name="id") int id, 
-			@PathVariable(name="courseCode") String courseCode,
-			@PathVariable(name="semesterid") int semesterid) {
-		
+	public String rejectCourseApplication(@PathVariable(name = "acceptOrReject") String acceptOrReject,
+			@PathVariable(name = "id") int id, @PathVariable(name = "courseCode") String courseCode,
+			@PathVariable(name = "semesterid") int semesterid) {
+
 		int status;
-		if(acceptOrReject.equalsIgnoreCase("acceptcourse")) {
+		if (acceptOrReject.equalsIgnoreCase("acceptcourse")) {
 			status = 8; // 8 -> Undergoing
 		} else {
 			status = 7; // 7 -> Rejected
 		}
-		aService.setCourserunStudentStatus(id,courseCode,semesterid, status);
-		return "redirect:/administrator/courseapplication";
+		aService.setCourserunStudentStatus(id, courseCode, semesterid, status);
+		return "redirect:/courseapplication";
 	}
-	
-	//Willis 7th Dec
+
+	@GetMapping("/courserunmanagement")
+	public String listCourseruns(Model model, @RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size) {
+		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(5);
+
+
+		Page<Courserun> courserunPage = aService.pageCourserun(PageRequest.of(currentPage - 1, pageSize));
+
+		model.addAttribute("courserunPage", courserunPage);
+		
+		int totalPages = courserunPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> courserunPageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+            model.addAttribute("courserunPageNumbers", courserunPageNumbers);
+        }
+        
+        return "courserunmanagement";
+	}
+
+	// Willis 7th Dec
 	@GetMapping("/leaveapplication")
 	public String leaveApplication(Model model) {
 		ArrayList<Leave> llist = new ArrayList<Leave>();
@@ -227,7 +248,7 @@ public class AdminController {
 		model.addAttribute("leaves", llist);
 		return "leaveapplication";
 	}
-	
+
 	@PostMapping("/approveleave")
 	public String approveLeaveApplication(@Valid Leave leave, BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
@@ -235,11 +256,75 @@ public class AdminController {
 		aService.approveLeave(leave);
 		return "redirect:/leaveapplication";
 	}
-	
+
+	@GetMapping("/addcourserun")
+	public String showAddCourseForm(Model model) {
+		Courserun course = new Courserun();
+		Semester currentSemester = aService.currentSemester();
+		ArrayList<Faculty> flist = aService.findAllFaculty();
+		model.addAttribute("flist", flist);
+		model.addAttribute("course", course);
+		model.addAttribute("currentSemester", currentSemester);
+
+		String longSemLabel = currentSemester.getLabel();
+		String shortSemLabel = concatSemester(longSemLabel);
+		model.addAttribute("shortSemLabel", shortSemLabel);
+
+		return "courserunform";
+	}
+
 	@PostMapping("/rejectleave")
 	public String rejectLeaveApplication(@ModelAttribute Leave leave) {
 		aService.rejectLeave(leave);
 		return "redirect:/leaveapplication";
 	}
 
+	private String concatSemester(String longSemLabel) {
+		String s1 = longSemLabel.substring(0, 2);
+		String s2 = longSemLabel.substring(4, 7);
+		String s3 = longSemLabel.substring(9, 12);
+		String s4 = longSemLabel.substring(14);
+
+		return s1 + s2 + s3 + s4;
+	}
+
+	@PostMapping("/savecourserun")
+	public String saveCourserun(@Valid @ModelAttribute Courserun course, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "courserunform";
+		}
+
+		aService.saveCourserun(course);
+		return "redirect:/courserunmanagement";
+	}
+
+	@GetMapping("/editcourserun/{courseCode}/{semesterid}")
+	public String showCourserunEditForm(Model model, @PathVariable(name = "courseCode") String courseCode,
+			@PathVariable(name = "semesterid") int semesterid) {
+		Courserun course = aService.findCourserun(courseCode, semesterid);
+		ArrayList<Faculty> flist = aService.findAllFaculty();
+		model.addAttribute("flist", flist);
+		model.addAttribute("course", course);
+		return "courserunform";
+	}
+
+	@GetMapping("/deletecourserun/{courseCode}/{semesterid}")
+	public String deleteCourserun(Model model, @PathVariable(name = "courseCode") String courseCode,
+			@PathVariable(name = "semesterid") int semesterid) {
+		Courserun course = aService.findCourserun(courseCode, semesterid);
+		aService.removeCourserun(course);
+		return "redirect:/courserunmanagement";
+	}
+
+	@GetMapping("/viewcourserun/{courseCode}/{semesterid}")
+	public String viewCourserun(Model model, @PathVariable(name = "courseCode") String courseCode,
+			@PathVariable(name = "semesterid") int semesterid) {
+		Courserun course = aService.findCourserun(courseCode, semesterid);
+		ArrayList<CourserunStudent> studentsPerCourse = aService.findStudentsByCourseName(course.getCourseName());
+
+		model.addAttribute("course", course);
+		model.addAttribute("studentsPerCourse", studentsPerCourse);
+
+		return "viewcourserun";
+	}
 }
