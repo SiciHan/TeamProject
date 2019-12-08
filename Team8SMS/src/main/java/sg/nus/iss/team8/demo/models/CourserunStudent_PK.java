@@ -15,6 +15,8 @@ public class CourserunStudent_PK implements Serializable {
 	@JoinColumn(name = "coursename")
 	private Courserun courserun;
 
+
+
 	@Override
 	public int hashCode() {
 		return super.hashCode();
@@ -56,6 +58,16 @@ public class CourserunStudent_PK implements Serializable {
 
 	public void setCourserun(Courserun courserun) {
 		this.courserun = courserun;
+	}
+	@Override
+	public String toString() {
+		//what you are going to print in the report
+		return this.courserun.getCourseName()+","
+				+this.student.getStudentId()+","
+				+this.getStudent().getName()+","
+				+this.getStudent().getDegree()+","
+				+this.getStudent().getMobile()+","
+				+this.getStudent().getEmail();
 	}
 	
 }
