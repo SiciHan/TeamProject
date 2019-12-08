@@ -19,10 +19,10 @@
 					<a class="navbar-brand" href="#">Home</a>
 				</div>
 				<ul class="nav navbar-nav">
-					<li><a href="/administrator/studentmanagement">Student
+					<li><a href="/studentmanagement">Student
 							Management</a></li>
-					<li><a href="/administrator/courseapplication">Course Application</a></li>
-					<li class="active"><a href="/administrator/courserunmanagement">Course Management</a></li>
+					<li><a href="/courseapplication">Course Application</a></li>
+					<li class="active"><a href="/courserunmanagement">Course Management</a></li>
 					<li><a href="#">Page 3</a></li>
 				</ul>
 			</div>
@@ -34,7 +34,7 @@
 			<span th:if="${course.courseName == null}">Add Course</span> 
 			<span th:unless="${course.courseName == null}">Edit Course</span>
 		</h2>
-		<form th:object="${course}" th:action="@{/administrator/savecourserun}"
+		<form th:object="${course}" th:action="@{/savecourserun}"
 			method="post" 
 			oninput="courseName.value = courseNameNoSem.value + ' ' + shortSemLabel.value">
 			<div class="form-inline">

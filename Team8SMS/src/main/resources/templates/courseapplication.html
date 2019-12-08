@@ -18,9 +18,9 @@
 					<a class="navbar-brand" href="#">Home</a>
 				</div>
 				<ul class="nav navbar-nav">
-					<li><a href="/administrator/studentmanagement">Student
+					<li><a href="/studentmanagement">Student
 							Management</a></li>
-					<li class="active"><a href="/administrator/courseapplication">Course Application</a></li>
+					<li class="active"><a href="/courseapplication">Course Application</a></li>
 					<li><a href="#">Page 2</a></li>
 					<li><a href="#">Page 3</a></li>
 				</ul>
@@ -33,7 +33,7 @@
 		<div class="col-md-12">
 			<div th:if="${pendingPage.totalPages > 0}" class="pagination"
    				 th:each="pendingPageNumber : ${pendingPageNumbers}">
-			    <a th:href="@{/administrator/courseapplication(size=${pendingPage.size}, page=${pendingPageNumber})}"
+			    <a th:href="@{/courseapplication(size=${pendingPage.size}, page=${pendingPageNumber})}"
 		        	th:text=${pendingPageNumber}
 			        th:class="${pendingPageNumber==pendingPage.number + 1} ? active"></a>
 			</div>
@@ -49,8 +49,8 @@
 					<td th:text=${pendingStudent.id.courserun.courseName}>Course Name</td>
 					<td th:text=${pendingStudent.id.student.studentId}>Student ID</td>
 					<td th:text=${pendingStudent.id.student.name}>Student Name</td>
-					<td><a th:href="${'/administrator/acceptcourse/' + pendingStudent.id.student.studentId +'/'+ pendingStudent.id.courserun.courseCode+'/'+ pendingStudent.id.courserun.semester.semester}" class="btn btn-success">Approve</a></td>
-					<td><a th:href="${'/administrator/rejectcourse/' + pendingStudent.id.student.studentId +'/'+ pendingStudent.id.courserun.courseCode+'/'+ pendingStudent.id.courserun.semester.semester}" class="btn btn-danger">Reject</a></td>
+					<td><a th:href="${'/acceptcourse/' + pendingStudent.id.student.studentId +'/'+ pendingStudent.id.courserun.courseCode+'/'+ pendingStudent.id.courserun.semester.semester}" class="btn btn-success">Approve</a></td>
+					<td><a th:href="${'/rejectcourse/' + pendingStudent.id.student.studentId +'/'+ pendingStudent.id.courserun.courseCode+'/'+ pendingStudent.id.courserun.semester.semester}" class="btn btn-danger">Reject</a></td>
 				</tbody>
 			</table>
 		</div>

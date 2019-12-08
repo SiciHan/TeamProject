@@ -19,10 +19,10 @@
 					<a class="navbar-brand" href="#">Home</a>
 				</div>
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="/administrator/studentmanagement">Student
+					<li class="active"><a href="/studentmanagement">Student
 							Management</a></li>
-					<li><a href="/administrator/courseapplication">Course Application</a></li>
-					<li><a href="/administrator/courserunmanagement">Course Management</a></li>
+					<li><a href="/courseapplication">Course Application</a></li>
+					<li><a href="/courserunmanagement">Course Management</a></li>
 					<li><a href="#">Page 3</a></li>
 				</ul>
 			</div>
@@ -35,7 +35,7 @@
 				th:unless="${student.name == null}">Edit Student</span>
 		</h2>
 
-		<form th:object="${student}" th:action="@{/administrator/savestudent}"
+		<form th:object="${student}" th:action="@{/savestudent}"
 			method="post">
 			<div class="form-group">
 				<label for="studentId">Student ID</label> 
