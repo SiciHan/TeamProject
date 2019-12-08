@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Faculty;
 import sg.nus.iss.team8.demo.models.Semester;
@@ -40,4 +41,16 @@ public interface AdminService {
 	Page<CourserunStudent> pagePendingStudents(Pageable pageable);
 	
 	void setCourserunStudentStatus(int id, String courseCode, int semesterid, int status);
+	
+	Page<Courserun> pageCourserun(Pageable pageable);
+
+	Courserun findCourserun(String courseCode, int semesterid);
+
+	Courserun saveCourserun(Courserun course);
+
+	void removeCourserun(Courserun course);
+
+	ArrayList<CourserunStudent> findStudentsByCourseName(String courseName);
+
+	
 }

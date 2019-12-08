@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Student Form</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Home</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li><a href="/administrator/studentmanagement">Student
+							Management</a></li>
+					<li><a href="/administrator/courseapplication">Course Application</a></li>
+					<li class="active"><a href="/administrator/courserunmanagement">Course Management</a></li>
+					<li><a href="#">Page 3</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	<br />
+	<div class="container">
+		<h2>
+			<span th:if="${course.courseName == null}">Add Course</span> 
+			<span th:unless="${course.courseName == null}">Edit Course</span>
+		</h2>
+		<form th:object="${course}" th:action="@{/administrator/savecourserun}"
+			method="post" 
+			oninput="courseName.value = courseNameNoSem.value + ' ' + shortSemLabel.value">
+			<div class="form-inline">
+				<label for="courseName">Course Name</label> 
+				<span th:if="${course.courseName == null}"> 
+					<input type="text" name="courseNameNoSem" class="form-control" required>
+					<input type="hidden" th:value="${currentSemester.semester}" name="semester.semester" id="semester.semester" readonly> 
+					<input type="text" th:value="${shortSemLabel}" name="shortSemLabel" class="form-control" readonly>
+					<input type="hidden" th:field="*{courseName}">
+				</span> 
+				<span th:unless="${course.courseName == null}"> 
+					<input type="text" th:field="*{courseName}" class="form-control" readonly>
+						<!-- <p th:if="${#fields.hasErrors('courseName')}" th:errors="*{courseName}" class="alert alert-danger"></p> -->
+					<input type="hidden" th:field="*{semester.semester}" readonly> 
+					<!-- <input type="text" th:field="*{semester.label}" class="form-control" readonly> -->
+				</span>
+			</div>
+			<div class="form-group">
+				<label for="courseCode">Course Code</label>
+				<input type="text" th:field="*{courseCode}" class="form-control" required>
+			</div>
+			<div class="form-group">
+				<label for="facultyId">Faculty ID</label>
+				<select th:field="*{faculty.facultyId}" class="form-control">
+					<option th:each="f : ${flist}" th:value="${f.facultyId}" th:text="${f.name}"></option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="courseUnit">Course Units</label>
+				<input type="text" th:field="*{courseUnit}" class="form-control" required>
+			</div>
+			<div>
+				<button type="submit" class="btn btn-primary">Save</button>
+			</div>
+		</form>
+	</div>
+
+</body>
+</html>
