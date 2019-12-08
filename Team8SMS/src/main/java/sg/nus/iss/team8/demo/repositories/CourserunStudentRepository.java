@@ -1,5 +1,6 @@
 package sg.nus.iss.team8.demo.repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,4 +25,15 @@ public interface CourserunStudentRepository extends JpaRepository<CourserunStude
 
 	  @Query("select course from CourserunStudent course where course.status.status= :status") 
 	  public List<CourserunStudent> findCourseByStatus(@Param("status") Integer status);
+	  
+	  		// SH
+		  @Query("Select c From CourserunStudent c where c.id.student.studentId=?1 and (c.status.status=6 or c.status.status=8)")
+		  public ArrayList<CourserunStudent>findCourseById(int studentid);
+		  // SH
+		  @Query("Select c from CourserunStudent c where c.id.student.studentId=?1 and c.status.status=9")
+		  public ArrayList<CourserunStudent>findCourseGradebyId(int studentid);
+		  
+		  //SH
+		  @Query("Select c from CourserunStudent c where c.id.student.studentId=?1")
+		  public CourserunStudent findStudentNamebyId(int studentid);
 }
