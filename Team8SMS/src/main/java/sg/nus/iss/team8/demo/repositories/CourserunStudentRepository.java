@@ -1,5 +1,6 @@
 package sg.nus.iss.team8.demo.repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.CourserunStudent_PK;
+import sg.nus.iss.team8.demo.models.Student;
 
 @Repository
 public interface CourserunStudentRepository extends JpaRepository<CourserunStudent,CourserunStudent_PK>{
@@ -27,4 +29,8 @@ public interface CourserunStudentRepository extends JpaRepository<CourserunStude
 
 	  @Query("select course from CourserunStudent course where course.id.courserun.courseName=:coursename")
 	  public List<CourserunStudent> findAllByCourserun(@Param("coursename") String coursename);
+	  
+	  @Query("select crs from CourserunStudent crs where crs.id.courserun.courseName = ?1")
+	  public ArrayList<CourserunStudent> findStudentsByCourseName(String name);
+
 }

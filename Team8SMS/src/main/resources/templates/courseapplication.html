@@ -18,9 +18,9 @@
 					<a class="navbar-brand" href="#">Home</a>
 				</div>
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="/administrator/studentmanagement">Student
+					<li><a href="/administrator/studentmanagement">Student
 							Management</a></li>
-					<li><a href="/administrator/courseapplication">Course Application</a></li>
+					<li class="active"><a href="/administrator/courseapplication">Course Application</a></li>
 					<li><a href="#">Page 2</a></li>
 					<li><a href="#">Page 3</a></li>
 				</ul>
@@ -37,7 +37,6 @@
 		        	th:text=${pendingPageNumber}
 			        th:class="${pendingPageNumber==pendingPage.number + 1} ? active"></a>
 			</div>
-			<br/>
 			<table class="table table-hover">
 				<tbody>
 					<thead>
