@@ -50,9 +50,12 @@ public class FacultyController {
 		return "class_list";
 	}
 	
-	@GetMapping("/score_card")
-	public String getScore() {
-		return "score_card";
+	@GetMapping("/grade")
+	public String getGrade(Model model) {		
+		ArrayList<Courserun> courseruns = fservice.findAllCourseruns();
+		model.addAttribute("courseruns", courseruns);
+		return "faculty_grade";
+		
 	}
 	
 	@GetMapping("/movement")

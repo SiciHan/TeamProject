@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -31,27 +31,12 @@
 		</div>
 	</div>
 	<div class="row"style="margin: 20px">
-		<div class="col-md-4">
-			<div class="col-sm-3"><label for="Choose_Semester" class="col-form-label">Semester</label></div>
-			<div class="col-sm-8"><select id="form_semester" name="dob_semester">
+		<div class="col-md-7">
+			<div class="col-sm-2"><label for="Choose_Courses" class="col-form-label">Courses:</label></div>
+			<div class="col-sm-9">
+			<select id="form_Courses" name="dob_Courses">
 				<option value="-">-</option>
-				<option value="1">AY2017/2018Sem1</option>
-				<option value="2">AY2017/2018Sem2</option>
-				<option value="3">AY2018/2019Sem1</option>
-				<option value="4">AY2019/2020Sem1</option>
-				<option value="5">AY2019/2020Sem2</option>
-			</select>
-			</div>
-		</div>
-		<div class="col-md-8">
-			<div class="col-sm-1"><label for="Choose_courserun"  class="col-form-label">Course</label></div>
-			<div class="col-sm-7"><select id="form_semester" name="dob_semester">
-			<option value="-">-</option>
-			<option value="1">[CCE01]/Chemical Engineering AY17/18S1</option>
-			<option value="2">[ITDL01]/Digital Leadership AY17/18S1</option>
-			<option value="3">[ITIS01]/Information System AY18/19S1</option>
-			<option value="4">[CIS02]/Intelligent System AY19/20S2</option>
-			<option value="5">[MME01]/Manufacturing Engineering AY17/18S1</option>
+				<option th:each="courserun:${courseruns}" th:value="${courserun.courseName}" th:text="'['+${courserun.courseCode}+']/'+${courserun.courseName}">
 			</select>
 			</div>
 		</div>

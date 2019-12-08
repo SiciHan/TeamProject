@@ -4,7 +4,9 @@ package sg.nus.iss.team8.demo.services;
 import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 
+import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.Faculty;
+import sg.nus.iss.team8.demo.models.Semester;
 @Service
 public interface FacultyService {
 
@@ -13,6 +15,9 @@ public interface FacultyService {
 	Faculty findFacultyByName(String name);
 	void deleteFaculty(Faculty f);
 	Faculty saveFaculty(Faculty f);
+	
+	ArrayList<Semester> findAllSemesters();
+	ArrayList<Courserun> findAllCourseruns();
 }
 
 
