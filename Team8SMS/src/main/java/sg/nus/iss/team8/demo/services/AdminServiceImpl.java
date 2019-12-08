@@ -2,6 +2,7 @@ package sg.nus.iss.team8.demo.services;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Comparator;
 import java.util.List;
 
@@ -15,8 +16,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import sg.nus.iss.team8.demo.models.CourserunStudent;
+import sg.nus.iss.team8.demo.models.Department;
 import sg.nus.iss.team8.demo.models.Faculty;
+import sg.nus.iss.team8.demo.models.Leave;
+import sg.nus.iss.team8.demo.models.Leave_PK;
 import sg.nus.iss.team8.demo.models.Semester;
+import sg.nus.iss.team8.demo.models.Status;
 import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.repositories.CourserunRepository;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
@@ -190,6 +195,34 @@ public class AdminServiceImpl implements AdminService {
 	public void setCourserunStudentStatus(int id, String courseCode, int semesterid, int status) {
 		String coursename=courserunRepository.findByCourseCodeAndSemester(courseCode, semesterRepository.getOne(semesterid)).getCourseName();
 		courserunStudentRepository.setStatus(id,coursename,status);
+	}
+	
+	//Willis 7th Dec
+	@Override
+	public ArrayList<Status> findAllStatuses(){
+		return (ArrayList<Status>)statusRepository.findAll();
+	}
+	@Override
+	public ArrayList<Department> findAllDepartments(){
+		return (ArrayList<Department>)departmentRepository.findAll();
+	}
+	@Override
+	public ArrayList<Leave> findAllLeave() {
+		ArrayList<Leave> listleave = (ArrayList<Leave>) leaveRepository.findAll();
+		return listleave;
+	}
+	@Override
+	public Leave findLeave(Leave_PK id) {
+		return leaveRepository.findById(id).orElse(null);
+	}
+	@Override
+	public void approveLeave(Leave leave) {
+		leaveRepository.setStatus(leave.getId(), 6);
+//		leaveRepository.save(leave);
+	}
+	@Override
+	public void rejectLeave(Leave leave) {
+		leaveRepository.setStatus(leave.getId(), 7);
 	}
 
 }
