@@ -1,6 +1,9 @@
 package sg.nus.iss.team8.demo.models;
 
 import javax.persistence.*;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,6 +13,7 @@ public class Leave_PK implements Serializable {
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name="startdate")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date startDate;
 	
 	@Column(length = 50, name="usertype")

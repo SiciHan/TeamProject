@@ -8,7 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import sg.nus.iss.team8.demo.models.*;
 import sg.nus.iss.team8.demo.services.*;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.*;
 
@@ -17,10 +21,26 @@ import org.springframework.beans.factory.annotation.*;
 //@SessionAttributes("user")
 public class FacultyController {
 	private FacultyService fservice;
-	
+	private StudentService sservice;
+	private GenerateReportService grs;
+
+	public GenerateReportService getGrs() {
+		return grs;
+	}
+
+	@Autowired
+	public void setGrs(GenerateReportService grs) {
+		this.grs = grs;
+	}
+
 	@Autowired
 	public void setFacultyService(FacultyServiceImplementation fservice) {
 		this.fservice = fservice;
+	}
+	
+	@Autowired
+	public void setStudentService(StudentServiceImplementation sservice) {
+		this.sservice = sservice;
 	}
 	
 	@GetMapping("/home")
@@ -38,16 +58,14 @@ public class FacultyController {
 		return "faculty_courses";
 	}
 	
-	@GetMapping("/mycourses/this_course/{coursename}")
-	public String getCourse(Model model, @PathVariable("coursename") String coursename) {
-		
-		return "faculty_specific_course";
-	}
-	
-	@GetMapping("/mycourses/this_course/class_list")
-	public String getClassList() {
-		
-		return "class_list";
+	@GetMapping("/this_course")
+	public String getThisCourse(Model model, @RequestParam("coursename") String coursename) {
+		ArrayList<Student> students = sservice.findStudentsByCourseName(coursename);
+		model.addAttribute("students", students);
+		Faculty faculty = fservice.findFacultyById(102);
+		model.addAttribute("faculty", faculty);
+		model.addAttribute("coursename", coursename);
+		return "course_class_list";
 	}
 	
 	@GetMapping("/score_card")
@@ -71,8 +89,22 @@ public class FacultyController {
 	
 	@PostMapping("/createleave")
 	public String createLeave(@ModelAttribute("leave") Leave leave) {
+		//leave.setStatus(status);
 		
 		return "redirect:/faculty/home";
 	}
-	
+
+
+	@RequestMapping("/downloadCSV/classlist")
+	public void downloadCSV(HttpServletRequest request, HttpServletResponse response,
+			@ModelAttribute("courserunname") String courserunname) throws IOException {
+		// create a list of object
+		List<CourserunStudent> list = null;
+		if (courserunname == null || courserunname.isEmpty()) {
+			courserunname="Digital Leadership AY17/18S1";//hardcoded to this course for testing purpose
+		}
+		list = fservice.findAllStudents(courserunname);
+		String[] headers=new String[]{"Course Name","Student ID", "Name","Degree","Mobile","Email","Grade","Status"};
+		grs.ExportCSV(request, response, list, headers);
+	}
 }

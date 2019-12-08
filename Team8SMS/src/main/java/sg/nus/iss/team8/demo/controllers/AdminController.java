@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Department;
 import sg.nus.iss.team8.demo.models.Faculty;
@@ -40,7 +41,6 @@ import sg.nus.iss.team8.demo.services.AdminServiceImpl;
 import sg.nus.iss.team8.demo.services.FacultyService;
 import sg.nus.iss.team8.demo.services.FacultyServiceImplementation;
 import sg.nus.iss.team8.demo.services.StudentService;
-
 
 @Controller
 public class AdminController {
@@ -56,7 +56,7 @@ public class AdminController {
 	@InitBinder
 	private void initUserBinder(WebDataBinder binder) {
 	}
-	
+
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 //		binder.addValidators(studentValidator);
@@ -76,7 +76,7 @@ public class AdminController {
 	public String addFaculty(Model model) {
 		ArrayList<Faculty> flist = new ArrayList<Faculty>();
 		flist.addAll(aService.findAllFaculty());
-		//Willis 7thDec
+		// Willis 7thDec
 		ArrayList<Status> slist = new ArrayList<Status>();
 		ArrayList<Department> dlist = new ArrayList<Department>();
 		slist.addAll(aService.findAllStatuses());
@@ -102,7 +102,7 @@ public class AdminController {
 	public String editFaculty(Model model, @PathVariable("id") Integer id) {
 		Faculty f = aService.findFacultyById(id);
 		model.addAttribute("faculty", f);
-		//Willis 7th Dec
+		// Willis 7th Dec
 		ArrayList<Status> slist = new ArrayList<Status>();
 		ArrayList<Department> dlist = new ArrayList<Department>();
 		slist.addAll(aService.findAllStatuses());
@@ -155,8 +155,7 @@ public class AdminController {
 		Semester currentSemester = aService.currentSemester();
 		model.addAttribute("student", student);
 		model.addAttribute("newStudentId", newStudentId);
-		model.addAttribute("currentSemester", currentSemester);		Student student = new Student();
-		model.addAttribute("student", student);
+		model.addAttribute("currentSemester", currentSemester);
 		return "studentform";
 	}
 
