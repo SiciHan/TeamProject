@@ -213,6 +213,7 @@ public class StudentServiceImplementation implements StudentService {
 	public ArrayList<Student> findStudentsByCourseName(String courseName) {
 		return (ArrayList<Student>) studentRepository.findStudentsByCourseName(courseName);
 	}
+
 	
 	@Override
 	public int totalCredits(int studentid) {
@@ -273,4 +274,5 @@ public class StudentServiceImplementation implements StudentService {
 		return sum;
 	}
 	
+
 }

@@ -7,7 +7,6 @@
 <title>Staff Login</title>
 </head>
 <body>
-<div th:insert="~{home :: home}">Home</div>
 	<h1>Staff Login Page</h1>
 
 	<form th:object="${user}" th:action="@{/authenticate}" method="post"

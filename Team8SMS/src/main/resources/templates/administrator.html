@@ -4,9 +4,33 @@
 <meta charset="ISO-8859-1">
 <title>Administrator's Page</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 <body>
+	<div>
 	<h1>Admin's page</h1>
+	<p>Current Semester: <span th:text="${currentsemester}"></span></p>
+	</div>
+	<div>
+		<nav class="navbar navbar-default">
+  			<div class="container-fluid">
+    			<div class="navbar-header">
+      				<p class="navbar-brand" href="#"></a>
+    			</div>
+    			<ul class="nav navbar-nav">
+      				<li class="active"><a href="#">Home</a></li>
+      				<li><a href="#">Course Management</a></li>
+      				<li><a href="#">Department Management</a></li>
+      				<li><a href="facultymanagement.html" th:href="@{/facultymanagement}">Faculty Management</a></li>
+      				<li><a href="studentmanagement.html" th:href="@{/studentmanagement}">Student Management</a></li>
+      				<li><a href="#">Course Application</a></li>
+      				<li><a href="leaveapplication.html" th:href="@{/leaveapplication}">Leave Application</a></li>
+      				<li><a href="#">Logout</a></li>
+    			</ul>
+  			</div>
+		</nav>
+	</div>
 </body>
 </html>

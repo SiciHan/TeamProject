@@ -38,6 +38,11 @@ public class HomeController {
 	public String getHome() {
 		return "index";
 	}
+	
+	@GetMapping("/home")
+	public String testHome() {
+		return "home";
+	}
 
 	@GetMapping("/login/student")
 	public String getStudentLoginPage(Model model) {

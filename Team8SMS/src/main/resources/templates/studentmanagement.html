@@ -19,8 +19,8 @@
 					<a class="navbar-brand" href="#">Home</a>
 				</div>
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="/administrator/studentmanagement">Student Management</a></li>
-					<li><a href="/administrator/courseapplication">Course Application</a></li>
+					<li class="active"><a href="administrator.html" th:href="@{/administrator}">Home</a></li>
+					<li><a href="/courseapplication">Course Application</a></li>
 					<li><a href="#">Page 2</a></li>
 					<li><a href="#">Page 3</a></li>
 				</ul>
@@ -33,12 +33,12 @@
 
 	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
-			<a class="btn btn-primary" href="studentform.html" th:href="@{/administrator/addstudent}" role="button">Add
+			<a class="btn btn-primary" href="studentform.html" th:href="@{/addstudent}" role="button">Add
 				Student</a>
 			<br/>
 			<div th:if="${studentPage.totalPages > 0}" class="pagination"
    				 th:each="pageNumber : ${pageNumbers}">
-			    <a th:href="@{/administrator/studentmanagement(size=${studentPage.size}, page=${pageNumber})}"
+			    <a th:href="@{/studentmanagement(size=${studentPage.size}, page=${pageNumber})}"
 		        	th:text=${pageNumber}
 			        th:class="${pageNumber==studentPage.number + 1} ? active"></a>
 			</div>
@@ -73,10 +73,10 @@
 				th:href="@{/product/edit/}+${product.id}"> Enrolled Courses </a></td>-->
 					<td><a href="#"> Courses </a></td>
 					<td><a href="#"
-						th:href="@{/administrator/editstudent/}+${student.studentId}">
+						th:href="@{/editstudent/}+${student.studentId}">
 							Edit </a></td>
 					<td><a href="#"
-						th:href="@{/administrator/deletestudent/}+${student.studentId}">
+						th:href="@{/deletestudent/}+${student.studentId}">
 							Delete </a></td>
 				</tr>
 				</tbody>
