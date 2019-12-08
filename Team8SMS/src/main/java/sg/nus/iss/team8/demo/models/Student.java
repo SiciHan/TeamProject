@@ -131,6 +131,20 @@ public class Student {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+
+	@Override
+	public String toString() {
+		return this.studentId + ","
+				+ this.name + "," 
+				+ this.gender + ","
+				+ this.birthDate + ","
+				+ this.degree + ","
+				+ this.address + ","
+				+ this.mobile + ","
+				+ this.email + ","
+				+ this.semester.getLabel() + ","
+				+ this.status.getLabel();
+	}
 	
 	
 

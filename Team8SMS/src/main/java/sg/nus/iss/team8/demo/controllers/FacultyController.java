@@ -103,14 +103,15 @@ public class FacultyController {
 
 	@RequestMapping("/downloadCSV/classlist")
 	public void downloadCSV(HttpServletRequest request, HttpServletResponse response,
-			@ModelAttribute("courserunname") String courserunname) throws IOException {
+			@RequestParam("coursename") String coursename) throws IOException {
 		// create a list of object
-		List<CourserunStudent> list = null;
-		if (courserunname == null || courserunname.isEmpty()) {
-			courserunname="Digital Leadership AY17/18S1";//hardcoded to this course for testing purpose
-		}
-		list = fservice.findAllStudents(courserunname);
-		String[] headers=new String[]{"Course Name","Student ID", "Name","Degree","Mobile","Email","Grade","Status"};
-		grs.ExportCSV(request, response, list, headers);
+		List<Student> students = sservice.findStudentsByCourseName(coursename);
+//		for(Student s:students) {
+//			System.out.println(s);
+//		}
+		
+
+		String[] headers=new String[]{"Student ID","Name", "Gender","Birth Date","Degree","Address","Address(2)","Mobile","Email","Semester","Status"};
+		grs.ExportCSV(request, response, students, headers);
 	}
 }

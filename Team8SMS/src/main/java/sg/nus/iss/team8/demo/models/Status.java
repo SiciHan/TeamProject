@@ -78,5 +78,10 @@ public class Status {
 		this.courserunstudents = courserunstudents;
 	}
 
+	@Override
+	public String toString() {
+		return "Status [status=" + status + "]";
+	}
+
 	
 }
