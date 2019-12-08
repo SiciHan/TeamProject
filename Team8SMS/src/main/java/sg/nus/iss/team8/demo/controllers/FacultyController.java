@@ -7,28 +7,39 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import sg.nus.iss.team8.demo.models.*;
+import sg.nus.iss.team8.demo.services.*;
 import java.util.ArrayList;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.*;
 
 @Controller
 @RequestMapping("/faculty")
-@SessionAttributes("faculty")
+//@SessionAttributes("user")
 public class FacultyController {
+	private FacultyService fservice;
+	
+	@Autowired
+	public void setFacultyService(FacultyServiceImplementation fservice) {
+		this.fservice = fservice;
+	}
+	
 	@GetMapping("/home")
-	public String getHomePage(Model model, @SessionAttribute("faculty") Faculty faculty) {
+	public String getHomePage(Model model/*, @SessionAttribute("user") UserSession user*/) {
+		Faculty faculty = fservice.findFacultyById(102);
 		model.addAttribute("faculty", faculty);
+		
 		return "faculty_home";
 	}
 	
 	@GetMapping("/mycourses")
-	public String getCourses(Model model, @SessionAttribute("faculty") Faculty faculty) {
+	public String getCourses(Model model/*, @SessionAttribute("faculty") Faculty faculty*/) {
+		Faculty faculty = fservice.findFacultyById(102);
 		model.addAttribute("faculty", faculty);
 		return "faculty_courses";
 	}
 	
-	@GetMapping("/mycourses/this_course")
-	public String getCourse(Model model, @RequestParam("coursename") String coursename) {
+	@GetMapping("/mycourses/this_course/{coursename}")
+	public String getCourse(Model model, @PathVariable("coursename") String coursename) {
 		
 		return "faculty_specific_course";
 	}
@@ -50,8 +61,18 @@ public class FacultyController {
 	}
 	
 	@GetMapping("/applyleave")
-	public String getLeave() {
-		return "faculty_apply_leave";
+	public String getLeave(Model model) {
+		Leave leave = new Leave();
+		model.addAttribute("leave", leave);
+		Faculty faculty = fservice.findFacultyById(102);
+		model.addAttribute("faculty", faculty);
+		return "faculty_leave";
+	}
+	
+	@PostMapping("/createleave")
+	public String createLeave(@ModelAttribute("leave") Leave leave) {
+		
+		return "redirect:/faculty/home";
 	}
 	
 }

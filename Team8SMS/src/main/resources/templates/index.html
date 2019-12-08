@@ -14,91 +14,17 @@
 </head>
 <body data-spy="scroll" data-target="#scroll-spy">
 
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {margin:0;}
-
-.navbar {
-  display:none
-  min-width: 17rem;
-  width: 17rem;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
-  transition: all 0.4s; 
-}
-
-
-.navbar:hover  {
-  display: block;
-}
-
-
-.navbar a {
-  float: left;
-  display: block;
-  color: 564f4f;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
-}
-
-.navbar a:hover {
-  background: #ddd;
-  color: black;
-}
-
-.main {
-  padding: 16px;
-  margin-top: 30px;
-  height: 1500px; /* Used in this example to enable scrolling */
-}
-</style>
-</head>
-<body>
-
-</body>
-</html>
-
-	<h1 align="center">Student Management System</h1>
-	<div class="dropdown">
-								<button type="secondary" class="btn btn-secondary">LogIn</Button>
-								<div class="dropdown-content">
-									<a href="scontroller2.html" th:href="@{/login/student}">Student</a> <br />
-									<a href="scontroller2.html" th:href="@{/login/staff}">Staff</a> <br />
-								</div>
-							</div>
-	<div>
-		<nav class="navbar"  id="sidebar">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="http://localhost:8080/home">Team 8</a>
-				</div>
-				<!-- navbar-nav -->
-				<ul class="nav navbar-nav">
-					<li><a href="#home">Home</a></li>
-					<li><a href="#admissions">Admissions</a></li>
-				<li><a href="#education">Education</a></li>
-				<li><a href="#Research">Research</a></li>
-				</ul>
-				<!-- /.navbar-nav -->
-			</div>
-		</nav>
+	<div th:fragment="home" class="w3-panel w3-pale-blue w3-card">
+		<div class="w3-container w3-tangerine">
+			<p class="w3-large" align="center">Beautiful Header</p>
+		</div>
 	</div>
 
-<!-- 
 	<div class="w3-container">
-		Navigation - Fixed Top
+		<!-- Navigation - Fixed Top -->
 		<nav class="navbar navbar-fixed-top">
-			<div class="pos-f-t">
-				Brand and toggle get grouped for better mobile display
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
 					<a class="navbar-home" href="#home" role="button"> <svg
 							class="lnr lnr-home">
@@ -113,36 +39,36 @@ body {margin:0;}
 
 				</div>
 
-				Collect the nav links, forms for toggling
+				<!-- Collect the nav links, forms for toggling -->
 				<div class="collapse navbar-collapse" id="scroll-spy">
 
-					navbar-nav
+					<!-- navbar-nav -->
 					<ul class="nav navbar-nav ">
 						<li><a href="#home">Home</a></li>
 						<li><a href="#admissions">Admissions</a></li>
 						<li><a href="#education">Education</a></li>
 						<li><a href="#Research">Research</a></li>
+
+
 						<li>
 							<div class="dropdown">
 								<button type="secondary" class="btn btn-secondary">LogIn</Button>
 								<div class="dropdown-content">
-									<a href="scontroller2.html" th:href="@{/login/student}">Student</a>
-									<br /> <a href="scontroller2.html" th:href="@{/login/staff}">Staff</a>
-									<br />
+									<a href="scontroller2.html" th:href="@{/login/student}">Student</a> <br />
+									<a href="scontroller2.html" th:href="@{/login/staff}">Staff</a> <br />
 								</div>
 							</div>
 						</li>
 					</ul>
-					/.navbar-nav
+					<!-- /.navbar-nav -->
 				</div>
 
 
-				/.navbar-collapse
+				<!-- /.navbar-collapse -->
 			</div>
-			/.container-fluid
+			<!-- /.container-fluid -->
 		</nav>
-		/.fixed navigation
- -->
+		<!-- /.fixed navigation -->
 
 
 		<section id="home">
@@ -160,8 +86,8 @@ body {margin:0;}
 							About Home GETTING READY FOR THE FUTURE At NUS, we pride
 							ourselves as being at the forefront of educational innovation and
 							we have implemented a range of initiatives to prepare our
-							students for the future. Prof Tan Eng Chye NUS President <img
-								src="feature_banner.jpg" class="w3-border w3-padding"
+							students for the future. Prof Tan Eng Chye NUS President 
+							<img src="feature_banner.jpg" class="w3-border w3-padding"
 								alt="Team X" style="max-height: 800px; max-width: 800px">
 					</div>
 					<!-- /.col -->
@@ -201,7 +127,7 @@ body {margin:0;}
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="section-header">Education</div>
-
+						
 						<img src="education.jpg" class="w3-border w3-padding" alt="Team X"
 							style="max-height: 800px; max-width: 800px">
 
@@ -253,9 +179,6 @@ body {margin:0;}
 
 <script>
 	$(document).ready(
-			
-			
-			
 			function() {
 
 			

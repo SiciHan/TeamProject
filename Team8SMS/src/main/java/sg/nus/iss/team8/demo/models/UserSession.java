@@ -1,12 +1,23 @@
 package sg.nus.iss.team8.demo.models;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 import org.springframework.web.context.annotation.SessionScope;
+
+import sg.nus.iss.team8.demo.services.ValidPassword;
 
 @SessionScope
 public class UserSession {
 	
+
+	@NotEmpty(message = "Username is required!")
 	private String name;
+
 	private String role;
+	
+
+	@NotEmpty(message = "Password is needed!")
 	private String password;
 	public UserSession() {
 		super();

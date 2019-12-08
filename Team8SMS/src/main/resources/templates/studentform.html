@@ -16,10 +16,11 @@
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="#">Student Management</a>
+					<a class="navbar-brand" href="#">Home</a>
 				</div>
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Home</a></li>
+					<li class="active"><a href="/administrator/studentmanagement">Student
+							Management</a></li>
 					<li><a href="#">Page 1</a></li>
 					<li><a href="#">Page 2</a></li>
 					<li><a href="#">Page 3</a></li>
@@ -27,54 +28,88 @@
 			</div>
 		</nav>
 	</div>
-	<br/>
-	<h1>Add/Edit Student</h1>
-	
-	<form th:object="${student}" th:action="@{/administrator/savestudent}" method="post">
-		<fieldset>
-			Student ID: <input type="text" th:field="*{studentId}">
-			<p th:if="${#fields.hasErrors('studentId')}" th:errors="*{studentId}"></p>
-		</fieldset>
-		<fieldset>
-			Name: <input type="text" th:field="*{name}">
-			<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
-		</fieldset>
-		<fieldset>
-			Gender: <input type="text" th:field="*{gender}">
-			<p th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></p>
-		</fieldset>
-		<fieldset>
-			Date of Birth: <input type="date" th:type="date" th:field="*{birthDate}"
-			th:value="${#dates.format(student.birthDate, 'yyyy-MM-DD')}">
-			<p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></p>
-		</fieldset>
-		<fieldset>
-			Degree: <input type="text" th:field="*{degree}">
-			<p th:if="${#fields.hasErrors('degree')}" th:errors="*{degree}"></p>
-		</fieldset>
-		<fieldset>
-			Address: <input type="text" th:field="*{address}">
-			<p th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
-		</fieldset>
-		<fieldset>
-			Mobile: <input type="text" th:field="*{mobile}">
-			<p th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}"></p>
-		</fieldset>
-		<fieldset>
-			Email: <input type="text" th:field="*{email}">
-			<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-		</fieldset>
-		<fieldset>
-			Semester: <input type="text" th:field="*{semester.semester}">
-			<p th:if="${#fields.hasErrors('semester.semester')}" th:errors="*{semester.semester}"></p>
-		</fieldset>
-		<fieldset>
-			Status: <input type="text" th:field="*{status.status}">
-			<p th:if="${#fields.hasErrors('status.status')}" th:errors="*{status.status}"></p>
-		</fieldset>
-		<fieldset>
-			<button type="submit">Save</button>
-		</fieldset>
-	</form>
+	<br />
+	<div class="container">
+		<h2>
+			<span th:if="${student.name == null}">Add Student</span> <span
+				th:unless="${student.name == null}">Edit Student</span>
+		</h2>
+
+		<form th:object="${student}" th:action="@{/administrator/savestudent}"
+			method="post">
+			<div class="form-group">
+				<label for="studentId">Student ID</label> 
+				<span th:if="${student.name == null}"> 
+					<input type="text" th:value="${newStudentId}" id="studentId" name="studentId" class="form-control" readonly>
+				</span> 
+				<span th:unless="${student.name == null}"> 
+					<input type="text" th:field="*{studentId}" class="form-control" readonly>
+				</span>
+				<p th:if="${#fields.hasErrors('studentId')}" th:errors="*{studentId}" class="alert alert-danger"></p>
+			</div>
+			<div class="form-inline">
+				<label for="name">Name</label> 
+				<input type="text" th:field="*{name}" class="form-control">
+				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"></p>
+			<!-- </div>
+			<div class="form-group"> -->
+				<label><input type="radio" th:field="*{gender}" value="M" checked>Male</label>
+				<label><input type="radio" th:field="*{gender}" value="F">Female</label>
+				<p th:if="${#fields.hasErrors('*{gender}')}" th:errors="*{gender}" class="alert alert-danger"></p>
+			</div>
+			<br/>
+			<div class="form-inline">
+				<label for="birthDate">Date of Birth</label> 
+				<input type="date" th:type="date" th:field="*{birthDate}" th:value="${#dates.format(student.birthDate, 'yyyy-MM-DD')}" min="1900-01-01" max="2019-12-31" class="form-control">
+				<p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" class="alert alert-danger"></p>
+			<!-- </div>
+			<div class="form-group"> -->
+				<label for="degree">Degree</label> 
+				<input type="text" th:field="*{degree}" class="form-control">
+				<p th:if="${#fields.hasErrors('degree')}" th:errors="*{degree}" class="alert alert-danger"></p>
+			<!-- </div>
+			<div class="form-group"> -->
+				<label for="address">Address</label> 
+				<input type="text" th:field="*{address}" class="form-control">
+				<p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="alert alert-danger"></p>
+			<!-- </div>
+			<div class="form-group"> -->
+				<label for="mobile">Mobile</label> 
+				<input type="text" th:field="*{mobile}" class="form-control" placeholder="xxxx-xxxx">
+				<p th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}" class="alert alert-danger"></p>
+			</div>
+			<br/>
+			<div class="form-inline">
+				<label for="email">Email</label> 
+				<input type="text" th:field="*{email}" class="form-control" placeholder="yourname@example.com">
+				<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="alert alert-danger"></p>
+			<!-- </div>
+			<div class="form-group"> -->
+				<label for="status.status">Status</label> 
+				<select th:field="*{status.status}" class="form-control">
+					<option th:value="1">Enrolled</option>
+					<option th:value="2">On Leave</option>
+					<option th:value="3">Graduated</option>
+				</select>
+			</div>
+			<br/>
+			<div class="form-group">
+				<label for="semester.semester">Semester</label> 
+				<span
+					th:if="${student.name == null}"> 
+					<input type="hidden" th:value="${currentSemester.semester}" name="semester.semester" id="semester.semester" readonly> 
+					<input type="text" th:field="${currentSemester.label}" class="form-control" readonly>
+				</span> 
+				<span th:unless="${student.name == null}"> 
+				<input type="hidden" th:field="*{semester.semester}" readonly> 
+				<input type="text" th:field="*{semester.label}" class="form-control" readonly>
+				</span>
+			</div>
+			<div>
+				<button type="submit" class="btn btn-primary">Save</button>
+			</div>
+		</form>
+	</div>
+
 </body>
 </html>

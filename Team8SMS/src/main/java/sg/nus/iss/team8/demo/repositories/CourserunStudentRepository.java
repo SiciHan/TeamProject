@@ -21,4 +21,7 @@ public interface CourserunStudentRepository extends JpaRepository<CourserunStude
 	  @Modifying
 	  @Query("update CourserunStudent crs set crs.status.status = :status where crs.id.student.studentId =:studentId and crs.id.courserun.courseName=:coursename")
 	  public void setStatus(@Param("studentId") Integer studentId, @Param("coursename") String coursename, @Param("status") Integer status);
+
+	  @Query("select course from CourserunStudent course where course.status.status= :status") 
+	  public List<CourserunStudent> findCourseByStatus(@Param("status") Integer status);
 }

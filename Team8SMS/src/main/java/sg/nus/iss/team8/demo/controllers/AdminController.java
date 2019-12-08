@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Department;
 import sg.nus.iss.team8.demo.models.Faculty;
 import sg.nus.iss.team8.demo.models.Leave;
@@ -58,6 +59,7 @@ public class AdminController {
 	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
+//		binder.addValidators(studentValidator);
 		// binder.addValidators(new ProductValidator());
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
 	}
@@ -149,6 +151,11 @@ public class AdminController {
 	@GetMapping("/addstudent")
 	public String showAddStudentForm(Model model) {
 		Student student = new Student();
+		Integer newStudentId = aService.newStudentId();
+		Semester currentSemester = aService.currentSemester();
+		model.addAttribute("student", student);
+		model.addAttribute("newStudentId", newStudentId);
+		model.addAttribute("currentSemester", currentSemester);		Student student = new Student();
 		model.addAttribute("student", student);
 		return "studentform";
 	}
@@ -177,6 +184,40 @@ public class AdminController {
 		aService.removeStudent(student);
 		//Willis 7th Dec
 		return "redirect:/studentmanagement";
+	}
+	@GetMapping("/courseapplication")
+	public String listPendingCourseApplications(Model model, @RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size) {
+		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(5);
+
+		Page<CourserunStudent> pendingPage = aService.pagePendingStudents(PageRequest.of(currentPage - 1, pageSize));
+
+		model.addAttribute("pendingPage", pendingPage);
+		
+		int totalPages = pendingPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pendingPageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+            model.addAttribute("pendingPageNumbers", pendingPageNumbers);
+        }
+        
+        return "courseapplication";
+	}
+	
+	@GetMapping("/{acceptOrReject}/{id}/{courseCode}/{semesterid}")
+	public String rejectCourseApplication(@PathVariable(name="acceptOrReject") String acceptOrReject,
+			@PathVariable(name="id") int id, 
+			@PathVariable(name="courseCode") String courseCode,
+			@PathVariable(name="semesterid") int semesterid) {
+		
+		int status;
+		if(acceptOrReject.equalsIgnoreCase("acceptcourse")) {
+			status = 8; // 8 -> Undergoing
+		} else {
+			status = 7; // 7 -> Rejected
+		}
+		aService.setCourserunStudentStatus(id,courseCode,semesterid, status);
+		return "redirect:/administrator/courseapplication";
 	}
 	
 	//Willis 7th Dec
