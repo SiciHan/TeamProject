@@ -10,7 +10,7 @@
 </head>
 <body>
 	<h1>Add Faculty Form</h1>
-		<form th:object="${faculty}" th:action="@{/administrator/savefaculty}" method="post">
+		<form th:object="${faculty}" th:action="@{/savefaculty}" method="post">
 		<fieldset>
 		Faculty Id: <input type="text" th:field="*{facultyId}">
 		<p th:if="${#fields.hasErrors('facultyId')}" th:errors="*{facultyId}"></p>
@@ -20,31 +20,25 @@
 		<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
 		</fieldset>
 		<fieldset>
-		Department Id: <input type="text" th:field="*{department.departmentId}">
-		<p th:if="${#fields.hasErrors('department.departmentId')}" th:errors="*{department.departmentId}"></p>
-		</fieldset>
-<!-- 	  	<fieldset>
-		Department Name: <input type="text" th:field="*{department.name}">
-		<p th:if="${#fields.hasErrors('department.name')}" th:errors="*{department.name}"></p>
-		</fieldset> -->
-		<fieldset>
-		Status Id: <input type="text" th:field="*{status.status}">
-		<p th:if="${#fields.hasErrors('status.status')}" th:errors="*{status.status}"></p>
-		</fieldset>	
-<!-- 		<fieldset>
-		Status: <input type="text" th:field="*{status.label}">
-		<p th:if="${#fields.hasErrors('status.label')}" th:errors="*{status.label}"></p>
-		</fieldset> -->
-		<fieldset>
-			<button type="submit">Save</button>
-		</fieldset>
-		</form>
-		<div th:object="${faculty}">
-		<select class="form-control" id="status">
-		<option value="">Select status</option>
-		<option th:each="faculty:${faculties}" th:value="${faculty.status.status}" th:text="${faculty.status.label}">
+		Department :
+		<select th:field="*{department.departmentId}">
+		<option th:value="0">Select department</option>
+		<option th:each="department:${departments}" th:value="${department.departmentId}" th:text="${department.name}">
 		</option>
 		</select>
-		</div>
+		</fieldset>
+		<fieldset>
+		Status :
+		<select th:field="*{status.status}">
+		<option th:value="0">Select Status</option>
+		<option th:each="status:${statuses}" th:if="${status.status == 2 OR status.status == 10}" 
+				th:value="${status.status}" th:text="${status.label}">
+		</option>
+		</select>
+		</fieldset>
+		<fieldset>
+			<button type="submit">Save</button>
+		</fieldset> 
+		</form>
 </body>
 </html>

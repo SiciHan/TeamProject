@@ -16,7 +16,7 @@
       				<a class="navbar-brand" href="#">Apply Course</a>
     			</div>
     			<ul class="nav navbar-nav">
-      				<li class="active"><a href="#">Home</a></li>
+      				<li class="active"><a href="administrator.html" th:href="@{/administrator}">Home</a></li>
       				<li><a href="#">Page 1</a></li>
       				<li><a href="#">Page 2</a></li>
       				<li><a href="#">Page 3</a></li>
@@ -27,7 +27,7 @@
 	</div>
 	<h1>List of Faculties</h1>
 	<!-- Add HyperLink -->
-	<a href="facultyform.html" th:href="@{/administrator/addfaculty}">Add Faculty</a>
+	<a href="facultyform.html" th:href="@{/addfaculty}">Add Faculty</a>
 	<table>
 		<tr>
 			<td>Faculty Id</td>
@@ -40,9 +40,9 @@
 			<td th:text=${faculty.name}>Name</td>
 			<td th:text=${faculty.status.label}>Status</td>
 			<td th:text=${faculty.department.name}>DepartmentName</td>
-			<td><a href="EditFaculty.html" th:href="@{/administrator/editfaculty/}+${faculty.facultyId}"> 
+			<td><a href="EditFaculty.html" th:href="@{/editfaculty/}+${faculty.facultyId}"> 
 			Edit </a></td>
-			<td><a href="DeleteFaculty.html" th:href="@{/administrator/deletefaculty/}+${faculty.facultyId}"> 
+			<td><a href="DeleteFaculty.html" th:href="@{/deletefaculty/}+${faculty.facultyId}"> 
 			Delete </a></td>
 		</tr>
 	</table>
