@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,15 +29,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
+import sg.nus.iss.team8.demo.models.Department;
 import sg.nus.iss.team8.demo.models.Faculty;
+import sg.nus.iss.team8.demo.models.Leave;
+import sg.nus.iss.team8.demo.models.Leave_PK;
 import sg.nus.iss.team8.demo.models.Semester;
+import sg.nus.iss.team8.demo.models.Status;
 import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.services.AdminService;
 import sg.nus.iss.team8.demo.services.AdminServiceImpl;
+import sg.nus.iss.team8.demo.services.FacultyService;
+import sg.nus.iss.team8.demo.services.FacultyServiceImplementation;
 import sg.nus.iss.team8.demo.services.StudentService;
 
+
 @Controller
-@RequestMapping("/administrator")
 public class AdminController {
 
 	private AdminService aService;
@@ -54,6 +61,7 @@ public class AdminController {
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 //		binder.addValidators(studentValidator);
+		// binder.addValidators(new ProductValidator());
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
 	}
 
@@ -69,6 +77,14 @@ public class AdminController {
 	public String addFaculty(Model model) {
 		ArrayList<Faculty> flist = new ArrayList<Faculty>();
 		flist.addAll(aService.findAllFaculty());
+		//Willis 7thDec
+		ArrayList<Status> slist = new ArrayList<Status>();
+		ArrayList<Department> dlist = new ArrayList<Department>();
+		slist.addAll(aService.findAllStatuses());
+		dlist.addAll(aService.findAllDepartments());
+		model.addAttribute("statuses", slist);
+		model.addAttribute("departments", dlist);
+		//
 		model.addAttribute("faculties", flist);
 		Faculty f = new Faculty();
 		model.addAttribute("faculty", f);
@@ -80,13 +96,20 @@ public class AdminController {
 		if (bindingResult.hasErrors())
 			return "facultyform";
 		aService.saveFaculty(faculty);
-		return "redirect:/administrator/facultymanagement";
+		return "redirect:/facultymanagement";
 	}
 
 	@GetMapping("/editfaculty/{id}")
 	public String editFaculty(Model model, @PathVariable("id") Integer id) {
 		Faculty f = aService.findFacultyById(id);
 		model.addAttribute("faculty", f);
+		//Willis 7th Dec
+		ArrayList<Status> slist = new ArrayList<Status>();
+		ArrayList<Department> dlist = new ArrayList<Department>();
+		slist.addAll(aService.findAllStatuses());
+		dlist.addAll(aService.findAllDepartments());
+		model.addAttribute("statuses", slist);
+		model.addAttribute("departments", dlist);
 		return "facultyform";
 	}
 
@@ -94,13 +117,17 @@ public class AdminController {
 	public String deleteFaculty(Model model, @PathVariable("id") Integer id) {
 		Faculty f = aService.findFacultyById(id);
 		aService.deleteFaculty(f);
-		return "redirect:/administrator/facultymanagement";
+		return "redirect:/facultymanagement";
 	}
+	
+	//Willis 7th Dec
+	public static final String CURRENTSEMESTER = "AY2019/2020Sem2";
 
-//	@GetMapping("/administrator")
-//	public String getAdmin() {
-//		return "administrator";
-//	}
+	@GetMapping("/administrator")
+	public String getAdmin(Model model) {
+		model.addAttribute("currentsemester", CURRENTSEMESTER);
+		return "administrator";
+	}
 
 	@GetMapping("/studentmanagement")
 	public String listAllStudents(Model model, @RequestParam("page") Optional<Integer> page,
@@ -140,7 +167,8 @@ public class AdminController {
 		}
 
 		aService.saveStudent(student);
-		return "redirect:/administrator/studentmanagement";
+		//Willis 7th Dec
+		return "redirect:/studentmanagement";
 	}
 
 	@GetMapping("/editstudent/{id}")
@@ -154,9 +182,9 @@ public class AdminController {
 	public String deleteStudent(Model model, @PathVariable("id") Integer id) {
 		Student student = aService.findStudent(id);
 		aService.removeStudent(student);
-		return "redirect:/administrator/studentmanagement";
+		//Willis 7th Dec
+		return "redirect:/studentmanagement";
 	}
-	
 	@GetMapping("/courseapplication")
 	public String listPendingCourseApplications(Model model, @RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size) {
@@ -211,6 +239,23 @@ public class AdminController {
         return "courserunmanagement";
 	}
 	
+	//Willis 7th Dec
+	@GetMapping("/leaveapplication")
+	public String leaveApplication(Model model) {
+		ArrayList<Leave> llist = new ArrayList<Leave>();
+		llist.addAll(aService.findAllLeave());
+		model.addAttribute("leaves", llist);
+		return "leaveapplication";
+	}
+	
+	@PostMapping("/approveleave")
+	public String approveLeaveApplication(@Valid Leave leave, BindingResult bindingResult) {
+		if (bindingResult.hasErrors())
+			return "leaveapplication";
+		aService.approveLeave(leave);
+		return "redirect:/leaveapplication";
+	}
+	
 	@GetMapping("/addcourserun")
 	public String showAddCourseForm(Model model) {
 		Courserun course = new Courserun();
@@ -225,6 +270,11 @@ public class AdminController {
 		model.addAttribute("shortSemLabel", shortSemLabel);
 		
 		return "courserunform";
+	}
+	@PostMapping("/rejectleave")
+	public String rejectLeaveApplication(@ModelAttribute Leave leave) {
+		aService.rejectLeave(leave);
+		return "redirect:/leaveapplication";
 	}
 
 	private String concatSemester(String longSemLabel) {
@@ -243,7 +293,7 @@ public class AdminController {
 		}
 
 		aService.saveCourserun(course);
-		return "redirect:/administrator/courserunmanagement";
+		return "redirect:/courserunmanagement";
 	}
 
 	@GetMapping("/editcourserun/{courseCode}/{semesterid}")
@@ -261,7 +311,7 @@ public class AdminController {
 			@PathVariable(name="semesterid") int semesterid) {
 		Courserun course = aService.findCourserun(courseCode, semesterid);
 		aService.removeCourserun(course);
-		return "redirect:/administrator/courserunmanagement";
+		return "redirect:/courserunmanagement";
 	}
 	
 	@GetMapping("/viewcourserun/{courseCode}/{semesterid}")
