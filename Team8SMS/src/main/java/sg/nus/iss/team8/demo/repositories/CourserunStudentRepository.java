@@ -21,11 +21,14 @@ public interface CourserunStudentRepository extends JpaRepository<CourserunStude
 	  
 	  @Transactional
 	  @Modifying
-	  @Query("update CourserunStudent crs set crs.status.status = :status where crs.id.student.studentId =:studentId and crs.id.courserun.courseName=:coursename")
+	  @Query("update CourserunStudent crs Set crs.status.status=:status where crs.id.student.studentId =:studentId and crs.id.courserun.courseName=:coursename")
 	  public void setStatus(@Param("studentId") Integer studentId, @Param("coursename") String coursename, @Param("status") Integer status);
 
 	  @Query("select course from CourserunStudent course where course.status.status= :status") 
 	  public List<CourserunStudent> findCourseByStatus(@Param("status") Integer status);
+
+	  @Query("select course from CourserunStudent course where course.id.courserun.courseName=:coursename")
+	  public List<CourserunStudent> findAllByCourserun(@Param("coursename") String coursename);
 	  
 	  @Query("select crs from CourserunStudent crs where crs.id.courserun.courseName = ?1")
 	  public ArrayList<CourserunStudent> findStudentsByCourseName(String name);
