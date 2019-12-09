@@ -159,7 +159,7 @@ public class StudentController {
 	public String MyCourses(Model model){
 		Student s=srepo.findNameById(10006);
 		model.addAttribute("student", s);
-		ArrayList<CourserunStudent>courserunstudentlist=new ArrayList<>();
+		ArrayList<CourserunStudent> courserunstudentlist=new ArrayList<>();
 		courserunstudentlist.addAll(csrepo.findCourseById(10006));
 		model.addAttribute("courselist", courserunstudentlist);
 		
@@ -183,12 +183,13 @@ public class StudentController {
 		model.addAttribute("gstatus",gstatus);
 		model.addAttribute("today", today);
 		ArrayList<CourserunStudent>clist= csrepo.findCourseGradebyId(10006);
+		//ArrayList<CourserunStudent> clist=csrepo.findCourseGradebyIdAndSem(10006, selectedsem);
 		model.addAttribute("clist", clist);
 		
 		// selected sem==AY2017%2F2018Sem2
-				if(selectedsem!=null && !selectedsem.isEmpty()) {
-					selectedsem=selectedsem.substring(0, 6)+"/"+selectedsem.substring(9);
-				}
+//				if(selectedsem!=null && !selectedsem.isEmpty()) {
+//					selectedsem=selectedsem.substring(0, 6)+"/"+selectedsem.substring(9);
+//				}
 				
 				ArrayList<String> allsem= semrepo.findAllSemsters();
 				model.addAttribute("allsem", allsem);

@@ -38,12 +38,7 @@
 				</tr>
 			</table>
 		</div>
-	<form action="http://localhost:8080/student/transcript/" method="get">
-		<select class="form-group" id="sem" name="sem">
-			<option th:each="sem:${allsem}" th:value="${sem}"
-				th:text="${sem}" th:selected="${sem.equals(selectedsem)}"></option>
-		</select> <input class="btn btn-primary" type="submit">
-	</form>
+
 	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
 			<table class="table table-bordered table-hover">

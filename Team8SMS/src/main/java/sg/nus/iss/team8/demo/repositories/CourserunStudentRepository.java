@@ -35,6 +35,9 @@ public interface CourserunStudentRepository extends JpaRepository<CourserunStude
 		  @Query("Select c from CourserunStudent c where c.id.student.studentId=?1 and c.status.status=9")
 		  public ArrayList<CourserunStudent>findCourseGradebyId(int studentid);
 		  
+//		  @Query("Select c from courserunStudent c where c.id.student.studentId=?1 and c.status.status=9 and c.id.student.semester.label=?2")
+//		  public ArrayList<CourserunStudent>findCourseGradebyIdAndSem(int studentid,String sem);
+		  
 		  //SH
 		  @Query("Select c from CourserunStudent c where c.id.student.studentId=?1")
 		  public CourserunStudent findStudentNamebyId(int studentid);
