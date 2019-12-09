@@ -23,6 +23,7 @@ import sg.nus.iss.team8.demo.models.Leave;
 
 import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
+import sg.nus.iss.team8.demo.repositories.SemesterRepository;
 import sg.nus.iss.team8.demo.repositories.StudentRepository;
 
 import sg.nus.iss.team8.demo.models.User;
@@ -36,6 +37,16 @@ import sg.nus.iss.team8.demo.services.StudentServiceImplementation;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
+	private SemesterRepository semrepo;
+	public SemesterRepository getSemrepo() {
+		return semrepo;
+	}
+	@Autowired
+	public void setSemrepo(SemesterRepository semrepo) {
+		this.semrepo = semrepo;
+	}
+
+
 	private StudentRepository srepo;
 	@Autowired
 	public void setSrepo(StudentRepository srepo) {
@@ -155,7 +166,7 @@ public class StudentController {
 		return "mycourses"; 
 	}
 	@GetMapping("/transcript")
-	public String MyTranscript(Model model) {
+	public String MyTranscript(Model model,@RequestParam(required=false, name="sem") String selectedsem) {
 		Student s=srepo.findNameById(10006);
 		model.addAttribute("student", s);
 		double points=ss.totalScorePoints(10006);
@@ -174,6 +185,14 @@ public class StudentController {
 		ArrayList<CourserunStudent>clist= csrepo.findCourseGradebyId(10006);
 		model.addAttribute("clist", clist);
 		
+		// selected sem==AY2017%2F2018Sem2
+				if(selectedsem!=null && !selectedsem.isEmpty()) {
+					selectedsem=selectedsem.substring(0, 6)+"/"+selectedsem.substring(9);
+				}
+				
+				ArrayList<String> allsem= semrepo.findAllSemsters();
+				model.addAttribute("allsem", allsem);
+				model.addAttribute("selectedsem", selectedsem);	
 		return "mytranscript";
 	}
 
