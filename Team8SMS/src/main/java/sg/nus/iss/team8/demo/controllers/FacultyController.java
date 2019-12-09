@@ -83,9 +83,24 @@ public class FacultyController {
 	}
 	
 	@GetMapping("/grade")
-	public String getGrade(Model model) {		
-		ArrayList<Courserun> courseruns = fservice.findAllCourseruns();
+	public String getGrade(Model model, @RequestParam(value = "coursename", required = false, defaultValue = "-")String coursename) {		
+		Faculty faculty = fservice.findFacultyById(102);
+		model.addAttribute("faculty", faculty);
+		ArrayList<Courserun> courseruns = fservice.findAllCourserunsByFacultyId(faculty.getFacultyId());
 		model.addAttribute("courseruns", courseruns);
+		String courseCode = "-";
+		Semester semester = new Semester();
+		for (Courserun c:courseruns) {
+			  if (coursename.equals(c.getCourseName())) { 
+				  courseCode = c.getCourseCode(); 
+				  semester = c.getSemester();
+				  break; 
+				  }
+			}
+		model.addAttribute("courseKey", courseCode + (semester == null ? "" : semester.getSemester()));
+		List<CourserunStudent> courserunstudents = new ArrayList<>();
+		if(coursename != null && !coursename.equals("-")) courserunstudents = fservice.findAllStudents(coursename);
+		model.addAttribute("courserunstudents", courserunstudents);
 		return "faculty_grade";
 	}
 

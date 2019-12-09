@@ -13,6 +13,7 @@ import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Faculty;
 import sg.nus.iss.team8.demo.models.Semester;
+import sg.nus.iss.team8.demo.repositories.CourserunRepository;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
 import sg.nus.iss.team8.demo.repositories.FacultyRepository;
 
@@ -22,16 +23,21 @@ public class FacultyServiceImplementation implements FacultyService {
 	@Resource
 	private FacultyRepository fr;
 	private CourserunStudentRepository crsr;
+	private CourserunRepository cr;  //repository mingzi 
 	
 	@Autowired
-	public void setCrsr(CourserunStudentRepository crsr) {
+	public void setCrsr(CourserunStudentRepository crsr) { //zidong lianjie zhege repository
 		this.crsr = crsr;
 	}
 	@Autowired
 	public void setFacultyRepository(FacultyRepository fr) {
 		this.fr = fr;
 	}
-	@Override
+	@Autowired
+	public void setCourserunRepository(CourserunRepository cr) {
+		this.cr = cr;
+	}
+	@Override  //chongxie shixian fangfa
 	public ArrayList<Faculty> findAllFaculty() {
 		ArrayList<Faculty> alf = (ArrayList<Faculty>)fr.findAll();
 		return alf;
@@ -77,5 +83,11 @@ public class FacultyServiceImplementation implements FacultyService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public ArrayList<Courserun> findAllCourserunsByFacultyId(int facultyId){
+		return cr.findCoursesById(facultyId);
+	}
+	
 
 }

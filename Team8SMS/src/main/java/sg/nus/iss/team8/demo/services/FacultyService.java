@@ -23,6 +23,7 @@ public interface FacultyService {
 	
 	ArrayList<Semester> findAllSemesters();
 	ArrayList<Courserun> findAllCourseruns();
+	ArrayList<Courserun> findAllCourserunsByFacultyId(int facultyId);
 	List<CourserunStudent> findAllStudents(String courserunname);
 }
 

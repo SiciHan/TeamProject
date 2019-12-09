@@ -8,108 +8,107 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-<script src="/moment.min.js"></script> 
-<script src="/jquery.daterangepicker.min.js"></script> 
+<script src="/moment.min.js"></script>
+<script src="/jquery.daterangepicker.min.js"></script>
 
 <title>Faculty/grade</title>
 </head>
 <body>
 	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
-			<h2 style="color: 000000">Hello, UserName</h2>
+			<h2 style="color: 000000">Hello, <text th:text="${faculty.name}">Name</text></h2>
 			<ul class="nav nav-pills">
 				<li><a href="http://localhost:8080/faculty/home"
 					class="glyphicon glyphicon-home"> <span>Home</span>
 				</a></li>
 				<li><a href="http://localhost:8080/faculty/courses"
 					class="glyphicon glyphicon-list-alt"> <span>Course</span></a></li>
-				<li class="active"><a href="http://localhost:8080/faculty/grade"
+				<li class="active"><a
+					href="http://localhost:8080/faculty/grade"
 					class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
 				<li><a href="#" class="glyphicon glyphicon-stats"> <span>Report</span></a></li>
 				<li><a href="#" class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
 			</ul>
 		</div>
 	</div>
-	<div class="row"style="margin: 20px">
+	<div class="row" style="margin: 20px">
 		<div class="col-md-7">
-			<div class="col-sm-2"><label for="Choose_Courses" class="col-form-label">Courses:</label></div>
+			<div class="col-sm-2">
+				<label for="Choose_Courses" class="col-form-label">Courses:</label>
+			</div>
 			<div class="col-sm-9">
-			<select id="form_Courses" name="dob_Courses">
-				<option value="-">-</option>
-				<option th:each="courserun:${courseruns}" th:value="${courserun.courseName}" th:text="'['+${courserun.courseCode}+']/'+${courserun.courseName}">
-			</select>
+				<select id="form_Courses" name="dob_Courses"
+					onchange="onSelectChange()">
+					<option id="-" value="-">-</option>
+					<option th:each="courserun:${courseruns}"
+						th:id="${courserun.courseCode} + ${courserun.semester.semester}"
+						th:value="${courserun.courseName}"
+						th:text="'['+${courserun.courseCode}+']/'+${courserun.courseName}">
+				</select>
 			</div>
 		</div>
 	</div>
-	
-	<div class="row"style="margin: 20px">
-	<div class="col-md-12">
-		<table class="table table-bordered table-hover">
-			<tbody>
-			<thead>
-			    <th>COURSE ID</th>
-			    <th>COURSE NAME</th>
-				<th>STUDENT ID</th>
-				<th>STUDENT NAME</th>
-				<th>GRADE</th>
 
-			</thead>
-			<tr>
-			    <td>CCE01</td>
-				<td>Chemical Engineering AY17/18S1</td>
-				<td>10001</td>
-				<td>Terry Foo</td>
-				<td><select id="form_grade" name="grade" class="col-sm-4" style="width:60%">
-			<option value="-">-</option>
-			<option value="1">A+</option>
-			<option value="2">A</option>
-			<option value="3">A-</option>
-			<option value="4">B+</option>
-			<option value="5">B</option>
-			<option value="-">B-</option>
-			<option value="1">C+</option>
-			<option value="2">C</option>
-			<option value="3">D+</option>
-			<option value="4">D</option>
-			</select>
-			</td> 
-			</tr>
-			<tr>
-			    <td>ITDL01</td>
-				<td>Digital Leadership AY17/18S1</td>
-				<td>10006</td>
-				<td>Sheryl Ho</td>
-				<td><select id="form_grade" name="grade" class="col-sm-4" style="width:60%">
-			<option value="-">-</option>
-			<option value="1">A+</option>
-			<option value="2">A</option>
-			<option value="3">A-</option>
-			<option value="4">B+</option>
-			<option value="5">B</option>
-			<option value="-">B-</option>
-			<option value="1">C+</option>
-			<option value="2">C</option>
-			<option value="3">D+</option>
-			<option value="4">D</option>
-			</select>
-			</td> 
-			</tr>
-			
-			</tbody>
-		</table>
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<table class="table table-bordered table-hover">
+				<tbody>
+				<thead>
+					<th>COURSE ID</th>
+					<th>COURSE NAME</th>
+					<th>STUDENT ID</th>
+					<th>STUDENT NAME</th>
+					<th>GRADE</th>
+
+				</thead>
+				<tr th:each="courseRunStudent:${courserunstudents}">
+					<td th:text="${courseRunStudent.id.courserun.courseCode}">courseCode</td>
+					<td th:text="${courseRunStudent.id.courserun.courseName}">courseName</td>
+					<td th:text="${courseRunStudent.id.student.studentId}">Id</td>
+					<td th:text="${courseRunStudent.id.student.name}">Name</td>
+					<td><select id="form_grade" name="grade" class="col-sm-4"
+						style="width: 60%">
+							<option value="-">-</option>
+							<option value="1">A+</option>
+							<option value="2">A</option>
+							<option value="3">A-</option>
+							<option value="4">B+</option>
+							<option value="5">B</option>
+							<option value="-">B-</option>
+							<option value="1">C+</option>
+							<option value="2">C</option>
+							<option value="3">D+</option>
+							<option value="4">D</option>
+					</select></td>
+				</tr>
+
+				</tbody>
+			</table>
 		</div>
 	</div>
-	
-	<div class="form-group" style="margin-top: 0%; margin-right:32px">
-						<div class="input-group col-sm-3 col-sm-offset-9">
-							<button type="submit" name="btn_dark" id="btn_apply" class="btn btn-primary"
-								style="width: 40%; float: right;">Submit</button>
-							<button name="btn_dark" id="btn_cancel" class="btn btn-dark"
-								style="margin-right: 3%; width: 40%; float: right;">Cancel</button>
-						</div>
-					</div>
-	
-	
-	
+
+	<div class="form-group" style="margin-top: 0%; margin-right: 32px">
+		<div class="input-group col-sm-3 col-sm-offset-9">
+			<button type="submit" name="btn_dark" id="btn_apply"
+				class="btn btn-primary" style="width: 40%; float: right;">Submit</button>
+			<button name="btn_dark" id="btn_cancel" class="btn btn-dark"
+				style="margin-right: 3%; width: 40%; float: right;">Cancel</button>
+		</div>
+	</div>
+
+	<input type="hidden" th:value="${courseKey}" id="hidden_input" />
+	<script>
+		var hidden_input = $('#hidden_input').val();
+		var hidden_input_selector = '#' + hidden_input.toString();
+		console.log(hidden_input_selector);
+		$(hidden_input_selector).attr("selected", true)
+		function onSelectChange() {
+			var courseSelect = document.getElementById("form_Courses");
+			console.log(courseSelect);
+			var selectedCoursesName = courseSelect.value;
+			console.log("selected:" + selectedCoursesName);
+			window.location.href = 'grade?coursename=' + selectedCoursesName;
+		}
+	</script>
 </body>
 </html>

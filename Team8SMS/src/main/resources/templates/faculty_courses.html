@@ -36,7 +36,7 @@
 			</thead>
 			<tr th:each="c : ${faculty.courseruns}">
 				<td th:text="${c.courseCode}">Course Code</td>
-				<td><a href="course_class_list.html" th:href="@{/faculty/this_course?coursename=} + ${c.courseName}" th:text="${c.courseName}" >Course Name</a></td>
+				<td><a href="course_class_list.html" th:href="@{/faculty/this_course?coursename=} + ${c.courseName}" th:text="${c.courseName}">Course Name</a></td>
 				<td th:text="${c.semester.semester}">Semester</td>
 				<td th:text="${c.courseUnit}">Course Unit</td>
 			</tr>
