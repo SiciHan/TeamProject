@@ -1,6 +1,8 @@
 package sg.nus.iss.team8.demo.services;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +28,8 @@ public interface AdminService {
 	Student saveStudent(Student student);
 
 	void removeStudent(Student student);
-
+	
+	//for faculty management
 	ArrayList<Faculty> findAllFaculty();
 
 	Faculty findFacultyById(int id);
@@ -37,6 +40,8 @@ public interface AdminService {
 
 	Faculty saveFaculty(Faculty f);
 	
+	int newFacultyId();
+	
 int newStudentId();
 	
 	Semester currentSemester();
@@ -45,11 +50,16 @@ int newStudentId();
 	
 	void setCourserunStudentStatus(int id, String courseCode, int semesterid, int status);
 	
-	//Willis added
+	// for Leave application
 	ArrayList<Status> findAllStatuses();
+	
 	ArrayList<Department> findAllDepartments();
+	
 	ArrayList<Leave> findAllLeave();
+	
 	Leave findLeave(Leave_PK id);
-	void approveLeave(Leave leave);
-	void rejectLeave(Leave leave);
+	
+	void approveLeave(String string, String userType,int id, int status);
+	
+	void rejectLeave(String startDate, String userType,int id, int status);
 }

@@ -26,60 +26,38 @@
 		</nav>
 	</div>
 	<h1>Leave Application</h1>
-	<table>
-		<tr>
-			<td>Start date</td>
-			<td>End date</td>
-			<td>User type</td>
-			<td>USer Id</td>
-			<td>Reason</td>
-			<td>Status</td>
-		</tr>
-		<tr th:each="leave:${leaves}">
-			<td th:text=${leave.id.startDate}>StartDate</td>
-			<td th:text=${leave.endDate}>EndDate</td>
-			<td th:text=${leave.id.userType}>UserType</td>
-			<td th:text=${leave.id.id}>StudentId</td>
-			<td th:text="${leave.reason}">Reason</td>
-			<td th:text="${leave.status.label}">Status</td>
-			<td th:if="${leave.status.status == 4}">
-				<form th:object="${leaves}" th:action="@{/approveleave}" method="post">
-					<button value="approve">Approve</button>
-				</form>
-			</td>
-			<td th:if="${leave.status.status == 4}">
-				<form th:object="${leave}" th:action="@{/rejectleave}" method="post">
-				<fieldset>
-				<input type="hidden" id="id.startDate" name="id.startDate" 
-						th:value="*{id.startDate}" th:text="${leave.id.startDate}">
-				</fieldset>
-				<fieldset>
-				<input type="hidden" id="id.userType" name="id.userType" 
-						th:value="*{id.userType}" th:text="${leave.id.userType}">
-				</fieldset>
-				<fieldset>
-				<input type="hidden" id="id.id" name="id.id" 
-						th:value="*{id.id}" th:text="${leave.id.id}">
-				</fieldset> 
-				<fieldset>
-				<input type="hidden" id="endDate" name="endDate" 
-						th:value="*{endDate}" th:text="${leave.endDate}">
-				</fieldset>
-				<fieldset>
-				<input type="hidden" id="reason" name="reason" 
-						th:value="*{reason}" th:text="${leave.reason}">
-				</fieldset>
-				<fieldset>
-				<input type="hidden" id="status.status" name="status.status" 
-						th:value="*{status.status}" th:text="leave.status.status">
-				</fieldset>
-					<!-- <a th:href="@{/rejectleave/}+${leave.id}" th:type="submit">Reject</a> -->
-				<fieldset>
-				<button type="submit">Reject</button>
-				</fieldset>
-				</form>
-			</td>
-		</tr>
-	</table>
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<table class="table table-hover">
+				<tr>
+					<th>Start date</th>
+					<th>End date</th>
+					<th>User type</th>
+					<th>USer Id</th>
+					<th>Reason</th>
+					<th>Status</th>
+					<th colspan="2"></th>
+				</tr>
+				<tr th:each="leave:${leaves}">
+					<td th:text=${leave.id.startDate}>StartDate</td>
+					<td th:text=${leave.endDate}>EndDate</td>
+					<td th:text=${leave.id.userType}>UserType</td>
+					<td th:text=${leave.id.id}>StudentId</td>
+					<td th:text="${leave.reason}">Reason</td>
+					<td th:text="${leave.status.label}">Status</td>
+					<td th:if="${leave.status.status == 4}">
+						<a th:href="${'/approveleave/' + leave.id.startDate +'/'+ 
+									leave.id.userType+'/'+ leave.id.id}" 
+									class="btn btn-success">Approve</a>
+					</td>
+					<td th:if="${leave.status.status == 4}">
+						<a th:href="${'/rejectleave/' + leave.id.startDate +'/'+ 
+									leave.id.userType+'/'+ leave.id.id}" 
+									class="btn btn-danger">Reject</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
 </body>
 </html>

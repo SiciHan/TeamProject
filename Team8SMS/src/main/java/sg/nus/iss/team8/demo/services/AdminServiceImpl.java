@@ -1,10 +1,14 @@
 package sg.nus.iss.team8.demo.services;
 
+import java.text.DateFormat;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 
@@ -155,6 +159,14 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+	public int newFacultyId() {
+		ArrayList<Faculty> faculties = findAllFaculty();
+		Faculty faculty = Collections.max(faculties, Comparator.comparingInt(Faculty::getFacultyId));
+		int newFacultyId = faculty.getFacultyId() + 1;
+		return newFacultyId;
+	}
+	
+	@Override
 	public int newStudentId() {
 		ArrayList<Student> students = findAllStudents();
 		Student student = Collections.max(students, Comparator.comparingInt(Student::getStudentId));
@@ -197,7 +209,6 @@ public class AdminServiceImpl implements AdminService {
 		courserunStudentRepository.setStatus(id,coursename,status);
 	}
 	
-	//Willis 7th Dec
 	@Override
 	public ArrayList<Status> findAllStatuses(){
 		return (ArrayList<Status>)statusRepository.findAll();
@@ -216,13 +227,40 @@ public class AdminServiceImpl implements AdminService {
 		return leaveRepository.findById(id).orElse(null);
 	}
 	@Override
-	public void approveLeave(Leave leave) {
-		leaveRepository.setStatus(leave.getId(), 6);
-//		leaveRepository.save(leave);
+	public void approveLeave(String startDate, String userType, int id, int status) {
+		Status apprvstatus = statusRepository.findById(status).orElse(null);
+		List<Leave> leaves=leaveRepository.findAll();
+		for (Leave l : leaves) {
+			//if the leave is equal to startDate, userType and id 
+			// set status to status(approve or reject)
+			if (l.getId().getStartDate().toString().equalsIgnoreCase(startDate) 
+					&& l.getId().getUserType().equals(userType) && l.getId().getId() == id) {
+				l.setStatus(apprvstatus);
+				System.out.println("1st comparison:" +l.getId().getStartDate().toString().equalsIgnoreCase(startDate));
+				System.out.println("2st comparison:" +l.getId().getUserType().equals(userType));
+				System.out.println("3rd comparison:" + l.getStatus().getStatus());
+				System.out.println("4th comparison:" + l.getStatus().getLabel());
+				leaveRepository.saveAndFlush(l);
+			}
+		}
 	}
 	@Override
-	public void rejectLeave(Leave leave) {
-		leaveRepository.setStatus(leave.getId(), 7);
+	public void rejectLeave(String startDate, String userType, int id, int status) {
+		Status apprvstatus = statusRepository.findById(status).orElse(null);
+		List<Leave> leaves=leaveRepository.findAll();
+		for (Leave l : leaves) {
+			//if the leave is equal to startDate, userType and id 
+			// set status to status(approve or reject)
+			if (l.getId().getStartDate().toString().equalsIgnoreCase(startDate) 
+					&& l.getId().getUserType().equals(userType) && l.getId().getId() == id) {
+				l.setStatus(apprvstatus);
+				System.out.println("1st comparison:" +l.getId().getStartDate().toString().equalsIgnoreCase(startDate));
+				System.out.println("2st comparison:" +l.getId().getUserType().equals(userType));
+				System.out.println("3rd comparison:" + l.getStatus().getStatus());
+				System.out.println("4th comparison:" + l.getStatus().getLabel());
+				leaveRepository.saveAndFlush(l);
+			}
+		}
 	}
 
 }

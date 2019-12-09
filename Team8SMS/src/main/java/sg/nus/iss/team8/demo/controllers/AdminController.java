@@ -1,6 +1,9 @@
 package sg.nus.iss.team8.demo.controllers;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,16 +78,16 @@ public class AdminController {
 	@GetMapping("/addfaculty")
 	public String addFaculty(Model model) {
 		ArrayList<Faculty> flist = new ArrayList<Faculty>();
-		flist.addAll(aService.findAllFaculty());
-		//Willis 7thDec
 		ArrayList<Status> slist = new ArrayList<Status>();
 		ArrayList<Department> dlist = new ArrayList<Department>();
+		Integer newFacultyId = aService.newFacultyId();
+		flist.addAll(aService.findAllFaculty());
 		slist.addAll(aService.findAllStatuses());
 		dlist.addAll(aService.findAllDepartments());
 		model.addAttribute("statuses", slist);
 		model.addAttribute("departments", dlist);
-		//
 		model.addAttribute("faculties", flist);
+		model.addAttribute("newFacultyId", newFacultyId);
 		Faculty f = new Faculty();
 		model.addAttribute("faculty", f);
 		return "facultyform";
@@ -102,7 +105,6 @@ public class AdminController {
 	public String editFaculty(Model model, @PathVariable("id") Integer id) {
 		Faculty f = aService.findFacultyById(id);
 		model.addAttribute("faculty", f);
-		//Willis 7th Dec
 		ArrayList<Status> slist = new ArrayList<Status>();
 		ArrayList<Department> dlist = new ArrayList<Department>();
 		slist.addAll(aService.findAllStatuses());
@@ -155,7 +157,7 @@ public class AdminController {
 		Semester currentSemester = aService.currentSemester();
 		model.addAttribute("student", student);
 		model.addAttribute("newStudentId", newStudentId);
-		model.addAttribute("currentSemester", currentSemester);		Student student = new Student();
+		model.addAttribute("currentSemester", currentSemester);
 		model.addAttribute("student", student);
 		return "studentform";
 	}
@@ -217,10 +219,9 @@ public class AdminController {
 			status = 7; // 7 -> Rejected
 		}
 		aService.setCourserunStudentStatus(id,courseCode,semesterid, status);
-		return "redirect:/administrator/courseapplication";
+		return "redirect:/courseapplication";
 	}
 	
-	//Willis 7th Dec
 	@GetMapping("/leaveapplication")
 	public String leaveApplication(Model model) {
 		ArrayList<Leave> llist = new ArrayList<Leave>();
@@ -229,17 +230,19 @@ public class AdminController {
 		return "leaveapplication";
 	}
 	
-	@PostMapping("/approveleave")
-	public String approveLeaveApplication(@Valid Leave leave, BindingResult bindingResult) {
-		if (bindingResult.hasErrors())
-			return "leaveapplication";
-		aService.approveLeave(leave);
+	@GetMapping("/approveleave/{startDate}/{user}/{id}")
+	public String approveLeaveApplication(@PathVariable("startDate") String startDate, 
+			@PathVariable("user") String user, @PathVariable("id") int id) throws ParseException {
+		int status = 6;
+ 		aService.approveLeave(startDate, user, id, status);
 		return "redirect:/leaveapplication";
 	}
 	
-	@PostMapping("/rejectleave")
-	public String rejectLeaveApplication(@ModelAttribute Leave leave) {
-		aService.rejectLeave(leave);
+	@GetMapping("/rejectleave/{startDate}/{user}/{id}")
+	public String rejectLeaveApplication(@PathVariable("startDate") String startDate, 
+			@PathVariable("user") String user, @PathVariable("id") int id) {
+		int status = 7;
+		aService.rejectLeave(startDate, user, id, status);
 		return "redirect:/leaveapplication";
 	}
 
