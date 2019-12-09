@@ -157,23 +157,23 @@ public class StudentController {
 
 	@GetMapping("/mycourses")
 	public String MyCourses(Model model){
-		Student s=srepo.findNameById(10006);
+		Student s=srepo.findNameById(10013);
 		model.addAttribute("student", s);
 		ArrayList<CourserunStudent> courserunstudentlist=new ArrayList<>();
-		courserunstudentlist.addAll(csrepo.findCourseById(10006));
+		courserunstudentlist.addAll(csrepo.findCourseById(10013));
 		model.addAttribute("courselist", courserunstudentlist);
 		
 		return "mycourses"; 
 	}
 	@GetMapping("/transcript")
-	public String MyTranscript(Model model,@RequestParam(required=false, name="sem") String selectedsem) {
-		Student s=srepo.findNameById(10006);
+	public String MyTranscript(Model model) {
+		Student s=srepo.findNameById(10013);
 		model.addAttribute("student", s);
-		double points=ss.totalScorePoints(10006);
-		int totalCredits=ss.totalCredits(10006);
+		double points=ss.totalScorePoints(10013);
+		int totalCredits=ss.totalCredits(10013);
 		double cap=points/totalCredits;
 		 cap=Math.round(cap*100.0)/100.0;
-		 String gstatus=ss.graduationStatus(10006);
+		 String gstatus=ss.graduationStatus(10013);
 		 //Date today = Calendar.getInstance().getTime();
 		 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
 		   LocalDateTime now = LocalDateTime.now();
@@ -182,18 +182,10 @@ public class StudentController {
 		model.addAttribute("cap", cap);
 		model.addAttribute("gstatus",gstatus);
 		model.addAttribute("today", today);
-		ArrayList<CourserunStudent>clist= csrepo.findCourseGradebyId(10006);
-		//ArrayList<CourserunStudent> clist=csrepo.findCourseGradebyIdAndSem(10006, selectedsem);
+		ArrayList<CourserunStudent>clist= csrepo.findCourseGradebyId(10013);
 		model.addAttribute("clist", clist);
 		
-		// selected sem==AY2017%2F2018Sem2
-//				if(selectedsem!=null && !selectedsem.isEmpty()) {
-//					selectedsem=selectedsem.substring(0, 6)+"/"+selectedsem.substring(9);
-//				}
-				
-				ArrayList<String> allsem= semrepo.findAllSemsters();
-				model.addAttribute("allsem", allsem);
-				model.addAttribute("selectedsem", selectedsem);	
+		
 		return "mytranscript";
 	}
 
