@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<title>Course Runs</title>
+</head>
+<body>
+	<div>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Home</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li><a href="/studentmanagement">Student
+							Management</a></li>
+					<li><a href="/courseapplication">Course Application</a></li>
+					<li class="active"><a href="/courserunmanagement">Course Management</a></li>
+					<li><a href="#">Page 3</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	<br/>
+	<h1>All Course Runs</h1>
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<a class="btn btn-primary" href="#" th:href="@{/addcourserun}" role="button">Add Course Run</a>
+			<br/>
+			<div th:if="${courserunPage.totalPages > 0}" class="pagination"
+   				 th:each="coursePageNumber : ${courserunPageNumbers}">
+			    <a th:href="@{/courserunmanagement(size=${courserunPage.size}, page=${coursePageNumber})}"
+		        	th:text=${coursePageNumber}
+			        th:class="${coursePageNumber==courserunPage.number + 1} ? active"></a>
+			</div>
+			<table class="table table-hover">
+				<tbody>
+					<thead>
+						<th>Course Name</th>
+						<th>Course Code</th>
+						<th>Semester</th>
+						<th>Faculty</th>
+						<th>Course Units</th>
+						<th colspan="3"></th>
+					</thead>
+					<tr th:each="course:${courserunPage.content}">
+						<td th:text=${course.courseName}>Course Name</td>
+						<td th:text=${course.courseCode}>Course Code</td>
+						<td th:text=${course.semester.label}>Semester</td>
+						<td th:text=${course.faculty.name}>Faculty Name</td>
+						<td th:text=${course.courseUnit}>Course Units</td>
+						<td><a th:href="${'/viewcourserun/' + course.courseCode + '/' + course.semester.semester}">View</a></td>
+						<td><a th:href="${'/editcourserun/' + course.courseCode + '/' + course.semester.semester}">Edit</a></td>
+						<td><a th:href="${'/deletecourserun/' + course.courseCode + '/' + course.semester.semester}">Delete</a></td>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

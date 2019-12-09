@@ -10,5 +10,8 @@ import sg.nus.iss.team8.demo.models.Student;
 public interface StudentRepository extends JpaRepository<Student,Integer>{
 	@Query("select cs.id.student from CourserunStudent cs where cs.id.courserun.courseName = ?1")
 	public ArrayList<Student> findStudentsByCourseName(String name);
+	
+	@Query("Select distinct s From Student s where s.studentId=?1")
+	 public Student findNameById(int id);
 }
  

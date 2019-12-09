@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Department;
 import sg.nus.iss.team8.demo.models.Faculty;
@@ -121,7 +122,6 @@ public class AdminController {
 		return "redirect:/facultymanagement";
 	}
 	
-	//Willis 7th Dec
 	public static final String CURRENTSEMESTER = "AY2019/2020Sem2";
 
 	@GetMapping("/administrator")
@@ -158,7 +158,6 @@ public class AdminController {
 		model.addAttribute("student", student);
 		model.addAttribute("newStudentId", newStudentId);
 		model.addAttribute("currentSemester", currentSemester);
-		model.addAttribute("student", student);
 		return "studentform";
 	}
 
@@ -169,7 +168,6 @@ public class AdminController {
 		}
 
 		aService.saveStudent(student);
-		//Willis 7th Dec
 		return "redirect:/studentmanagement";
 	}
 
@@ -184,7 +182,6 @@ public class AdminController {
 	public String deleteStudent(Model model, @PathVariable("id") Integer id) {
 		Student student = aService.findStudent(id);
 		aService.removeStudent(student);
-		//Willis 7th Dec
 		return "redirect:/studentmanagement";
 	}
 	@GetMapping("/courseapplication")
@@ -220,6 +217,93 @@ public class AdminController {
 		}
 		aService.setCourserunStudentStatus(id,courseCode,semesterid, status);
 		return "redirect:/courseapplication";
+	}
+	
+	
+	
+	@GetMapping("/courserunmanagement")
+	public String listCourseruns(Model model, @RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size) {
+		int currentPage = page.orElse(1);
+		int pageSize = size.orElse(5);
+
+
+		Page<Courserun> courserunPage = aService.pageCourserun(PageRequest.of(currentPage - 1, pageSize));
+
+		model.addAttribute("courserunPage", courserunPage);
+		
+		int totalPages = courserunPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> courserunPageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+            model.addAttribute("courserunPageNumbers", courserunPageNumbers);
+        }
+        
+        return "courserunmanagement";
+	}
+	
+	private String concatSemester(String longSemLabel) {
+		String s1 = longSemLabel.substring(0, 2);
+		String s2 = longSemLabel.substring(4, 7);
+		String s3 = longSemLabel.substring(9, 12);
+		String s4 = longSemLabel.substring(14);
+
+		return s1 + s2 + s3 + s4;
+	}
+
+	@PostMapping("/savecourserun")
+	public String saveCourserun(@Valid @ModelAttribute Courserun course, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "courserunform";
+		}
+
+		aService.saveCourserun(course);
+		return "redirect:/courserunmanagement";
+	}
+	
+	@GetMapping("/addcourserun")
+	public String showAddCourseForm(Model model) {
+		Courserun course = new Courserun();
+		Semester currentSemester = aService.currentSemester();
+		ArrayList<Faculty> flist = aService.findAllFaculty();
+		model.addAttribute("flist", flist);
+		model.addAttribute("course", course);
+		model.addAttribute("currentSemester", currentSemester);
+
+		String longSemLabel = currentSemester.getLabel();
+		String shortSemLabel = concatSemester(longSemLabel);
+		model.addAttribute("shortSemLabel", shortSemLabel);
+
+		return "courserunform";
+	}
+
+	@GetMapping("/editcourserun/{courseCode}/{semesterid}")
+	public String showCourserunEditForm(Model model, @PathVariable(name = "courseCode") String courseCode,
+			@PathVariable(name = "semesterid") int semesterid) {
+		Courserun course = aService.findCourserun(courseCode, semesterid);
+		ArrayList<Faculty> flist = aService.findAllFaculty();
+		model.addAttribute("flist", flist);
+		model.addAttribute("course", course);
+		return "courserunform";
+	}
+
+	@GetMapping("/deletecourserun/{courseCode}/{semesterid}")
+	public String deleteCourserun(Model model, @PathVariable(name = "courseCode") String courseCode,
+			@PathVariable(name = "semesterid") int semesterid) {
+		Courserun course = aService.findCourserun(courseCode, semesterid);
+		aService.removeCourserun(course);
+		return "redirect:/courserunmanagement";
+	}
+
+	@GetMapping("/viewcourserun/{courseCode}/{semesterid}")
+	public String viewCourserun(Model model, @PathVariable(name = "courseCode") String courseCode,
+			@PathVariable(name = "semesterid") int semesterid) {
+		Courserun course = aService.findCourserun(courseCode, semesterid);
+		ArrayList<CourserunStudent> studentsPerCourse = aService.findStudentsByCourseName(course.getCourseName());
+
+		model.addAttribute("course", course);
+		model.addAttribute("studentsPerCourse", studentsPerCourse);
+
+		return "viewcourserun";
 	}
 	
 	@GetMapping("/leaveapplication")

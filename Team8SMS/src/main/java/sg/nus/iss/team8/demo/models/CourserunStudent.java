@@ -5,6 +5,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Courserunstudents")
 public class CourserunStudent {
+
+
 	@EmbeddedId
 	private CourserunStudent_PK id;
 	
@@ -42,6 +44,12 @@ public class CourserunStudent {
 
 	public void setGrade(String grade) {
 		this.grade = grade;
+	}
+	@Override
+	public String toString() {
+		return this.id.toString()+","+
+				this.grade+","+
+				this.status.getLabel();
 	}
 	
 }
