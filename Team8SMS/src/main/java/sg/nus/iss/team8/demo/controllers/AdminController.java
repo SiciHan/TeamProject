@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,8 +47,6 @@ import sg.nus.iss.team8.demo.models.Status;
 import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.services.AdminService;
 import sg.nus.iss.team8.demo.services.AdminServiceImpl;
-import sg.nus.iss.team8.demo.services.FacultyService;
-import sg.nus.iss.team8.demo.services.FacultyServiceImplementation;
 import sg.nus.iss.team8.demo.services.GenerateReportService;
 import sg.nus.iss.team8.demo.services.GenerateReportServiceImpl;
 
@@ -56,7 +56,7 @@ public class AdminController {
 
 	private AdminService aService;
 	private GenerateReportService grs;
-	
+
 	// injection of faculty service
 	@Autowired
 	public void setAdminService(AdminServiceImpl aService) {
@@ -413,6 +413,25 @@ public class AdminController {
 		return "redirect:departmentmanagement";
 	}
 	
+	@GetMapping("/admin_movementregister")
+	public String movementRegister(Model model, @RequestParam(required=false, name="yearmonth") String ymstring) {
+		YearMonth ym=YearMonth.now();
+		if(ymstring!=null && !ymstring.isEmpty()) {
+			
+			ym=YearMonth.of(Integer.parseInt(ymstring.substring(0,4)),Integer.parseInt(ymstring.substring(5)));
+		}
+		
+		ArrayList<Leave> leaves=aService.findLeavesByYearMonth(ym);
+		ArrayList<YearMonth> yearMonths=aService.findAllYearMonths(ym);
+		ArrayList<String> username=aService.findAllUserName(leaves);
+		HashMap<String,Leave> usernameLeaves=aService.MergeListToMap(leaves,username);
+		//by default we will display the currentMonth leave
+		model.addAttribute("leaves",usernameLeaves);
+		model.addAttribute("yearMonths", yearMonths);
+		model.addAttribute("selectedmonth",ym);
+		return "admin_movementregister";
+	}
+	
 	@RequestMapping("/downloadCSV/classlist")
 	public void downloadCSV(HttpServletRequest request, HttpServletResponse response, 
 			@RequestParam("coursename") String coursename) throws IOException {
@@ -440,4 +459,5 @@ public class AdminController {
 
 		return "viewstudentcourses";
 	}
+
 }

@@ -28,6 +28,8 @@ public interface StudentService {
 
 	public void setStatusToCancelled(int id, String courseCode, int semesterid);
 	
+	public void saveCourserunStudent(CourserunStudent crs);
+	
 	ArrayList<Student> findAllStudents();
 
 	Page<Student> pageAllStudents(Pageable pageable);

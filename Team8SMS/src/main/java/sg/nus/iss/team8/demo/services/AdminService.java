@@ -1,8 +1,10 @@
 package sg.nus.iss.team8.demo.services;
 
 import java.text.DateFormat;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -76,7 +78,7 @@ public interface AdminService {
 	void approveLeave(String string, String userType,int id, int status);
 	
 	void rejectLeave(String startDate, String userType,int id, int status);
-
+	
 	ArrayList<Semester> findAllSemsters();
 
 	Semester saveSemester(Semester sem);
@@ -99,8 +101,17 @@ public interface AdminService {
 	Department saveDepartment(Department d);
 	
 	int newDepartmentId();
-
+	
 	ArrayList<CourserunStudent> findCoursesByStudentId(int studentid);
+	
+	// for movement register 
+	ArrayList<Leave> findLeavesByYearMonth(YearMonth ym);
+	
+	ArrayList<YearMonth> findAllYearMonths(YearMonth currentym);
+	
+	ArrayList<String> findAllUserName(ArrayList<Leave> leaves);
+	
+	HashMap<String, Leave> MergeListToMap(ArrayList<Leave> leaves, ArrayList<String> username);
 
 	int countPendingCourses();
 
