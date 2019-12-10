@@ -33,20 +33,27 @@
 	<div class="form container" >	
 		<div class="row">	
 			<div class="col-sm-12 col-sm-offset-4" style="margin-bottom:20px; margin-top:40px">
+
 				<label for="Start" class="col-sm-2 col-form-label">Start Date</label>
-				<input type="date" placeholder="" th:type="date" th:field="*{id.startDate}"/>
+				<input type="date" placeholder="" th:type="date" th:field="${leave.id.startDate}" />
+				<p th:if="${#fields.hasErrors('${leave.id.startDate}')}" th:errors="${leave.id.startDate}"></p> 
+
 			</div>
 			
 			<div class="col-sm-12 col-sm-offset-4" style="margin-bottom:20px">
 				<label for="End" class="col-sm-2 col-form-label">End Date</label>
-				<input type="date" placeholder="" th:type="date" th:field="*{endDate}"/>
+				<input type="date" placeholder="" th:type="date" th:field="${leave.endDate}" />
+				<p th:if="${#fields.hasErrors('${leave.endDate}')}" th:errors="${leave.endDate}"></p> 
 			</div>
-			<input type="hidden" th:field="*{id.id}" th:value="${faculty.facultyId}" />
-			<input type="hidden" th:field="*{id.userType}" value="Faculty" />
+			
+			<div class="col-sm-12 col-sm-offset-4" style="margin-bottom:20px">
+				<label for="Id" class="col-sm-2 col-form-label">ID</label>
+				<input type="text" name="id.id" id="id.id" th:value="${faculty.facultyId}" readonly />
+			</div>
 		</div>
 	</div>
-    <div class="form-group">
-        <label for="select" class="col-sm-1 col-sm-offset-4 control-label">Leave Reason</label>
+    <div class="form-group col-sm-12 col-sm-offset-4">
+        <label for="select" class="col-sm-2 control-label">Leave Reason:</label>
             <div class="input-group col-sm-4">
 				<select id="select" class="col-sm-5" th:field="*{reason}">
 					<option value="">-</option>
@@ -56,10 +63,20 @@
 					<option value="Medical leave">No reason</option>
 				</select>
 			</div>
+			<p th:if="${#fields.hasErrors('${leave.reason}')}" th:errors="${leave.reason}"></p>
+    </div>
+    <div class="form-group">
+        <label for="select" class="col-sm-1 col-sm-offset-4 control-label">User Type</label>
+            <div class="input-group col-sm-4">
+				<select id="select" class="col-sm-5" th:field="*{id.userType}">
+					<option value="Faculty">Faculty</option>
+				</select>
+			</div>
+			<!--  <p th:if="${#fields.hasErrors('${leave.reason}')}" th:errors="${leave.reason}"></p>-->
     </div>
 	
 	<div class="form-group" style="margin-top: 3%;">
-		<div class="input-group col-sm-3 col-sm-offset-9">
+		<div class="input-group col-sm-3 col-sm-offset-8">
 			<button type="submit" name="btn_dark" id="btn_apply" class="btn btn-primary"
 								style="width: 40%; float: right;">Apply</button>
 			<button name="btn_dark" id="btn_cancel" class="btn btn-dark"

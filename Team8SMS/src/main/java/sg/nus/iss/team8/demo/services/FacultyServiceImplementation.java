@@ -9,8 +9,11 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Faculty;
+import sg.nus.iss.team8.demo.models.Semester;
+import sg.nus.iss.team8.demo.repositories.CourserunRepository;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
 import sg.nus.iss.team8.demo.repositories.FacultyRepository;
 
@@ -20,16 +23,21 @@ public class FacultyServiceImplementation implements FacultyService {
 	@Resource
 	private FacultyRepository fr;
 	private CourserunStudentRepository crsr;
+	private CourserunRepository cr;  //repository mingzi 
 	
 	@Autowired
-	public void setCrsr(CourserunStudentRepository crsr) {
+	public void setCrsr(CourserunStudentRepository crsr) { //zidong lianjie zhege repository
 		this.crsr = crsr;
 	}
 	@Autowired
 	public void setFacultyRepository(FacultyRepository fr) {
 		this.fr = fr;
 	}
-	@Override
+	@Autowired
+	public void setCourserunRepository(CourserunRepository cr) {
+		this.cr = cr;
+	}
+	@Override  //chongxie shixian fangfa
 	public ArrayList<Faculty> findAllFaculty() {
 		ArrayList<Faculty> alf = (ArrayList<Faculty>)fr.findAll();
 		return alf;
@@ -56,6 +64,9 @@ public class FacultyServiceImplementation implements FacultyService {
 		fr.delete(f);
 	}
 	@Override
+	public ArrayList<Courserun> findAllCourseruns(){
+		return fr.findAllCourseruns();
+	}
 	public List<CourserunStudent> findAllStudents(String courserunname) {
 		// TODO Auto-generated method stub
 		List<CourserunStudent> result=crsr.findAllByCourserun(courserunname);
@@ -65,6 +76,27 @@ public class FacultyServiceImplementation implements FacultyService {
 		}
 		else
 			return result;
+
 	}
+	@Override
+	public ArrayList<Semester> findAllSemesters() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public ArrayList<Courserun> findAllCourserunsByFacultyId(int facultyId){
+		return cr.findCoursesById(facultyId);
+	}
+	@Override
+	public CourserunStudent saveCourserunStudent(CourserunStudent courserunStudent) {
+		return crsr.saveAndFlush(courserunStudent);
+		
+	}
+	@Override
+	public List<CourserunStudent> saveCourserunStudents(List<CourserunStudent> courserunStudents) {
+		return crsr.saveAll(courserunStudents);
+	}
+	
 
 }

@@ -29,9 +29,17 @@ public class FacultyController {
 	private StudentService sservice;
 
 	private GenerateReportService grs;
+	
+	private StatusService staservice;
+	
+	private LeaveService lservice;
 
 	public GenerateReportService getGrs() {
 		return grs;
+	}
+	
+	@InitBinder protected void initBinder(WebDataBinder binder) { 
+		//binder.addValidators(new ProductValidator()); 
 	}
 
 	@Autowired
@@ -47,6 +55,16 @@ public class FacultyController {
 	@Autowired
 	public void setStudentService(StudentServiceImplementation sservice) {
 		this.sservice = sservice;
+	}
+	
+	@Autowired
+	public void setStatusService(StatusServiceImplementation staservice) {
+		this.staservice = staservice;
+	}
+	
+	@Autowired
+	public void setLeaveService(LeaveServiceImplementation lservice) {
+		this.lservice = lservice;
 	}
 	
 	@GetMapping("/home")
@@ -75,10 +93,43 @@ public class FacultyController {
 		return "course_class_list";
 
 	}
-
-	@GetMapping("/score_card")
-	public String getScore() {
-		return "score_card";
+	
+	@GetMapping("/mycourses/this_course/class_list")
+	public String getClassList() {
+		
+		return "class_list";
+	}
+	
+	@GetMapping("/grade")
+	public String getGrade(Model model, @RequestParam(value = "coursename", required = false, defaultValue = "-")String coursename) {		
+		Faculty faculty = fservice.findFacultyById(102);
+		model.addAttribute("faculty", faculty);
+		ArrayList<Courserun> courseruns = fservice.findAllCourserunsByFacultyId(faculty.getFacultyId());
+		model.addAttribute("courseruns", courseruns);
+		String courseCode = "-";
+		Semester semester = new Semester();
+		for (Courserun c:courseruns) {
+			  if (coursename.equals(c.getCourseName())) { 
+				  courseCode = c.getCourseCode(); 
+				  semester = c.getSemester();
+				  break; 
+				  }
+			}
+		model.addAttribute("courseKey", courseCode + (semester == null ? "" : semester.getSemester()));
+		List<CourserunStudent> courserunstudents = new ArrayList<>();
+		if(coursename != null && !coursename.equals("-")) courserunstudents = fservice.findAllStudents(coursename);
+		model.addAttribute("courserunstudents", courserunstudents);
+		CourserunStudentListWrapper wrapper = new CourserunStudentListWrapper();
+		wrapper.setList(courserunstudents);
+		model.addAttribute("wrapper", wrapper);
+		return "faculty_grade";
+	}
+	
+	@PostMapping("/grade/submit")
+	public String submitStudentGrades(@ModelAttribute("wrapper") CourserunStudentListWrapper wrapper, Model model, BindingResult bindingResult) {
+		List<CourserunStudent> courserunStudents = wrapper.getList();
+		fservice.saveCourserunStudents(courserunStudents);
+		return "redirect:/faculty/grade";
 	}
 
 	@GetMapping("/movement")
@@ -96,8 +147,19 @@ public class FacultyController {
 	}
 
 	@PostMapping("/createleave")
-	public String createLeave(@ModelAttribute("leave") Leave leave) {
+	public String createLeave(@Valid @ModelAttribute("leave") Leave leave, BindingResult bindingResult, Model model) {
 		//leave.setStatus(status);
+		if (bindingResult.hasErrors()) { 
+			model.addAttribute("leave", leave);
+			Faculty faculty = fservice.findFacultyById(102);
+			model.addAttribute("faculty", faculty);
+			return "faculty_leave"; 
+		} 
+		Status status = staservice.findByStatusId(4);
+		model.addAttribute("status", status);
+		leave.setStatus(status);
+		lservice.saveLeave(leave);
+		
 		return "redirect:/faculty/home";
 	}
 
@@ -115,3 +177,5 @@ public class FacultyController {
 		grs.ExportCSV(request, response, students, headers);
 	}
 }
+
+
