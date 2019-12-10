@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Department Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div>
+		<nav class="navbar navbar-default">
+  			<div class="container-fluid">
+    			<div class="navbar-header">
+      				<a class="navbar-brand" href="#">Home</a>
+    			</div>
+    			<ul class="nav navbar-nav">
+      				<li class="active"><a href="administrator.html" th:href="@{/administrator}">Home</a></li>
+      				<li><a href="#">Page 1</a></li>
+      				<li><a href="#">Page 2</a></li>
+      				<li><a href="#">Page 3</a></li>
+      				<li><a href="logout.html" th:href="@{/home}">Logout</a></li>
+    			</ul>
+  			</div>
+		</nav>
+	</div>
+	<h1>List of Faculties</h1>
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<a class="btn btn-primary" role="button" href="departmentform.html" th:href="@{/adddepartment}">Add Faculty</a>
+			<br/>
+			<table class="table table-hover">
+				<tr>
+					<th>Department Id</th>
+					<th>Department Name</th>
+					<th colspan="2"></th>
+				</tr>
+				<tr th:each="department:${departments}">
+					<td th:text=${department.departmentId}>FacultyId</td>
+					<td th:text=${department.name}>Name</td>
+					<td><a href="editdepartment.html" th:href="@{/editdepartment/}+${department.departmentId}"> 
+						Edit </a></td>
+					<td><a href="deletedepartment.html" th:href="@{/deletedepartment/}+${department.departmentId}"> 
+						Delete </a></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
