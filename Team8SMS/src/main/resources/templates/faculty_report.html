@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="/daterangepicker.min.css" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="/moment.min.js"></script>
+<script src="/jquery.daterangepicker.min.js"></script>
+
+<title>Faculty/report</title>
+</head>
+<body>
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<h2 style="color: 000000">
+				Hello,
+				<text th:text="${faculty.name}">Name</text>
+			</h2>
+			<ul class="nav nav-pills">
+				<li><a href="http://localhost:8080/faculty/home"
+					class="glyphicon glyphicon-home"> <span>Home</span>
+				</a></li>
+				<li><a href="http://localhost:8080/faculty/courses"
+					class="glyphicon glyphicon-list-alt"> <span>Course</span></a></li>
+				<li><a href="http://localhost:8080/faculty/grade"
+					class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
+				<li class="active"><a
+					href="http://localhost:8080/faculty/report"
+					class="glyphicon glyphicon-stats"> <span>Report</span></a></li>
+				<li><a href="#" class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="row" style="margin: 20px">
+		<div class="col-md-6">
+			<div class="col-sm-2">
+				<label for="Choose_Courses" class="col-form-label">Courses:</label>
+			</div>
+			<div class="col-sm-9">
+				<select id="form_Courses" name="dob_Courses"
+					onchange="onSelectChange()">
+					<option id="-" value="-">-</option>
+					<option th:each="courserun:${courseruns}"
+						th:id="${courserun.courseCode} + ${courserun.semester.semester}"
+						th:value="${courserun.courseName}"
+						th:text="'['+${courserun.courseCode}+']/'+${courserun.courseName}">
+				</select>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="col-sm-2">
+				<label for="Choose_Grade" class="col-form-label">Grade:</label>
+			</div>
+			<div class="col-sm-9">
+				<select id="form_Grade" name="dob_Grade" onchange="onSelectChange()">
+					<option id="-" value="-">-</option>
+					<option th:each="courserun:${courseruns}"
+						th:id="${courserun.courseCode} + ${courserun.semester.semester}"
+						th:value="${courserun.courseName}"
+						th:text="'['+${courserun.courseCode}+']/'+${courserun.courseName}">
+				</select>
+			</div>
+		</div>
+	</div>
+	</div>
+
+
+
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<table class="table table-bordered table-hover">
+				<tbody>
+				<thead>
+					<th>COURSE ID</th>
+					<th>COURSE NAME</th>
+					<th>STUDENT ID</th>
+					<th>STUDENT NAME</th>
+					<th>GENDER</th>
+					<th>EMAIL</th>
+					<th>MOBILE</th>
+					<th>GRADE</th>
+
+				</thead>
+				<tr th:each="courseRunStudent, stat:${courserunstudents}">
+					<td th:text="${courseRunStudent.id.courserun.courseCode}">courseCode</td>
+					<td th:text="${courseRunStudent.id.courserun.courseName}">courseName</td>
+					<td th:text="${courseRunStudent.id.student.studentId}">studentId</td>
+					<td th:text="${courseRunStudent.id.student.name}">studentName</td>
+					<td th:text="${courseRunStudent.id.student.name}">gender</td>
+					<td th:text="${courseRunStudent.id.student.name}">email</td>
+					<td th:text="${courseRunStudent.id.student.name}">mobile</td>
+					<td th:text="${courseRunStudent.id.student.name}">grade</td>
+				</tr>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="form-group" style="margin-right: 10px">
+		<div class="input-group col-sm-1 col-sm-offset-11">
+			<a
+				th:href="@{/faculty/downloadCSV/classlist?coursename=} + ${coursename}"
+				class="glyphicon glyphicon-download">&nbsp;Download&emsp;</a>
+			&emsp;&emsp;
+		</div>
+	</div>
+
+
+</body>
+</html>
