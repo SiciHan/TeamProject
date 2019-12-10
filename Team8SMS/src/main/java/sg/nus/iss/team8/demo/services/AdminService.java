@@ -100,4 +100,6 @@ public interface AdminService {
 	
 	int newDepartmentId();
 
+	ArrayList<CourserunStudent> findCoursesByStudentId(int studentid);
+
 }
