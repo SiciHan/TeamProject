@@ -436,15 +436,10 @@ public class AdminController {
 	@RequestMapping("/downloadCSV/classlist")
 	public void downloadCSV(HttpServletRequest request, HttpServletResponse response, 
 			@RequestParam("coursename") String coursename) throws IOException {
-		// create a list of object
+			// create a list of object
 		
-			System.out.println("found " + coursename);
 			ArrayList<CourserunStudent> students = aService.findStudentsByCourseName(coursename);
-			System.out.println("found: " + students.size() + " students");
-			System.out.println("trying to download");
 			String[] headers=new String[]{"Course Name","Student Id", "Student Name", "Degree", "Mobile", "Email", "Grade", "Status"};
-			System.out.println("request: " + request);
-			System.out.println("response: " + response);
 			
 			grs.ExportCSV(request, response, students, headers);
 	}
