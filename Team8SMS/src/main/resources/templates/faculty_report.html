@@ -10,6 +10,8 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script src="/moment.min.js"></script>
 <script src="/jquery.daterangepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script language="JavaScript" src="/reportChart.js"></script>
 
 <title>Faculty/report</title>
 </head>
@@ -112,6 +114,50 @@
 		</div>
 	</div>
 
+	<div class="row">
+		<canvas id="barChart" style="height:20vh;width:60vw;"></canvas>
+	</div>
 
+<script>
+var ctx = document.getElementById('barChart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'bar',
+
+    // The data for our dataset
+    data: {
+        labels: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'D+', 'D'],
+        datasets: [{
+            label: 'Student Count of Grades',
+            backgroundColor: 'rgb(150, 60, 90)',
+            borderColor: 'rgb(0, 0, 0)',
+            data: [12, 10, 15, 12, 13, 14, 15, 8, 14, 15],
+            borderWidth: 1,
+
+        }],
+    },
+
+    // Configuration options go here
+    options: {
+        layout: {
+            padding: {
+                left: 50,
+                right: 50,
+                top: 0,
+                bottom: 0
+            }
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    suggestedMin: 0,
+                    suggestedMax: 30
+                }
+
+            }]
+        }
+    }
+});
+</script>
 </body>
 </html>
