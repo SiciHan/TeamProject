@@ -61,6 +61,9 @@
 			<p>Pending Course Applications: <span th:text="${courseApplicationCounter}"></span></p>
 			<p>Pending Leave Applications: <span th:text="${leaveApplicationCounter}"></span></p>
 		</div>
+		<div class="col-md-3">
+			<a th:href="@{/downloadCSV/gpalist}" class="btn btn-primary">Download Student GPA</a>
+		</div>
 	</div>
 </body>
 <script>

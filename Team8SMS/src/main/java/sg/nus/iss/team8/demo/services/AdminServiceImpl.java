@@ -50,6 +50,12 @@ public class AdminServiceImpl implements AdminService {
 	private LeaveRepository leaveRepository;
 	private FacultyRepository fr;
 	private DepartmentRepository departmentRepository;
+	private StudentService studentService;
+	
+	@Autowired
+	public void setStudentService(StudentServiceImplementation studentService) {
+		this.studentService = studentService;
+	}
 
 	@Autowired
 	public void setFacultyRepository(FacultyRepository fr) {
@@ -535,5 +541,19 @@ public class AdminServiceImpl implements AdminService {
 			ul.put(username.get(i), leaves.get(i));
 		}
 		return ul;
+	}
+
+	@Override
+	public double calculateGPA(Student student) {
+		ArrayList<CourserunStudent>clist=courserunStudentRepository.findCourseGradebyId(student.getStudentId());
+		double totalCompletedCredits=0;
+		for(CourserunStudent c:clist) {
+			totalCompletedCredits+=c.getId().getCourserun().getCourseUnit();
+		}
+		double points=studentService.totalScorePoints(student.getStudentId());
+		double cap;
+		cap=points/totalCompletedCredits;
+		cap=Math.round(cap*100.0)/100.0;
+		return cap;
 	}
 }
