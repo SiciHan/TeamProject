@@ -9,36 +9,67 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<h1>Add Faculty Form</h1>
+	<div>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Home</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="/facultymanagement">Faculty
+							Management</a></li>
+					<li><a href="#">Page 1</a></li>
+					<li><a href="#">Page 2</a></li>
+					<li><a href="#">Page 3</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	<br/>
+	<div>
+		<h2>
+			<span th:if="${faculty.name == null}">Add Faculty </span>
+			<span th:unless="${faculty.name == null}">Edit Faculty</span>
+		</h2>
 		<form th:object="${faculty}" th:action="@{/savefaculty}" method="post">
-		<fieldset>
-		Faculty Id: <input type="text" th:field="*{facultyId}">
-		<p th:if="${#fields.hasErrors('facultyId')}" th:errors="*{facultyId}"></p>
-		</fieldset>
-		<fieldset>
-		Name: <input type="text" th:field="*{name}">
-		<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
-		</fieldset>
-		<fieldset>
-		Department :
-		<select th:field="*{department.departmentId}">
-		<option th:value="0">Select department</option>
-		<option th:each="department:${departments}" th:value="${department.departmentId}" th:text="${department.name}">
-		</option>
-		</select>
-		</fieldset>
-		<fieldset>
-		Status :
-		<select th:field="*{status.status}">
-		<option th:value="0">Select Status</option>
-		<option th:each="status:${statuses}" th:if="${status.status == 2 OR status.status == 10}" 
-				th:value="${status.status}" th:text="${status.label}">
-		</option>
-		</select>
-		</fieldset>
-		<fieldset>
-			<button type="submit">Save</button>
-		</fieldset> 
+			<div class="form-group">
+			<label for="facultyId">Faculty ID</label>
+				<span th:if="${faculty.name == null}">
+					<input type="text" th:value="${newFacultyId}" id="facultyId" name="facultyId" class="form-control" readonly>
+				</span>
+				<span th:unless="${faculty.name == null}">
+					<input type="text" th:field="*{facultyId}" class="form-control">
+				</span>
+				<p th:if="${#fields.hasErrors('facultyId')}" th:errors="*{facultyId}" class="alert alert-danger"></p>
+			</div>
+			<div class="form-group">
+			<label for="name">Name</label>
+				<input type="text" th:field="*{name}" class="form-control">
+				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"></p>
+			</div>
+			<div class="form-group">
+			<label for="department.departmentId">Department</label>
+				<select th:field="*{department.departmentId}">
+					<option th:value="0">Select department</option>
+					<option th:each="department:${departments}" 
+							th:value="${department.departmentId}" th:text="${department.name}">
+					</option>
+				</select>
+			</div>
+			<div class="form-group">
+			<label for="status.status">Status</label>
+				<select th:field="*{status.status}">
+					<option th:value="0">Select Status</option>
+					<option th:each="status:${statuses}" 
+							th:if="${status.status == 2 OR status.status == 10}" 
+							th:value="${status.status}" th:text="${status.label}">
+					</option>
+				</select>
+			</div>
+			<div>
+				<button type="submit" class="btn btn-primary">Save</button>
+			</div> 
 		</form>
+	</div>
 </body>
 </html>

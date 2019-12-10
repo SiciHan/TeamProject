@@ -33,16 +33,23 @@
 
 	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
-			<a class="btn btn-primary" href="studentform.html" th:href="@{/administrator/addstudent}" role="button">Add
+			<a class="btn btn-primary" href="studentform.html" th:href="@{/addstudent}" role="button">Add
 				Student</a>
 			<br/>
-			<div th:if="${studentPage.totalPages > 0}" class="pagination"
-   				 th:each="pageNumber : ${pageNumbers}">
-			    <a th:href="@{/administrator/studentmanagement(size=${studentPage.size}, page=${pageNumber})}"
-		        	th:text=${pageNumber}
-			        th:class="${pageNumber==studentPage.number + 1} ? active"></a>
-			</div>
 			<br/>
+			<div>
+				<p>List results:
+					<a href="/studentmanagement?size=5&page=1">5</a>
+					<a href="/studentmanagement?size=10&page=1">10</a>
+					<a href="/studentmanagement?size=20&page=1">20</a>
+				</p>
+			</div>
+			<div th:if="${studentPage.totalPages > 0}" class="pagination mb-2"
+   				 th:each="pageNumber : ${pageNumbers}">
+				    <a th:href="@{/studentmanagement(size=${studentPage.size}, page=${pageNumber})}"
+			        	th:text=${pageNumber}
+				        th:class="${pageNumber==studentPage.number + 1} ? active"></a>
+			</div>
 			<table class="table table-hover">
 				<tbody>
 				<thead>
@@ -71,13 +78,9 @@
 					<td th:text=${student.semester.label}>Semester</td>
 					<!-- <td><a href="enrolledcourses.html"
 				th:href="@{/product/edit/}+${product.id}"> Enrolled Courses </a></td>-->
-					<td><a href="#"> Courses </a></td>
-					<td><a href="#"
-						th:href="@{/administrator/editstudent/}+${student.studentId}">
-							Edit </a></td>
-					<td><a href="#"
-						th:href="@{/administrator/deletestudent/}+${student.studentId}">
-							Delete </a></td>
+					<td><a href="#" th:href="@{/viewstudentcourses/}+${student.studentId}">Courses</a></td>
+					<td><a href="#" th:href="@{/editstudent/}+${student.studentId}">Edit</a></td>
+					<td><a href="#" th:href="@{/deletestudent/}+${student.studentId}">Delete</a></td>
 				</tr>
 				</tbody>
 			</table>

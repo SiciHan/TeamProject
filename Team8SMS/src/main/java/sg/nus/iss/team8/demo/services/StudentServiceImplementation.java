@@ -214,4 +214,68 @@ public class StudentServiceImplementation implements StudentService {
 		return (ArrayList<Student>) studentRepository.findStudentsByCourseName(courseName);
 	}
 
+	
+	@Override
+	public int totalCredits(int studentid) {
+		ArrayList<CourserunStudent>clist=courserunStudentRepository.findCourseGradebyId(studentid);
+		double totalCredits=0;
+		for(CourserunStudent c:clist) {
+			totalCredits+=c.getId().getCourserun().getCourseUnit();
+		}
+		return (int)totalCredits;
+	}
+	@Override
+	public String graduationStatus(int studentid) {
+		if(totalCredits(studentid)<160) {
+			return "Not fulfill graduation requirement, please contact your home falculty for further assistance if necessary.";
+		}
+		else {
+			return "Ready to file for graduation";
+		}
+		
+		
+	}
+	@Override
+	public double totalScorePoints(int studentid) {
+		ArrayList<CourserunStudent>clist=courserunStudentRepository.findCourseGradebyId(studentid);
+		double sum=0;
+		for(CourserunStudent c:clist) {
+			if(c.getGrade().equals("A+") || c.getGrade().equals("A")) {
+				sum+=5.0*c.getId().getCourserun().getCourseUnit();
+			}
+			else if(c.getGrade().equals("A-")) {
+				sum+=4.5*c.getId().getCourserun().getCourseUnit();
+			}
+			else if(c.getGrade().equals("B+")) {
+				sum+=4.0*c.getId().getCourserun().getCourseUnit();
+			}
+			else if(c.getGrade().equals("B")) {
+				sum+=3.5*c.getId().getCourserun().getCourseUnit();
+			}
+			else if(c.getGrade().equals("B-")) {
+				sum+=3.0*c.getId().getCourserun().getCourseUnit();
+			}
+			else if(c.getGrade().equals("C+")) {
+				sum+=2.5*c.getId().getCourserun().getCourseUnit();
+			}
+			else if(c.getGrade().equals("C")) {
+				sum+=2.0*c.getId().getCourserun().getCourseUnit();
+			}
+			else if(c.getGrade().equals("D+")) {
+				sum+=1.5*c.getId().getCourserun().getCourseUnit();
+			}
+			else if(c.getGrade().equals("D")) {
+				sum+=1.0*c.getId().getCourserun().getCourseUnit();
+			}
+			else if(c.getGrade().equals("N")) {
+				sum+=0*c.getId().getCourserun().getCourseUnit();
+			}
+		}
+		return sum;
+	}
+	
+	@Override
+	public void saveCourserunStudent(CourserunStudent crs) {
+		courserunStudentRepository.saveAndFlush(crs);
+	}
 }

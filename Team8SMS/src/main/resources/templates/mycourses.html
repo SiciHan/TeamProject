@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<title>My Courses</title>
+</head>
+<body>
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<h2 style="color: 000033">Hello <span th:text="${student.name}">username</span> Welcome Back</h2>
+			<h2 >Matriculation No: <span th:text="${student.studentId}">userid</span></h2>
+		</div>
+	</div>
+	<div>
+		<nav class="navbar navbar-default">
+  			<div class="container-fluid">
+    			<div class="navbar-header">
+      				<a class="navbar-brand" href="studenteducation.html" th:href="@{/student/stuedu}">Student Education Record</a>
+    			</div>
+    			<ul class="nav navbar-nav">
+      				<li class="active"><a href="mycourses.html" th:href="@{/student/mycourses}">My Courses</a></li>
+      				<li><a href="applycourses.html" th:href="@{/student/applycourse}">Apply Courses</a></li>
+      				<li><a href="mytranscript.html" th:href="@{/student/transcript}">My Transcript</a></li>
+      				<li><a href="movementrecord.html" th:href="@{/student/movementregister}">Movement Record</a></li>
+      				<li><a href="logout.html" th:href="@{/student/logout}">Log Out</a></li>
+    			</ul>
+  			</div>
+		</nav>
+	</div>
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<table class="table table-bordered table-hover">
+				<tbody>
+				<tr>			
+					<th>COURSE CODE</th>
+					<th>COURSE NAME</th>
+					<th>SEMESTER</th>
+					<th>FALCULTY ID</th>
+					<th>COURSES UNIT</th>
+					<th>COURSES STATUS</th>
+				</tr>
+				<tr th:each="c: ${courselist}">
+				<td th:text="${c.id.courserun.courseCode}">Code</td>
+				<td th:text="${c.id.courserun.courseName}">COURSE CODE to be here</td>
+				<td th:text="${c.id.courserun.semester.semester}">Semester</td>
+				<td th:text="${c.id.courserun.faculty.facultyId}">Faculty</td>
+				<td th:text="${c.id.courserun.courseUnit}">Unit</td>
+				<td th:text="${c.status.label}">Status</td>
+				</tr>								
+				</tbody>		
+			</table>
+		</div>
+	</div>
+</body>
+</html>

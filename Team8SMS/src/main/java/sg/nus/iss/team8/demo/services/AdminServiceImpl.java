@@ -1,8 +1,13 @@
 package sg.nus.iss.team8.demo.services;
 
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -157,6 +162,14 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+	public int newFacultyId() {
+		ArrayList<Faculty> faculties = findAllFaculty();
+		Faculty faculty = Collections.max(faculties, Comparator.comparingInt(Faculty::getFacultyId));
+		int newFacultyId = faculty.getFacultyId() + 1;
+		return newFacultyId;
+	}
+	
+	@Override
 	public int newStudentId() {
 		ArrayList<Student> students = findAllStudents();
 		Student student = Collections.max(students, Comparator.comparingInt(Student::getStudentId));
@@ -167,7 +180,57 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public Semester currentSemester() {
 		ArrayList<Semester> allSems = (ArrayList<Semester>)semesterRepository.findAll();
-		Semester currentSemester = Collections.max(allSems, Comparator.comparingInt(Semester::getSemester));
+		
+		String sem;
+		
+		//get current date
+		LocalDate currentDate = LocalDate.now();
+		int currentMonth = currentDate.getMonthValue();
+		int currentYear = currentDate.getYear();
+		
+//		System.out.println("Current YYYY-MM: "+ currentYear + currentMonth);
+		
+		//if month is >6 -> Sem1, else Sem2
+		if (currentMonth > 7 || currentMonth < 2)
+			sem = "Sem1";
+		else
+			sem = "Sem2";
+		
+		//Extract out the year, eg 2019, add +1 to the year to get next year, 2020
+		int nextYear = currentYear+1;
+		
+		//parse the 2 years to String
+		String year1 = String.valueOf(currentYear);
+		String year2 = String.valueOf(nextYear);
+		
+		//AY is fixed.
+		//Concatenate everything into a String. Eg AY2019/2020Sem2
+		String thisSem = "AY"+year1+"/"+year2+sem;
+//		String thisSem = "AY2023/2024Sem1";
+//		String thisSem = "AY2018/2019Sem1";
+		
+//		System.out.println("Current Semester: " + thisSem);
+		
+		//check if current semester (string) exists in the allSems list (of strings)
+		//if exists, just return the semester object
+		
+		Semester currentSemester = new Semester();
+		if(allSems.stream().filter(semester -> semester.getLabel().equals(thisSem)).findFirst().isPresent()) {
+			currentSemester = allSems.stream().filter(semester -> semester.getLabel().equals(thisSem)).findFirst().orElse(null);
+		} else {
+		
+		//if no such semester exists,		
+		//Instantiate and set Semester label and/or Id 
+		//(Id can either manually increment or use generated value annotation>
+//		if(currentSemester == null) {
+			Semester latestSemesterInTheDatabase = Collections.max(allSems, Comparator.comparingInt(Semester::getSemester));
+			int newSemId = latestSemesterInTheDatabase.getSemester() + 1;
+			currentSemester.setSemester(newSemId);
+			currentSemester.setLabel(thisSem);
+		}
+		
+//		System.out.println(currentSemester.getLabel());
+		
 		return currentSemester;
 	}
 	
@@ -199,7 +262,6 @@ public class AdminServiceImpl implements AdminService {
 		courserunStudentRepository.setStatus(id,coursename,status);
 	}
 	
-	//Willis 7th Dec
 	@Override
 	public ArrayList<Status> findAllStatuses(){
 		return (ArrayList<Status>)statusRepository.findAll();
@@ -218,13 +280,40 @@ public class AdminServiceImpl implements AdminService {
 		return leaveRepository.findById(id).orElse(null);
 	}
 	@Override
-	public void approveLeave(Leave leave) {
-		leaveRepository.setStatus(leave.getId(), 6);
-//		leaveRepository.save(leave);
+	public void approveLeave(String startDate, String userType, int id, int status) {
+		Status apprvstatus = statusRepository.findById(status).orElse(null);
+		List<Leave> leaves=leaveRepository.findAll();
+		for (Leave l : leaves) {
+			//if the leave is equal to startDate, userType and id 
+			// set status to status(approve or reject)
+			if (l.getId().getStartDate().toString().equalsIgnoreCase(startDate) 
+					&& l.getId().getUserType().equals(userType) && l.getId().getId() == id) {
+				l.setStatus(apprvstatus);
+				System.out.println("1st comparison:" +l.getId().getStartDate().toString().equalsIgnoreCase(startDate));
+				System.out.println("2st comparison:" +l.getId().getUserType().equals(userType));
+				System.out.println("3rd comparison:" + l.getStatus().getStatus());
+				System.out.println("4th comparison:" + l.getStatus().getLabel());
+				leaveRepository.saveAndFlush(l);
+			}
+		}
 	}
 	@Override
-	public void rejectLeave(Leave leave) {
-		leaveRepository.setStatus(leave.getId(), 7);
+	public void rejectLeave(String startDate, String userType, int id, int status) {
+		Status apprvstatus = statusRepository.findById(status).orElse(null);
+		List<Leave> leaves=leaveRepository.findAll();
+		for (Leave l : leaves) {
+			//if the leave is equal to startDate, userType and id 
+			// set status to status(approve or reject)
+			if (l.getId().getStartDate().toString().equalsIgnoreCase(startDate) 
+					&& l.getId().getUserType().equals(userType) && l.getId().getId() == id) {
+				l.setStatus(apprvstatus);
+				System.out.println("1st comparison:" +l.getId().getStartDate().toString().equalsIgnoreCase(startDate));
+				System.out.println("2st comparison:" +l.getId().getUserType().equals(userType));
+				System.out.println("3rd comparison:" + l.getStatus().getStatus());
+				System.out.println("4th comparison:" + l.getStatus().getLabel());
+				leaveRepository.saveAndFlush(l);
+			}
+		}
 	}
 
 	@Override
@@ -269,5 +358,182 @@ public class AdminServiceImpl implements AdminService {
 	public ArrayList<CourserunStudent> findStudentsByCourseName(String courseName) {
 		return (ArrayList<CourserunStudent>) courserunStudentRepository.findStudentsByCourseName(courseName);
 	}
+	
+	@Override
+	public ArrayList<Department> findAllDepartment(){
+		return (ArrayList<Department>)departmentRepository.findAll();
+	}
 
+	@Override
+	public Department findDepartmentById(int id) {
+		return departmentRepository.findById(id).orElse(null);
+	}
+
+	@Override
+	public Department findDepartmentByName(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteDepartment(Department department) {
+		departmentRepository.delete(department);
+	}
+
+	@Override
+	public Department saveDepartment(Department department) {
+		return departmentRepository.saveAndFlush(department);
+	}
+
+	@Override
+	public int newDepartmentId() {
+		ArrayList<Department> departments = findAllDepartment();
+		Department department = Collections.max(departments, Comparator.comparingInt(Department::getDepartmentId));
+		int newDepartmentId = department.getDepartmentId() + 1;
+		return newDepartmentId;
+	}
+	@Override
+	public ArrayList<Semester> findAllSemsters() {
+		return (ArrayList<Semester>) semesterRepository.findAllSemesters();
+	}
+
+	@Override
+	public Semester saveSemester(Semester sem) {
+		return semesterRepository.saveAndFlush(sem);
+	}
+
+	@Override
+	public Semester findOrAddSemester(String semLabel) {
+		ArrayList<Semester> allSems = (ArrayList<Semester>)semesterRepository.findAll();
+
+		Semester setSemester = new Semester();
+		if(allSems.stream().filter(semester -> semester.getLabel().equals(semLabel)).findFirst().isPresent()) {
+			setSemester = allSems.stream().filter(semester -> semester.getLabel().equals(semLabel)).findFirst().orElse(null);
+		} else {
+			Semester latestSemesterInTheDatabase = Collections.max(allSems, Comparator.comparingInt(Semester::getSemester));
+			int newSemId = latestSemesterInTheDatabase.getSemester() + 1;
+			setSemester.setSemester(newSemId);
+			setSemester.setLabel(semLabel);
+		}
+		
+		saveSemester(setSemester);
+		return setSemester;		
+	}
+	
+	@Override
+	public Courserun concatCourseNameWithYear(Courserun course, String shortSemLabel) {
+		course.setCourseName(course.getCourseName() + " " + shortSemLabel);
+		return course;
+	}
+
+	@Override
+	public void applyGraduatedStatus(Semester sem, int threshold) {
+		// retrieve all students
+		ArrayList<Student> students = findAllStudents();
+		
+		for (Student student : students) {
+			ArrayList<CourserunStudent>clist=courserunStudentRepository.findCourseGradebyId(student.getStudentId());
+			double totalCompletedCredits=0;
+			for(CourserunStudent c:clist) {
+				totalCompletedCredits+=c.getId().getCourserun().getCourseUnit();
+			}
+//			int totalCompletedCredits = 100; // to test that semester will change
+//			System.out.println("Student's status: " + student.getStatus().getLabel() + ", Total credits: " + totalCompletedCredits + ", Student's Semester: " + student.getSemester().getLabel());
+			if (student.getStatus().getStatus() != 3) {
+					if(totalCompletedCredits >= threshold) {
+						//set student's status to 3 = graduated
+						Status stat = new Status();
+						stat.setStatus(3);
+						student.setStatus(stat);
+//						System.out.println(student.getStudentId() + " has Graduated: " + student.getStatus().getStatus());
+					} else {
+						//change semester to current semester
+						student.setSemester(sem);
+//						System.out.println(student.getStudentId() + " still enrolled: " + student.getSemester().getLabel());
+					}
+				saveStudent(student);
+			}
+		}
+	}
+
+	@Override
+	public ArrayList<CourserunStudent> findCoursesByStudentId(int studentid) {
+		return (ArrayList<CourserunStudent>) courserunStudentRepository.findAllCourseById(studentid);
+	}
+
+	@Override
+	public int countPendingCourses() {
+		return (int)courserunStudentRepository.findCourseByStatus(4).size();
+	}
+
+	@Override
+	public int countPendingLeaves() {
+		return (int)leaveRepository.findLeaveByStatus(4).size();
+	}
+
+	@Override
+	public ArrayList<Leave> findLeavesByYearMonth(YearMonth ym) {
+		ArrayList<Leave> leavelist=new ArrayList<Leave>();
+		List<Leave> leaves=leaveRepository.findAll();
+		for (Leave leave : leaves) {
+			//if the leave startdate is before or equals to the selected yearmonth and enddate is after or equals to selected yearmonth
+			//we will add it in
+			
+			Date startDate=leave.getId().getStartDate();
+			Date endDate=leave.getEndDate();
+			Calendar cal1 = Calendar.getInstance();
+			cal1.setTime(startDate);
+			int month1=cal1.get(Calendar.MONTH);
+			int year1=cal1.get(Calendar.YEAR);
+			
+			Calendar cal2 = Calendar.getInstance();
+			cal2.setTime(endDate);
+			int month2=cal2.get(Calendar.MONTH);
+			int year2=cal2.get(Calendar.YEAR);
+	
+			YearMonth startym=YearMonth.of(year1, month1+1);
+			YearMonth endym=YearMonth.of(year2, month2+1);
+			
+			if((startym.isBefore(ym)||startym.equals(ym)) && (endym.isAfter(ym)||endym.equals(ym))) leavelist.add(leave);
+		}
+		return leavelist;		
+	}
+
+	@Override
+	public ArrayList<YearMonth> findAllYearMonths(YearMonth currentym) {
+		ArrayList<YearMonth> ymlist=new ArrayList<YearMonth>();
+		ymlist.add(currentym);
+		for(int i=1;i<3;i++) {
+			ymlist.add(currentym.plusMonths(i));
+			ymlist.add(currentym.minusMonths(i));
+		}
+		return ymlist;
+	}
+
+	@Override
+	public ArrayList<String> findAllUserName(ArrayList<Leave> leaves) {
+		ArrayList<String> names=new ArrayList<String>();
+		for(Leave l:leaves) {
+			if(l.getId().getUserType().equals("Student") ){
+				String studentname=studentRepository.findById(l.getId().getId()).get().getName();
+				names.add(studentname);}
+			else if(l.getId().getUserType().equals("Faculty")) {
+				String facultyname=fr.findById(l.getId().getId()).get().getName();
+				names.add(facultyname);
+			}
+			else {
+				names.add("");
+			}
+		}
+		return names;
+	}
+
+	@Override
+	public HashMap<String, Leave> MergeListToMap(ArrayList<Leave> leaves, ArrayList<String> username) {
+		HashMap<String,Leave> ul=new HashMap<>();
+		for(int i=0;i<leaves.size();i++) {
+			ul.put(username.get(i), leaves.get(i));
+		}
+		return ul;
+	}
 }

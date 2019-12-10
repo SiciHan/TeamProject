@@ -141,5 +141,10 @@ public class LeaveServiceImplementation implements LeaveService {
 		}
 		return ul;
 	}
+	
+	@Override
+	public void saveLeave(Leave leave) {
+		lr.saveAndFlush(leave);
+	}
 
 }

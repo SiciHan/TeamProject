@@ -13,7 +13,7 @@
 		<nav class="navbar navbar-default">
   			<div class="container-fluid">
     			<div class="navbar-header">
-      				<a class="navbar-brand" href="#">Apply Course</a>
+      				<a class="navbar-brand" href="#">Home</a>
     			</div>
     			<ul class="nav navbar-nav">
       				<li class="active"><a href="administrator.html" th:href="@{/administrator}">Home</a></li>
@@ -26,25 +26,30 @@
 		</nav>
 	</div>
 	<h1>List of Faculties</h1>
-	<!-- Add HyperLink -->
-	<a href="facultyform.html" th:href="@{/addfaculty}">Add Faculty</a>
-	<table>
-		<tr>
-			<td>Faculty Id</td>
-			<td>Name</td>
-			<td>Status</td>
-			<td>Department name</td>
-		</tr>
-		<tr th:each="faculty:${faculty}">
-			<td th:text=${faculty.facultyId}>FacultyId</td>
-			<td th:text=${faculty.name}>Name</td>
-			<td th:text=${faculty.status.label}>Status</td>
-			<td th:text=${faculty.department.name}>DepartmentName</td>
-			<td><a href="EditFaculty.html" th:href="@{/editfaculty/}+${faculty.facultyId}"> 
-			Edit </a></td>
-			<td><a href="DeleteFaculty.html" th:href="@{/deletefaculty/}+${faculty.facultyId}"> 
-			Delete </a></td>
-		</tr>
-	</table>
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<a class="btn btn-primary" role="button" href="facultyform.html" th:href="@{/addfaculty}">Add Faculty</a>
+			<br/>
+			<table class="table table-hover">
+				<tr>
+					<th>Faculty Id</th>
+					<th>Name</th>
+					<th>Status</th>
+					<th>Department name</th>
+					<th colspan="2"></th>
+				</tr>
+				<tr th:each="faculty:${faculty}">
+					<td th:text=${faculty.facultyId}>FacultyId</td>
+					<td th:text=${faculty.name}>Name</td>
+					<td th:text=${faculty.status.label}>Status</td>
+					<td th:text=${faculty.department.name}>DepartmentName</td>
+					<td><a href="editfaculty.html" th:href="@{/editfaculty/}+${faculty.facultyId}"> 
+						Edit </a></td>
+					<td><a href="deletefaculty.html" th:href="@{/deletefaculty/}+${faculty.facultyId}"> 
+						Delete </a></td>
+				</tr>
+			</table>
+		</div>
+	</div>
 </body>
 </html>

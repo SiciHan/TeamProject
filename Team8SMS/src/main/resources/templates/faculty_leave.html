@@ -1,122 +1,88 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-<!-- 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
-<!-- 	<link rel="stylesheet" href="/daterangepicker.min.css" /> -->
-<!-- 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
-<!-- 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> -->
-<!-- 	<script src="/moment.min.js"></script> -->
-<!-- 	<script src="/jquery.daterangepicker.min.js"></script> -->
-	
-	<script src="https://cdn.bootcss.com/jquery/1.12.2/jquery.min.js"></script>
-	<script src="/js/moment.min.js"></script>
-	<script src="/js/jquery.daterangepicker.js"></script> 
-	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/css/demo.css">
-    <link rel="stylesheet" href="/css/daterangepicker.css" />
-    <link rel="stylesheet" href="/w3.css" />
-	<title>Faculty/leave</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="/daterangepicker.min.css" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="/moment.min.js"></script> 
+<script src="/jquery.daterangepicker.min.js"></script> 
+
+<title>Faculty/leave</title>
 </head>
-
 <body>
-<div class="row main">
-	<div class="col-md-12">
-    	<h2 class="top_title"><span class="glyphicon glyphicon-menu-left" aria-hidden="true">
-    	</span><a th:href="@{/faculty/home}">Home</a></h2>
-    	
-        <form th:object="${leave}" th:acton="@{faculty/createleave}">
-        <div class="row" style="margin-top: 30px">
-        	<div class=" col-md-10 col-sm-12 form-horizontal">  
-            	
-                <div class="form-group">
-                	<label for="two-inputs" class="col-md-2 control-label">Leave Period</label>
-                    <div class="col-md-10 form-inline">
-                    <span id="two-inputs">
-                    	<text>Start Date: &nbsp;</text>
-                    	<input type="date" class="form-control" id="date-range200" placeholder="start date" th:type="date" th:field="*{id.startdate}" th:value="${#dates.format(leave.id.startDate, 'yyyy-MM-DD')}">&nbsp;&nbsp;
-                    	<text>End Date: &nbsp;</text>
-                        <input type="date" class="form-control" id="date-range201" placeholder="end date" th:type="date" th:field="*{id.enddate}" th:value="${#dates.format(leave.id.endDate, 'yyyy-MM-DD')}">
-                    </span>
-                    </div>
-                </div>
-                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                <div class="form-group">
-                	<label for="select" class="col-sm-2 control-label">Leave Reason</label>
-                	<div class="input-group col-sm-10">
-						<select class="form-control" id="select" th:field="*{reason}">
-							<option value="">-</option>
-							<option value="Paid leave">Paid leave</option>
-							<option value="Unpaid leave">Unpaid leave</option>
-							<option value="Medical leave">Medical leave</option>
-							<option value="Medical leave">No reason</option>
-						</select>
-					</div>
-                </div>
-                <div class="form-group" style="margin-top: 3%;">
-					<div class="input-group col-sm-3 col-sm-offset-9">
-						<button type="submit" name="btn_dark" id="btn_apply" class="btn btn-primary"
-								style="width: 40%; float: right;">Apply</button>
-						<button name="btn_dark" id="btn_cancel" class="btn btn-dark"
-								style="margin-right: 3%; width: 40%; float: right;">Cancel</button>
-					</div>
-				</div>
-            </div>
-        </div>
-        </form>
+	<div class="row" style="margin: 10px">
+		<div class="col-md-12">
+			<h2 style="color: 000000; margin-bottom: 20px">Hello, <text th:text="${faculty.name}">Name</text></h2>
+			<ul class="nav nav-pills">
+				<li><a href="faculty_home.html" th:href="@{/faculty/home}"
+					class="glyphicon glyphicon-home"> <span>Home</span>
+				</a></li>
+				<li><a href="faculty_courses.html" th:href="@{/faculty/mycourses}" class="glyphicon glyphicon-list-alt"> <span>Course</span></a></li>
+				<li><a href="faculty_grade.html" th:href="@{/faculty/grade}" class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
+				<li><a href="#" class="glyphicon glyphicon-stats"> <span>Report</span></a></li>
+				<li><a href="#" class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
+			</ul>
+		</div>
+	</div>	
+	<form th:object="${leave}" th:action="@{/faculty/createleave}" method="post">
+	<div class="form container" >	
+		<div class="row">	
+			<div class="col-sm-12 col-sm-offset-4" style="margin-bottom:20px; margin-top:40px">
+
+				<label for="Start" class="col-sm-2 col-form-label">Start Date</label>
+				<input type="date" placeholder="" th:type="date" th:field="${leave.id.startDate}" />
+				<p th:if="${#fields.hasErrors('${leave.id.startDate}')}" th:errors="${leave.id.startDate}"></p> 
+
+			</div>
+			
+			<div class="col-sm-12 col-sm-offset-4" style="margin-bottom:20px">
+				<label for="End" class="col-sm-2 col-form-label">End Date</label>
+				<input type="date" placeholder="" th:type="date" th:field="${leave.endDate}" />
+				<p th:if="${#fields.hasErrors('${leave.endDate}')}" th:errors="${leave.endDate}"></p> 
+			</div>
+			
+			<div class="col-sm-12 col-sm-offset-4" style="margin-bottom:20px">
+				<label for="Id" class="col-sm-2 col-form-label">ID</label>
+				<input type="text" name="id.id" id="id.id" th:value="${faculty.facultyId}" readonly />
+			</div>
+		</div>
+	</div>
+    <div class="form-group col-sm-12 col-sm-offset-4">
+        <label for="select" class="col-sm-2 control-label">Leave Reason:</label>
+            <div class="input-group col-sm-4">
+				<select id="select" class="col-sm-5" th:field="*{reason}">
+					<option value="">-</option>
+					<option value="Paid leave">Paid leave</option>
+					<option value="Unpaid leave">Unpaid leave</option>
+					<option value="Medical leave">Medical leave</option>
+					<option value="Medical leave">No reason</option>
+				</select>
+			</div>
+			<p th:if="${#fields.hasErrors('${leave.reason}')}" th:errors="${leave.reason}"></p>
     </div>
-</div>
-<div th:insert="~{home :: copy}">Copy</div>
-</body>
-<script type="text/javascript">
-	// 		$(function() {
-	// 			$('#datetimepicker6').datetimepicker();
-	// 			$('#datetimepicker7').datetimepicker({
-	// 				useCurrent : false
-	// 			});
-	// 			$("#datetimepicker6").on("dp.change", function(e) {
-	// 				$('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-	// 			});
-	// 			$("#datetimepicker7").on("dp.change", function(e) {
-	// 				$('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-	// 			});
-	// 		});
-// 	$('#datepicker')
-// 		.dateRangePicker()
-// 		.bind('datepicker-change', function (event, obj) {
-// 			console.log(obj);
-// 			// obj will be something like this:
-// 			// {
-// 			//      date1: (Date object of the earlier date),
-// 			//      date2: (Date object of the later date),
-// 			//      value: "2013-06-05 to 2013-06-07"
-// 			// }
-// 		})
-// 		.bind('datepicker-apply', function (event, obj) {
-// 			console.log(obj);
-// 		})
-// 		.bind('datepicker-close', function () {
-// 			console.log('close');
-// 		}); 
-
+    <div class="form-group col-sm-12 col-sm-offset-4">
+        <label for="select" class="col-sm-2 control-label">User Type</label>
+            <div class="input-group col-sm-4">
+				<select id="select" class="col-sm-5" th:field="*{id.userType}">
+					<option value="Faculty">Faculty</option>
+				</select>
+			</div>
+			<!--  <p th:if="${#fields.hasErrors('${leave.reason}')}" th:errors="${leave.reason}"></p>-->
+    </div>
 	
-$(function(){
-    $('#two-inputs').dateRangePicker(
-    {
-        separator : ' to ',
-        getValue: function()
-        {
-            if ($('#date-range200').val() && $('#date-range201').val() )
-                return $('#date-range200').val() + ' to ' + $('#date-range201').val();
-            else
-                return '';
-        },
-        setValue: function(s,s1,s2)
-        {
-            $('#date-range200').val(s1);
-            $('#date-range201').val(s2);
-        }
-    });
-});
-</script>
+	<div class="form-group" style="margin-top: 3%;">
+		<div class="input-group col-sm-3 col-sm-offset-8">
+			<button type="submit" name="btn_dark" id="btn_apply" class="btn btn-primary"
+								style="width: 40%; float: right;">Apply</button>
+			<button name="btn_dark" id="btn_cancel" class="btn btn-dark"
+								style="margin-right: 3%; width: 40%; float: right;">Cancel</button>
+		</div>
+	</div>
+	</form>
 
+</body>
 </html>

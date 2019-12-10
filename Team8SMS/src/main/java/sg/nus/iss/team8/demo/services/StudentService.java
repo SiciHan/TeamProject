@@ -28,6 +28,8 @@ public interface StudentService {
 
 	public void setStatusToCancelled(int id, String courseCode, int semesterid);
 	
+	public void saveCourserunStudent(CourserunStudent crs);
+	
 	ArrayList<Student> findAllStudents();
 
 	Page<Student> pageAllStudents(Pageable pageable);
@@ -41,5 +43,9 @@ public interface StudentService {
 	void removeStudent(Student student);
 	
 	ArrayList<Student> findStudentsByCourseName(String courseName);
+	
+	public double totalScorePoints(int studentid);
+	public int totalCredits(int studentid);
+	public String graduationStatus(int studentid);
 
 }
