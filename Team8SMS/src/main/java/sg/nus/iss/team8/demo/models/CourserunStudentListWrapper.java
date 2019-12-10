@@ -7,11 +7,12 @@ public class CourserunStudentListWrapper {
 
 		private List<CourserunStudent> courserunStudents;
 
-		public List<CourserunStudent> getList(){
-		    return courserunStudents;
+		public List<CourserunStudent> getCourserunStudents() {
+			return courserunStudents;
 		}
 
-		public void setList(List<CourserunStudent> courserunStudents){
-		    this.courserunStudents = courserunStudents;
+		public void setCourserunStudents(List<CourserunStudent> courserunStudents) {
+			this.courserunStudents = courserunStudents;
 		}
-	}
+		
+}

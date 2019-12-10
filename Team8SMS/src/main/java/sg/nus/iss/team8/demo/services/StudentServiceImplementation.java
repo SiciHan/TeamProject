@@ -274,5 +274,8 @@ public class StudentServiceImplementation implements StudentService {
 		return sum;
 	}
 	
-
+	@Override
+	public void saveCourserunStudent(CourserunStudent crs) {
+		courserunStudentRepository.saveAndFlush(crs);
+	}
 }
