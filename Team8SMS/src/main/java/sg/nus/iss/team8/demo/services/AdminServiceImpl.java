@@ -461,6 +461,15 @@ public class AdminServiceImpl implements AdminService {
 		return (ArrayList<CourserunStudent>) courserunStudentRepository.findAllCourseById(studentid);
 	}
 
+	@Override
+	public int countPendingCourses() {
+		return (int)courserunStudentRepository.findCourseByStatus(4).size();
+	}
+
+	@Override
+	public int countPendingLeaves() {
+		return (int)leaveRepository.findLeaveByStatus(4).size();
+	}
 
 	@Override
 	public ArrayList<Leave> findLeavesByYearMonth(YearMonth ym) {
@@ -527,5 +536,4 @@ public class AdminServiceImpl implements AdminService {
 		}
 		return ul;
 	}
-	
 }

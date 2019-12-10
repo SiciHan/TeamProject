@@ -113,4 +113,8 @@ public interface AdminService {
 	
 	HashMap<String, Leave> MergeListToMap(ArrayList<Leave> leaves, ArrayList<String> username);
 
+	int countPendingCourses();
+
+	int countPendingLeaves();
+
 }
