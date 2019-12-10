@@ -204,8 +204,8 @@ public class AdminServiceImpl implements AdminService {
 		
 		//AY is fixed.
 		//Concatenate everything into a String. Eg AY2019/2020Sem2
-//		String thisSem = "AY"+year1+"/"+year2+sem;
-		String thisSem = "AY2023/2024Sem1";
+		String thisSem = "AY"+year1+"/"+year2+sem;
+//		String thisSem = "AY2023/2024Sem1";
 //		String thisSem = "AY2018/2019Sem1";
 		
 //		System.out.println("Current Semester: " + thisSem);
