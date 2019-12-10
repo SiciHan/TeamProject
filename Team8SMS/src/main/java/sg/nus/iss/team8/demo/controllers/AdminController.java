@@ -156,8 +156,9 @@ public class AdminController {
 		model.addAttribute("student", student);
 		model.addAttribute("newStudentId", newStudentId);
 		model.addAttribute("currentSemester", currentSemester);
-		Student student = new Student();
-		model.addAttribute("student", student);
+		/*
+		 * Student student = new Student(); model.addAttribute("student", student);
+		 */
 		return "studentform";
 	}
 
@@ -228,28 +229,23 @@ public class AdminController {
 		int currentPage = page.orElse(1);
 		int pageSize = size.orElse(5);
 
-	//Willis 7th Dec
-	@GetMapping("/leaveapplication")
-	public String leaveApplication(Model model) {
-		ArrayList<Leave> llist = new ArrayList<Leave>();
-		llist.addAll(aService.findAllLeave());
-		model.addAttribute("leaves", llist);
-		return "leaveapplication";
-	}
-	
-	@PostMapping("/approveleave")
-	public String approveLeaveApplication(@Valid Leave leave, BindingResult bindingResult) {
-		if (bindingResult.hasErrors())
-			return "leaveapplication";
-		aService.approveLeave(leave);
-		return "redirect:/leaveapplication";
-	}
-	
-	@PostMapping("/rejectleave")
-	public String rejectLeaveApplication(@ModelAttribute Leave leave) {
-		aService.rejectLeave(leave);
-		return "redirect:/leaveapplication";
-	}
+		/*
+		 * //Willis 7th Dec
+		 * 
+		 * @GetMapping("/leaveapplication") public String leaveApplication(Model model)
+		 * { ArrayList<Leave> llist = new ArrayList<Leave>();
+		 * llist.addAll(aService.findAllLeave()); model.addAttribute("leaves", llist);
+		 * return "leaveapplication"; }
+		 * 
+		 * @PostMapping("/approveleave") public String approveLeaveApplication(@Valid
+		 * Leave leave, BindingResult bindingResult) { if (bindingResult.hasErrors())
+		 * return "leaveapplication"; aService.approveLeave(leave); return
+		 * "redirect:/leaveapplication"; }
+		 * 
+		 * @PostMapping("/rejectleave") public String
+		 * rejectLeaveApplication(@ModelAttribute Leave leave) {
+		 * aService.rejectLeave(leave); return "redirect:/leaveapplication"; }
+		 */
 
 		Page<Courserun> courserunPage = aService.pageCourserun(PageRequest.of(currentPage - 1, pageSize));
 
