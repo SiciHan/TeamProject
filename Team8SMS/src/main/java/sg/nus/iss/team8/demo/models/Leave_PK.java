@@ -1,6 +1,8 @@
 package sg.nus.iss.team8.demo.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,6 +16,8 @@ public class Leave_PK implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name="startdate")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Future(message = "Invalid Date!")
+	@NotNull(message = "Start Date is required!")
 	private Date startDate;
 	
 	@Column(length = 50, name="usertype")
