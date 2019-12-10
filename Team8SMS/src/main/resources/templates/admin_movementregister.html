@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Faculty Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div>
+		<nav class="navbar navbar-default">
+  			<div class="container-fluid">
+    			<div class="navbar-header">
+      				<a class="navbar-brand" href="administrator.html" th:href="@{/administrator}">Home</a>
+    			</div>
+    			<ul class="nav navbar-nav">
+      				<li><a href="coursemanagement.html" th:href="@{/coursemanagement}">Course Management</a></li>
+      				<li><a href="departmentmanagement.html" th:href="@{/departmentmanagement}">Department Management</a></li>
+      				<li><a href="facultymanagement.html" th:href="@{/facultymanagement}">Faculty Management</a></li>
+      				<li><a href="studentmanagement.html" th:href="@{/studentmanagement}">Student Management</a></li>
+      				<li><a href="courseapplication.html" th:href="@{/courseapplication}">Course Application</a></li>
+      				<li><a href="leaveapplication.html" th:href="@{/leaveapplication}">Leave Application</a></li>
+      				<li><a href="logout.html" th:href="@{/logout}">Logout</a></li>
+    			</ul>
+  			</div>
+		</nav>
+	</div>
+	<h1>Leaves</h1>
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<form action="@{/movementregister}" method="get">
+				<select class="form-group" id="yearmonth" name="yearmonth">
+					<option th:each="yearmonth:${yearMonths}" th:value="${yearmonth}"
+						th:text="${yearmonth}" th:selected="${yearmonth==selectedmonth}"></option>
+				</select> <input class="btn btn-primary" type="submit">
+			</form>
+			<div th:if="${leaves != null and !leaves.isEmpty()}">
+				<table class="table table-striped">
+					<tr>
+						<th>Start date</th>
+						<th>User Type</th>
+						<th>User ID</th>
+						<th>User Name</th>
+						<th>End Date</th>
+						<th>Reason</th>
+						<th>Status</th>
+					</tr>
+					<tr th:each="key:${leaves.keySet()}">
+						<td th:text="${leaves.get(key).id.startDate}"></td>
+						<td th:text="${leaves.get(key).id.UserType}"></td>
+						<td th:text="${leaves.get(key).id.id}"></td>
+						<td th:text="${key}"></td>
+						<td th:text="${leaves.get(key).endDate}"></td>
+						<td th:text="${leaves.get(key).reason}"></td>
+						<td th:text="${leaves.get(key).status.label}"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
