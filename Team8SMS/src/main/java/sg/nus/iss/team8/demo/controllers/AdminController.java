@@ -3,9 +3,11 @@ package sg.nus.iss.team8.demo.controllers;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -366,6 +368,25 @@ public class AdminController {
 		Department d = aService.findDepartmentById(id);
 		aService.deleteDepartment(d);
 		return "redirect:departmentmanagement";
+	}
+	
+	@GetMapping("/admin_movementregister")
+	public String movementRegister(Model model, @RequestParam(required=false, name="yearmonth") String ymstring) {
+		YearMonth ym=YearMonth.now();
+		if(ymstring!=null && !ymstring.isEmpty()) {
+			
+			ym=YearMonth.of(Integer.parseInt(ymstring.substring(0,4)),Integer.parseInt(ymstring.substring(5)));
+		}
+		
+		ArrayList<Leave> leaves=aService.findLeavesByYearMonth(ym);
+		ArrayList<YearMonth> yearMonths=aService.findAllYearMonths(ym);
+		ArrayList<String> username=aService.findAllUserName(leaves);
+		HashMap<String,Leave> usernameLeaves=aService.MergeListToMap(leaves,username);
+		//by default we will display the currentMonth leave
+		model.addAttribute("leaves",usernameLeaves);
+		model.addAttribute("yearMonths", yearMonths);
+		model.addAttribute("selectedmonth",ym);
+		return "admin_movementregister";
 	}
 
 }

@@ -1,8 +1,10 @@
 package sg.nus.iss.team8.demo.services;
 
 import java.text.DateFormat;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -86,5 +88,14 @@ int newStudentId();
 	Department saveDepartment(Department d);
 	
 	int newDepartmentId();
+	
+	// for movement register 
+	ArrayList<Leave> findLeavesByYearMonth(YearMonth ym);
+	
+	ArrayList<YearMonth> findAllYearMonths(YearMonth currentym);
+	
+	ArrayList<String> findAllUserName(ArrayList<Leave> leaves);
+	
+	HashMap<String, Leave> MergeListToMap(ArrayList<Leave> leaves, ArrayList<String> username);
 
 }

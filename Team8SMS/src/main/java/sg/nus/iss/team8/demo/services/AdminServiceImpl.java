@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -341,4 +342,70 @@ public class AdminServiceImpl implements AdminService {
 		return newDepartmentId;
 	}
 
+	@Override
+	public ArrayList<Leave> findLeavesByYearMonth(YearMonth ym) {
+		ArrayList<Leave> leavelist=new ArrayList<Leave>();
+		List<Leave> leaves=leaveRepository.findAll();
+		for (Leave leave : leaves) {
+			//if the leave startdate is before or equals to the selected yearmonth and enddate is after or equals to selected yearmonth
+			//we will add it in
+			
+			Date startDate=leave.getId().getStartDate();
+			Date endDate=leave.getEndDate();
+			Calendar cal1 = Calendar.getInstance();
+			cal1.setTime(startDate);
+			int month1=cal1.get(Calendar.MONTH);
+			int year1=cal1.get(Calendar.YEAR);
+			
+			Calendar cal2 = Calendar.getInstance();
+			cal2.setTime(endDate);
+			int month2=cal2.get(Calendar.MONTH);
+			int year2=cal2.get(Calendar.YEAR);
+	
+			YearMonth startym=YearMonth.of(year1, month1+1);
+			YearMonth endym=YearMonth.of(year2, month2+1);
+			
+			if((startym.isBefore(ym)||startym.equals(ym)) && (endym.isAfter(ym)||endym.equals(ym))) leavelist.add(leave);
+		}
+		return leavelist;		
+	}
+
+	@Override
+	public ArrayList<YearMonth> findAllYearMonths(YearMonth currentym) {
+		ArrayList<YearMonth> ymlist=new ArrayList<YearMonth>();
+		ymlist.add(currentym);
+		for(int i=1;i<3;i++) {
+			ymlist.add(currentym.plusMonths(i));
+			ymlist.add(currentym.minusMonths(i));
+		}
+		return ymlist;
+	}
+
+	@Override
+	public ArrayList<String> findAllUserName(ArrayList<Leave> leaves) {
+		ArrayList<String> names=new ArrayList<String>();
+		for(Leave l:leaves) {
+			if(l.getId().getUserType().equals("Student") ){
+				String studentname=studentRepository.findById(l.getId().getId()).get().getName();
+				names.add(studentname);}
+			else if(l.getId().getUserType().equals("Faculty")) {
+				String facultyname=fr.findById(l.getId().getId()).get().getName();
+				names.add(facultyname);
+			}
+			else {
+				names.add("");
+			}
+		}
+		return names;
+	}
+
+	@Override
+	public HashMap<String, Leave> MergeListToMap(ArrayList<Leave> leaves, ArrayList<String> username) {
+		HashMap<String,Leave> ul=new HashMap<>();
+		for(int i=0;i<leaves.size();i++) {
+			ul.put(username.get(i), leaves.get(i));
+		}
+		return ul;
+	}
+	
 }
