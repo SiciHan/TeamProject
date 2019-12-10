@@ -6,13 +6,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.springframework.stereotype.Service;
+
 import sg.nus.iss.team8.demo.models.Leave;
 import sg.nus.iss.team8.demo.models.User;
 
+@Service
 public interface LeaveService {
 	public void applyForLeave(String userType,int id, Date startDate, Date endDate, String reason);
 	public ArrayList<Leave> findLeavesByYearMonth(YearMonth ym);
 	public ArrayList<YearMonth> findAllYearMonths(YearMonth currentym);
 	public ArrayList<String> findAllUserName(ArrayList<Leave> leaves);
 	public HashMap<String, Leave> MergeListToMap(ArrayList<Leave> leaves, ArrayList<String> username);
+	public void saveLeave(Leave leave);
 }

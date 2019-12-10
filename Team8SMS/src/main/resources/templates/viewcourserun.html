@@ -30,7 +30,7 @@
 	<br/>
 	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
-			<a th:href="@{~/faculty/downloadCSV/classlist?coursename=} + ${course.courseName}" class="btn btn-primary" style="float:right">Download Student List</a>
+			<a th:href="@{/downloadCSV/classlist?coursename=} + ${course.courseName}" class="btn btn-primary" style="float:right">Download Student List</a>
 			<h2 th:text="${course.courseName}"></h2>
 			<h4>Course Units: <span th:text="${course.courseUnit}"></span></h4>
 			<h4>Lecturer: <span th:text="${course.faculty.name}"></span></h4>

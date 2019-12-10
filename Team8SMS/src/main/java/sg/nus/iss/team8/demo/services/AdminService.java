@@ -5,6 +5,9 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +48,7 @@ public interface AdminService {
 	
 	int newFacultyId();
 	
-int newStudentId();
+	int newStudentId();
 	
 	Semester currentSemester();
 	
@@ -76,6 +79,16 @@ int newStudentId();
 	
 	void rejectLeave(String startDate, String userType,int id, int status);
 	
+	ArrayList<Semester> findAllSemsters();
+
+	Semester saveSemester(Semester sem);
+
+	Semester findOrAddSemester(String semLabel);
+
+	Courserun concatCourseNameWithYear(Courserun course, String shortSemLabel);
+
+	void applyGraduatedStatus(Semester sem, int threshold);
+	
 	// department management
 	ArrayList<Department> findAllDepartment();
 	
@@ -88,6 +101,8 @@ int newStudentId();
 	Department saveDepartment(Department d);
 	
 	int newDepartmentId();
+	
+	ArrayList<CourserunStudent> findCoursesByStudentId(int studentid);
 	
 	// for movement register 
 	ArrayList<Leave> findLeavesByYearMonth(YearMonth ym);

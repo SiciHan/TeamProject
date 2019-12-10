@@ -32,5 +32,27 @@
   			</div>
 		</nav>
 	</div>
+	
+	<form th:object="${currentSemester}" th:action="@{/savecurrentsemester}" method="post">
+		<div class="form-group">
+			<label for="currentSemester">Set Current Semester and Graduation Status</label>
+			<select th:field="*{semester}" class="form-control" id="editSemLabel" th:onchange="selectedSemLabel();">
+				<option th:each="cs : ${allSemesters}" th:value="${cs.semester}" th:text="${cs.label}"></option>
+			</select>
+			<input type="hidden" th:value="*{label}" id="label" name="label">
+		</div>
+		<div>
+			<button type="submit" class="btn btn-primary">Apply</button>
+		</div>
+	
+	</form>
 </body>
+<script>
+	function selectedSemLabel()
+	{
+	   let txt = $("#editSemLabel option:selected").text();
+	   console.log(txt);
+	   $("#label").val(txt);
+	}
+</script>
 </html>

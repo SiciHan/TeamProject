@@ -34,37 +34,33 @@
 			<span th:if="${course.courseName == null}">Add Course</span> 
 			<span th:unless="${course.courseName == null}">Edit Course</span>
 		</h2>
-		<form th:object="${course}" th:action="@{/savecourserun}"
-			method="post" 
-			oninput="courseName.value = courseNameNoSem.value + ' ' + shortSemLabel.value">
+		<form th:object="${currentSemester}" th:action="@{/savecourserun}"
+			method="post">
 			<div class="form-inline">
 				<label for="courseName">Course Name</label> 
 				<span th:if="${course.courseName == null}"> 
-					<input type="text" name="courseNameNoSem" class="form-control" required>
-					<input type="hidden" th:value="${currentSemester.semester}" name="semester.semester" id="semester.semester" readonly> 
-					<input type="text" th:value="${shortSemLabel}" name="shortSemLabel" class="form-control" readonly>
-					<input type="hidden" th:field="*{courseName}">
+					<input type="text" th:field="${course.courseName}" class="form-control" required>
+					<input type="text" th:value="${currentSemester}" name="currentSemester" placeholder="eg. AY2019/2020Sem1" class="form-control" pattern=".{15}" required title="Semester must be exactly AYXXXX/XXXXSemX">
 				</span> 
 				<span th:unless="${course.courseName == null}"> 
-					<input type="text" th:field="*{courseName}" class="form-control" readonly>
-						<!-- <p th:if="${#fields.hasErrors('courseName')}" th:errors="*{courseName}" class="alert alert-danger"></p> -->
-					<input type="hidden" th:field="*{semester.semester}" readonly> 
-					<!-- <input type="text" th:field="*{semester.label}" class="form-control" readonly> -->
+					<input type="text" th:field="${course.courseName}" class="form-control" readonly>
+					<input type="hidden" th:field="${course.semester.semester}" readonly> 
+					<input type="hidden" th:value="${currentSemester}" name="currentSemester" class="form-control">
 				</span>
 			</div>
 			<div class="form-group">
 				<label for="courseCode">Course Code</label>
-				<input type="text" th:field="*{courseCode}" class="form-control" required>
+				<input type="text" th:field="${course.courseCode}" class="form-control" required>
 			</div>
 			<div class="form-group">
 				<label for="facultyId">Faculty ID</label>
-				<select th:field="*{faculty.facultyId}" class="form-control">
+				<select th:field="${course.faculty.facultyId}" class="form-control">
 					<option th:each="f : ${flist}" th:value="${f.facultyId}" th:text="${f.name}"></option>
 				</select>
 			</div>
 			<div class="form-group">
 				<label for="courseUnit">Course Units</label>
-				<input type="text" th:field="*{courseUnit}" class="form-control" required>
+				<input type="text" th:field="${course.courseUnit}" class="form-control" required>
 			</div>
 			<div>
 				<button type="submit" class="btn btn-primary">Save</button>
