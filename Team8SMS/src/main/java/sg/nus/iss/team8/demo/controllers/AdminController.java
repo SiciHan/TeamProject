@@ -78,16 +78,13 @@ public class AdminController {
 
 	@GetMapping("/addfaculty")
 	public String addFaculty(Model model) {
-		ArrayList<Faculty> flist = new ArrayList<Faculty>();
 		ArrayList<Status> slist = new ArrayList<Status>();
 		ArrayList<Department> dlist = new ArrayList<Department>();
 		Integer newFacultyId = aService.newFacultyId();
-		flist.addAll(aService.findAllFaculty());
 		slist.addAll(aService.findAllStatuses());
 		dlist.addAll(aService.findAllDepartments());
 		model.addAttribute("statuses", slist);
 		model.addAttribute("departments", dlist);
-		model.addAttribute("faculties", flist);
 		model.addAttribute("newFacultyId", newFacultyId);
 		Faculty f = new Faculty();
 		model.addAttribute("faculty", f);
@@ -116,7 +113,7 @@ public class AdminController {
 	}
 
 	@GetMapping("/deletefaculty/{id}")
-	public String deleteFaculty(Model model, @PathVariable("id") Integer id) {
+	public String deleteFaculty(@PathVariable("id") Integer id) {
 		Faculty f = aService.findFacultyById(id);
 		aService.deleteFaculty(f);
 		return "redirect:/facultymanagement";
@@ -345,6 +342,47 @@ public class AdminController {
 		int status = 7;
 		aService.rejectLeave(startDate, user, id, status);
 		return "redirect:/leaveapplication";
+	}
+	
+	@GetMapping("/departmentmanagement")
+	public String getDepartmentManagement(Model model) {
+		ArrayList<Department> dlist = new ArrayList<Department>();
+		dlist.addAll(aService.findAllDepartment());
+		model.addAttribute("departments", dlist);
+		return "departmentmanagement";
+	}
+	
+	@GetMapping("/adddepartment")
+	public String addDepartment(Model model) {
+//		ArrayList<Department> departmentlist = new ArrayList<Department>();
+		Integer newDapartmentId = aService.newDepartmentId();
+//		model.addAttribute("departments", departmentlist);
+		model.addAttribute("newDepartmentId", newDapartmentId);
+		Department department = new Department();
+		model.addAttribute("department", department);
+		return "departmentform";
+	}
+	
+	@PostMapping("/savedepartment")
+	public String saveDepartment(@Valid @ModelAttribute Department department, BindingResult bindingResult) {
+		if (bindingResult.hasErrors())
+			return "departmentManagement";
+		aService.saveDepartment(department);
+		return "redirect:/departmentmanagement";
+	}
+	
+	@GetMapping("/editdepartment/{id}")
+	public String editDepartment(Model model, @PathVariable("id") Integer id) {
+		Department d = aService.findDepartmentById(id);
+		model.addAttribute("department", d);
+		return "departmentform";
+	}
+	
+	@GetMapping("/deletedepartment/{id}")
+	public String deleteDepartment(@PathVariable("id") Integer id) {
+		Department d = aService.findDepartmentById(id);
+		aService.deleteDepartment(d);
+		return "redirect:departmentmanagement";
 	}
 
 }

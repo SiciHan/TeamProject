@@ -86,4 +86,18 @@ public interface AdminService {
 	Courserun concatCourseNameWithYear(Courserun course, String shortSemLabel);
 
 	void applyGraduatedStatus(Semester sem, int threshold);
+	
+	// department management
+	ArrayList<Department> findAllDepartment();
+	
+	Department findDepartmentById(int id);
+	
+	Department findDepartmentByName(String name);
+	
+	void deleteDepartment(Department d);
+	
+	Department saveDepartment(Department d);
+	
+	int newDepartmentId();
+
 }
