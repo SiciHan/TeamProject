@@ -38,7 +38,7 @@
 				</tr>
 			</table>
 		</div>
-	
+
 	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
 			<table class="table table-bordered table-hover">
@@ -55,7 +55,7 @@
 				<tr th:each="c: ${clist}">
 				<td th:text="${c.id.courserun.courseCode}">Code</td>
 				<td th:text="${c.id.courserun.courseName}">COURSE CODE to be here</td>
-				<td th:text="${c.id.courserun.semester.semester}">Semester</td>
+				<td th:text="${c.id.courserun.semester.label}">Semester</td>
 				<td th:text="${c.id.courserun.faculty.facultyId}">Faculty</td>
 				<td th:text="${c.id.courserun.courseUnit}">Unit</td>
 				<td th:text="${c.status.label}">Status</td>
@@ -80,8 +80,6 @@
 				</tbody>
 			</table>
 			<button type="button" class="btn btn-success">Print Transcript</button>
-			<button type="button" class="btn btn-danger">Contact Home Faculty</button>
-			<button type="button" class="btn btn-warning">Back</button>
 		</div>
 	</div>
 </body>

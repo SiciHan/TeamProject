@@ -23,6 +23,7 @@ import sg.nus.iss.team8.demo.models.Leave;
 
 import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
+import sg.nus.iss.team8.demo.repositories.SemesterRepository;
 import sg.nus.iss.team8.demo.repositories.StudentRepository;
 
 import sg.nus.iss.team8.demo.models.User;
@@ -36,6 +37,16 @@ import sg.nus.iss.team8.demo.services.StudentServiceImplementation;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
+	private SemesterRepository semrepo;
+	public SemesterRepository getSemrepo() {
+		return semrepo;
+	}
+	@Autowired
+	public void setSemrepo(SemesterRepository semrepo) {
+		this.semrepo = semrepo;
+	}
+
+
 	private StudentRepository srepo;
 	@Autowired
 	public void setSrepo(StudentRepository srepo) {
@@ -146,23 +157,23 @@ public class StudentController {
 
 	@GetMapping("/mycourses")
 	public String MyCourses(Model model){
-		Student s=srepo.findNameById(10006);
+		Student s=srepo.findNameById(10013);
 		model.addAttribute("student", s);
-		ArrayList<CourserunStudent>courserunstudentlist=new ArrayList<>();
-		courserunstudentlist.addAll(csrepo.findCourseById(10006));
+		ArrayList<CourserunStudent> courserunstudentlist=new ArrayList<>();
+		courserunstudentlist.addAll(csrepo.findCourseById(10013));
 		model.addAttribute("courselist", courserunstudentlist);
 		
 		return "mycourses"; 
 	}
 	@GetMapping("/transcript")
 	public String MyTranscript(Model model) {
-		Student s=srepo.findNameById(10006);
+		Student s=srepo.findNameById(10013);
 		model.addAttribute("student", s);
-		double points=ss.totalScorePoints(10006);
-		int totalCredits=ss.totalCredits(10006);
+		double points=ss.totalScorePoints(10013);
+		int totalCredits=ss.totalCredits(10013);
 		double cap=points/totalCredits;
 		 cap=Math.round(cap*100.0)/100.0;
-		 String gstatus=ss.graduationStatus(10006);
+		 String gstatus=ss.graduationStatus(10013);
 		 //Date today = Calendar.getInstance().getTime();
 		 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
 		   LocalDateTime now = LocalDateTime.now();
@@ -171,8 +182,9 @@ public class StudentController {
 		model.addAttribute("cap", cap);
 		model.addAttribute("gstatus",gstatus);
 		model.addAttribute("today", today);
-		ArrayList<CourserunStudent>clist= csrepo.findCourseGradebyId(10006);
+		ArrayList<CourserunStudent>clist= csrepo.findCourseGradebyId(10013);
 		model.addAttribute("clist", clist);
+		
 		
 		return "mytranscript";
 	}

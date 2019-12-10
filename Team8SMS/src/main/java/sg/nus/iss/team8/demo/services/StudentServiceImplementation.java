@@ -241,34 +241,34 @@ public class StudentServiceImplementation implements StudentService {
 		double sum=0;
 		for(CourserunStudent c:clist) {
 			if(c.getGrade().equals("A+") || c.getGrade().equals("A")) {
-				sum+=5.0;
+				sum+=5.0*c.getId().getCourserun().getCourseUnit();
 			}
 			else if(c.getGrade().equals("A-")) {
-				sum+=4.5;
+				sum+=4.5*c.getId().getCourserun().getCourseUnit();
 			}
 			else if(c.getGrade().equals("B+")) {
-				sum+=4.0;
+				sum+=4.0*c.getId().getCourserun().getCourseUnit();
 			}
 			else if(c.getGrade().equals("B")) {
-				sum+=3.5;
+				sum+=3.5*c.getId().getCourserun().getCourseUnit();
 			}
 			else if(c.getGrade().equals("B-")) {
-				sum+=3.0;
+				sum+=3.0*c.getId().getCourserun().getCourseUnit();
 			}
 			else if(c.getGrade().equals("C+")) {
-				sum+=2.5;
+				sum+=2.5*c.getId().getCourserun().getCourseUnit();
 			}
 			else if(c.getGrade().equals("C")) {
-				sum+=2.0;
+				sum+=2.0*c.getId().getCourserun().getCourseUnit();
 			}
 			else if(c.getGrade().equals("D+")) {
-				sum+=1.5;
+				sum+=1.5*c.getId().getCourserun().getCourseUnit();
 			}
 			else if(c.getGrade().equals("D")) {
-				sum+=1.0;
+				sum+=1.0*c.getId().getCourserun().getCourseUnit();
 			}
 			else if(c.getGrade().equals("N")) {
-				sum+=0;
+				sum+=0*c.getId().getCourserun().getCourseUnit();
 			}
 		}
 		return sum;

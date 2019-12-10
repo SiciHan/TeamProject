@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="ISO-8859-1">
-<title>Faculty Management</title>
+<title>Department Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -20,7 +20,7 @@
       				<li><a href="#">Page 1</a></li>
       				<li><a href="#">Page 2</a></li>
       				<li><a href="#">Page 3</a></li>
-      				<li><a href="#">Logout</a></li>
+      				<li><a href="logout.html" th:href="@{/home}">Logout</a></li>
     			</ul>
   			</div>
 		</nav>
@@ -28,24 +28,20 @@
 	<h1>List of Faculties</h1>
 	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
-			<a class="btn btn-primary" role="button" href="facultyform.html" th:href="@{/addfaculty}">Add Faculty</a>
+			<a class="btn btn-primary" role="button" href="departmentform.html" th:href="@{/adddepartment}">Add Faculty</a>
 			<br/>
 			<table class="table table-hover">
 				<tr>
-					<th>Faculty Id</th>
-					<th>Name</th>
-					<th>Status</th>
-					<th>Department name</th>
+					<th>Department Id</th>
+					<th>Department Name</th>
 					<th colspan="2"></th>
 				</tr>
-				<tr th:each="faculty:${faculty}">
-					<td th:text=${faculty.facultyId}>FacultyId</td>
-					<td th:text=${faculty.name}>Name</td>
-					<td th:text=${faculty.status.label}>Status</td>
-					<td th:text=${faculty.department.name}>DepartmentName</td>
-					<td><a href="editfaculty.html" th:href="@{/editfaculty/}+${faculty.facultyId}"> 
+				<tr th:each="department:${departments}">
+					<td th:text=${department.departmentId}>FacultyId</td>
+					<td th:text=${department.name}>Name</td>
+					<td><a href="editdepartment.html" th:href="@{/editdepartment/}+${department.departmentId}"> 
 						Edit </a></td>
-					<td><a href="deletefaculty.html" th:href="@{/deletefaculty/}+${faculty.facultyId}"> 
+					<td><a href="deletedepartment.html" th:href="@{/deletedepartment/}+${department.departmentId}"> 
 						Delete </a></td>
 				</tr>
 			</table>

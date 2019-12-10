@@ -17,9 +17,4 @@ import sg.nus.iss.team8.demo.models.Leave_PK;
 
 @Repository
 public interface LeaveRepository extends JpaRepository<Leave, Leave_PK> {
-
-	@Transactional
-	@Modifying
-	@Query("update Leave leave set leave.status.status = :status where leave.id =:id")
-	public void setStatus(@Param("id") Leave_PK id, @Param("status") int status);
 }
