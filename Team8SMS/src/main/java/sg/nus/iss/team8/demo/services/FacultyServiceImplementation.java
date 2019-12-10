@@ -88,6 +88,15 @@ public class FacultyServiceImplementation implements FacultyService {
 	public ArrayList<Courserun> findAllCourserunsByFacultyId(int facultyId){
 		return cr.findCoursesById(facultyId);
 	}
+	@Override
+	public CourserunStudent saveCourserunStudent(CourserunStudent courserunStudent) {
+		return crsr.saveAndFlush(courserunStudent);
+		
+	}
+	@Override
+	public List<CourserunStudent> saveCourserunStudents(List<CourserunStudent> courserunStudents) {
+		return crsr.saveAll(courserunStudents);
+	}
 	
 
 }

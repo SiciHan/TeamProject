@@ -48,7 +48,7 @@
 			</div>
 		</div>
 	</div>
-
+	<form action="#" th:action="@{/grade/submit}" th:object="${wapper}" method="post">
 	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
 			<table class="table table-bordered table-hover">
@@ -61,13 +61,14 @@
 					<th>GRADE</th>
 
 				</thead>
-				<tr th:each="courseRunStudent:${courserunstudents}">
+				<tr th:each="courseRunStudent, stat:${courserunstudents}">
 					<td th:text="${courseRunStudent.id.courserun.courseCode}">courseCode</td>
 					<td th:text="${courseRunStudent.id.courserun.courseName}">courseName</td>
 					<td th:text="${courseRunStudent.id.student.studentId}">Id</td>
 					<td th:text="${courseRunStudent.id.student.name}">Name</td>
 					<td><select id="form_grade" name="grade" class="col-sm-4"
-						style="width: 60%">
+						style="width: 60%"
+						th:field="*{courserunstudents[__${stat.index}__].grade}">
 							<option value="-">-</option>
 							<option value="1">A+</option>
 							<option value="2">A</option>
@@ -95,7 +96,7 @@
 				style="margin-right: 3%; width: 40%; float: right;">Cancel</button>
 		</div>
 	</div>
-
+	</form>
 	<input type="hidden" th:value="${courseKey}" id="hidden_input" />
 	<script>
 		var hidden_input = $('#hidden_input').val();

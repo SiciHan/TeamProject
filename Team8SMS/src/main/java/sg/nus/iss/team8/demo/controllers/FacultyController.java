@@ -101,7 +101,17 @@ public class FacultyController {
 		List<CourserunStudent> courserunstudents = new ArrayList<>();
 		if(coursename != null && !coursename.equals("-")) courserunstudents = fservice.findAllStudents(coursename);
 		model.addAttribute("courserunstudents", courserunstudents);
+		CourserunStudentListWrapper wrapper = new CourserunStudentListWrapper();
+		wrapper.setList(courserunstudents);
+		model.addAttribute("wrapper", wrapper);
 		return "faculty_grade";
+	}
+	
+	@PostMapping("/grade/submit")
+	public String submitStudentGrades(@ModelAttribute("wrapper") CourserunStudentListWrapper wrapper, Model model, BindingResult bindingResult) {
+		List<CourserunStudent> courserunStudents = wrapper.getList();
+		fservice.saveCourserunStudents(courserunStudents);
+		return "redirect:/faculty/grade";
 	}
 
 	@GetMapping("/movement")
@@ -138,3 +148,5 @@ public class FacultyController {
 		grs.ExportCSV(request, response, students, headers);
 	}
 }
+
+
