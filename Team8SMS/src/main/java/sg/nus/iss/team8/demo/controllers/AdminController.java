@@ -1,5 +1,6 @@
 package sg.nus.iss.team8.demo.controllers;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,6 +12,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,18 +46,25 @@ import sg.nus.iss.team8.demo.services.AdminService;
 import sg.nus.iss.team8.demo.services.AdminServiceImpl;
 import sg.nus.iss.team8.demo.services.FacultyService;
 import sg.nus.iss.team8.demo.services.FacultyServiceImplementation;
-import sg.nus.iss.team8.demo.services.StudentService;
+import sg.nus.iss.team8.demo.services.GenerateReportService;
+import sg.nus.iss.team8.demo.services.GenerateReportServiceImpl;
 
 
 @Controller
 public class AdminController {
 
 	private AdminService aService;
-
+	private GenerateReportService grs;
+	
 	// injection of faculty service
 	@Autowired
 	public void setAdminService(AdminServiceImpl aService) {
 		this.aService = aService;
+	}
+	
+	@Autowired
+	public void setGrs(GenerateReportServiceImpl grs) {
+		this.grs = grs;
 	}
 
 	@InitBinder
@@ -216,7 +226,7 @@ public class AdminController {
 	}
 	
 	@GetMapping("/{acceptOrReject}/{id}/{courseCode}/{semesterid}")
-	public String rejectCourseApplication(@PathVariable(name="acceptOrReject") String acceptOrReject,
+	public String acceptOrRejectCourseApplication(@PathVariable(name="acceptOrReject") String acceptOrReject,
 			@PathVariable(name="id") int id, 
 			@PathVariable(name="courseCode") String courseCode,
 			@PathVariable(name="semesterid") int semesterid) {
@@ -304,8 +314,15 @@ public class AdminController {
 	public String deleteCourserun(Model model, @PathVariable(name = "courseCode") String courseCode,
 			@PathVariable(name = "semesterid") int semesterid) {
 		Courserun course = aService.findCourserun(courseCode, semesterid);
-		aService.removeCourserun(course);
-		return "redirect:/courserunmanagement";
+		// if courserunstudents is not empty, redirect to /viewcourserun/"+courseCode+"/"+semesterid;
+		ArrayList<CourserunStudent> studentsPerCourse = aService.findStudentsByCourseName(course.getCourseName());
+		if(studentsPerCourse.isEmpty()) {
+			aService.removeCourserun(course);
+			return "redirect:/courserunmanagement";
+		} else {
+			return "redirect:/viewcourserun/"+courseCode+"/"+semesterid;
+		}
+		
 	}
 
 	@GetMapping("/viewcourserun/{courseCode}/{semesterid}")
@@ -384,5 +401,32 @@ public class AdminController {
 		aService.deleteDepartment(d);
 		return "redirect:departmentmanagement";
 	}
+	
+	@RequestMapping("/downloadCSV/classlist")
+	public void downloadCSV(HttpServletRequest request, HttpServletResponse response, 
+			@RequestParam("coursename") String coursename) throws IOException {
+		// create a list of object
+		
+			System.out.println("found " + coursename);
+			ArrayList<CourserunStudent> students = aService.findStudentsByCourseName(coursename);
+			System.out.println("found: " + students.size() + " students");
+			System.out.println("trying to download");
+			String[] headers=new String[]{"Course Name","Student Id", "Student Name", "Degree", "Mobile", "Email", "Grade", "Status"};
+			System.out.println("request: " + request);
+			System.out.println("response: " + response);
+			
+			grs.ExportCSV(request, response, students, headers);
+	}
+	
+	@GetMapping("/viewstudentcourses/{studentid}")
+	public String viewCourserun(Model model,
+			@PathVariable(name = "studentid") int studentid) {
+		Student student = aService.findStudent(studentid);
+		ArrayList<CourserunStudent> coursesPerStudent = aService.findCoursesByStudentId(studentid);
 
+		model.addAttribute("student", student);
+		model.addAttribute("coursesPerStudent", coursesPerStudent);
+
+		return "viewstudentcourses";
+	}
 }

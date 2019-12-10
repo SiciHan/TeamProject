@@ -456,4 +456,9 @@ public class AdminServiceImpl implements AdminService {
 		}
 	}
 
+	@Override
+	public ArrayList<CourserunStudent> findCoursesByStudentId(int studentid) {
+		return (ArrayList<CourserunStudent>) courserunStudentRepository.findAllCourseById(studentid);
+	}
+
 }
