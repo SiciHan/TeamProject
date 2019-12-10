@@ -40,13 +40,12 @@
 				<label for="courseName">Course Name</label> 
 				<span th:if="${course.courseName == null}"> 
 					<input type="text" th:field="${course.courseName}" class="form-control" required>
-					<input type="text" th:value="${currentSemester}" name="currentSemester" placeholder="eg. AY2019/2020Sem1" class="form-control" required>
+					<input type="text" th:value="${currentSemester}" name="currentSemester" placeholder="eg. AY2019/2020Sem1" class="form-control" pattern=".{15}" required title="Semester must be exactly AYXXXX/XXXXSemX">
 				</span> 
 				<span th:unless="${course.courseName == null}"> 
 					<input type="text" th:field="${course.courseName}" class="form-control" readonly>
 					<input type="hidden" th:field="${course.semester.semester}" readonly> 
 					<input type="hidden" th:value="${currentSemester}" name="currentSemester" class="form-control">
-					
 				</span>
 			</div>
 			<div class="form-group">
