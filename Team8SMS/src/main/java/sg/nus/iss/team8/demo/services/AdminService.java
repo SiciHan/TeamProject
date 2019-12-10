@@ -73,4 +73,18 @@ int newStudentId();
 	void approveLeave(String string, String userType,int id, int status);
 	
 	void rejectLeave(String startDate, String userType,int id, int status);
+	
+	// department management
+	ArrayList<Department> findAllDepartment();
+	
+	Department findDepartmentById(int id);
+	
+	Department findDepartmentByName(String name);
+	
+	void deleteDepartment(Department d);
+	
+	Department saveDepartment(Department d);
+	
+	int newDepartmentId();
+
 }

@@ -43,9 +43,9 @@
 					<td th:text=${faculty.name}>Name</td>
 					<td th:text=${faculty.status.label}>Status</td>
 					<td th:text=${faculty.department.name}>DepartmentName</td>
-					<td><a href="EditFaculty.html" th:href="@{/editfaculty/}+${faculty.facultyId}"> 
+					<td><a href="editfaculty.html" th:href="@{/editfaculty/}+${faculty.facultyId}"> 
 						Edit </a></td>
-					<td><a href="DeleteFaculty.html" th:href="@{/deletefaculty/}+${faculty.facultyId}"> 
+					<td><a href="deletefaculty.html" th:href="@{/deletefaculty/}+${faculty.facultyId}"> 
 						Delete </a></td>
 				</tr>
 			</table>

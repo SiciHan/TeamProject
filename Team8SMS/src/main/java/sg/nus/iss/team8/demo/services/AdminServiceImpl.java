@@ -306,5 +306,39 @@ public class AdminServiceImpl implements AdminService {
 	public ArrayList<CourserunStudent> findStudentsByCourseName(String courseName) {
 		return (ArrayList<CourserunStudent>) courserunStudentRepository.findStudentsByCourseName(courseName);
 	}
+	
+	@Override
+	public ArrayList<Department> findAllDepartment(){
+		return (ArrayList<Department>)departmentRepository.findAll();
+	}
+
+	@Override
+	public Department findDepartmentById(int id) {
+		return departmentRepository.findById(id).orElse(null);
+	}
+
+	@Override
+	public Department findDepartmentByName(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteDepartment(Department department) {
+		departmentRepository.delete(department);
+	}
+
+	@Override
+	public Department saveDepartment(Department department) {
+		return departmentRepository.saveAndFlush(department);
+	}
+
+	@Override
+	public int newDepartmentId() {
+		ArrayList<Department> departments = findAllDepartment();
+		Department department = Collections.max(departments, Comparator.comparingInt(Department::getDepartmentId));
+		int newDepartmentId = department.getDepartmentId() + 1;
+		return newDepartmentId;
+	}
 
 }
