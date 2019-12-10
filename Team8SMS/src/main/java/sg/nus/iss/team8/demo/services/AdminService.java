@@ -3,6 +3,9 @@ package sg.nus.iss.team8.demo.services;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +46,7 @@ public interface AdminService {
 	
 	int newFacultyId();
 	
-int newStudentId();
+	int newStudentId();
 	
 	Semester currentSemester();
 	
@@ -73,4 +76,14 @@ int newStudentId();
 	void approveLeave(String string, String userType,int id, int status);
 	
 	void rejectLeave(String startDate, String userType,int id, int status);
+
+	ArrayList<Semester> findAllSemsters();
+
+	Semester saveSemester(Semester sem);
+
+	Semester findOrAddSemester(String semLabel);
+
+	Courserun concatCourseNameWithYear(Courserun course, String shortSemLabel);
+
+	void applyGraduatedStatus(Semester sem, int threshold);
 }

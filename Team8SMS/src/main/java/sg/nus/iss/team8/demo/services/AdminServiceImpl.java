@@ -1,6 +1,7 @@
 package sg.nus.iss.team8.demo.services;
 
 import java.text.DateFormat;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -178,7 +179,57 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public Semester currentSemester() {
 		ArrayList<Semester> allSems = (ArrayList<Semester>)semesterRepository.findAll();
-		Semester currentSemester = Collections.max(allSems, Comparator.comparingInt(Semester::getSemester));
+		
+		String sem;
+		
+		//get current date
+		LocalDate currentDate = LocalDate.now();
+		int currentMonth = currentDate.getMonthValue();
+		int currentYear = currentDate.getYear();
+		
+//		System.out.println("Current YYYY-MM: "+ currentYear + currentMonth);
+		
+		//if month is >6 -> Sem1, else Sem2
+		if (currentMonth > 7 || currentMonth < 2)
+			sem = "Sem1";
+		else
+			sem = "Sem2";
+		
+		//Extract out the year, eg 2019, add +1 to the year to get next year, 2020
+		int nextYear = currentYear+1;
+		
+		//parse the 2 years to String
+		String year1 = String.valueOf(currentYear);
+		String year2 = String.valueOf(nextYear);
+		
+		//AY is fixed.
+		//Concatenate everything into a String. Eg AY2019/2020Sem2
+//		String thisSem = "AY"+year1+"/"+year2+sem;
+		String thisSem = "AY2023/2024Sem1";
+//		String thisSem = "AY2018/2019Sem1";
+		
+//		System.out.println("Current Semester: " + thisSem);
+		
+		//check if current semester (string) exists in the allSems list (of strings)
+		//if exists, just return the semester object
+		
+		Semester currentSemester = new Semester();
+		if(allSems.stream().filter(semester -> semester.getLabel().equals(thisSem)).findFirst().isPresent()) {
+			currentSemester = allSems.stream().filter(semester -> semester.getLabel().equals(thisSem)).findFirst().orElse(null);
+		} else {
+		
+		//if no such semester exists,		
+		//Instantiate and set Semester label and/or Id 
+		//(Id can either manually increment or use generated value annotation>
+//		if(currentSemester == null) {
+			Semester latestSemesterInTheDatabase = Collections.max(allSems, Comparator.comparingInt(Semester::getSemester));
+			int newSemId = latestSemesterInTheDatabase.getSemester() + 1;
+			currentSemester.setSemester(newSemId);
+			currentSemester.setLabel(thisSem);
+		}
+		
+//		System.out.println(currentSemester.getLabel());
+		
 		return currentSemester;
 	}
 	
@@ -305,6 +356,70 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public ArrayList<CourserunStudent> findStudentsByCourseName(String courseName) {
 		return (ArrayList<CourserunStudent>) courserunStudentRepository.findStudentsByCourseName(courseName);
+	}
+
+	@Override
+	public ArrayList<Semester> findAllSemsters() {
+		return (ArrayList<Semester>) semesterRepository.findAllSemesters();
+	}
+
+	@Override
+	public Semester saveSemester(Semester sem) {
+		return semesterRepository.saveAndFlush(sem);
+	}
+
+	@Override
+	public Semester findOrAddSemester(String semLabel) {
+		ArrayList<Semester> allSems = (ArrayList<Semester>)semesterRepository.findAll();
+
+		Semester setSemester = new Semester();
+		if(allSems.stream().filter(semester -> semester.getLabel().equals(semLabel)).findFirst().isPresent()) {
+			setSemester = allSems.stream().filter(semester -> semester.getLabel().equals(semLabel)).findFirst().orElse(null);
+		} else {
+			Semester latestSemesterInTheDatabase = Collections.max(allSems, Comparator.comparingInt(Semester::getSemester));
+			int newSemId = latestSemesterInTheDatabase.getSemester() + 1;
+			setSemester.setSemester(newSemId);
+			setSemester.setLabel(semLabel);
+		}
+		
+		saveSemester(setSemester);
+		return setSemester;		
+	}
+	
+	@Override
+	public Courserun concatCourseNameWithYear(Courserun course, String shortSemLabel) {
+		course.setCourseName(course.getCourseName() + " " + shortSemLabel);
+		return course;
+	}
+
+	@Override
+	public void applyGraduatedStatus(Semester sem, int threshold) {
+		// retrieve all students
+		ArrayList<Student> students = findAllStudents();
+		
+		for (Student student : students) {
+			ArrayList<CourserunStudent>clist=courserunStudentRepository.findCourseGradebyId(student.getStudentId());
+			double totalCompletedCredits=0;
+			for(CourserunStudent c:clist) {
+				totalCompletedCredits+=c.getId().getCourserun().getCourseUnit();
+			}
+//			int totalCompletedCredits = 100; // to test that semester will change
+//			System.out.println("Student's status: " + student.getStatus().getLabel() + ", Total credits: " + totalCompletedCredits + ", Student's Semester: " + student.getSemester().getLabel());
+			if (student.getStatus().getStatus() != 3) {
+					if(totalCompletedCredits >= threshold) {
+						//set student's status to 3 = graduated
+						Status stat = new Status();
+						stat.setStatus(3);
+						student.setStatus(stat);
+//						System.out.println(student.getStudentId() + " has Graduated: " + student.getStatus().getStatus());
+					} else {
+						//change semester to current semester
+						student.setSemester(sem);
+//						System.out.println(student.getStudentId() + " still enrolled: " + student.getSemester().getLabel());
+					}
+				saveStudent(student);
+			}
+		}
 	}
 
 }

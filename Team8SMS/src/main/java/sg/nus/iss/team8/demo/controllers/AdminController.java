@@ -122,12 +122,27 @@ public class AdminController {
 		return "redirect:/facultymanagement";
 	}
 	
-	public static final String CURRENTSEMESTER = "AY2019/2020Sem2";
-
 	@GetMapping("/administrator")
 	public String getAdmin(Model model) {
-		model.addAttribute("currentsemester", CURRENTSEMESTER);
+		
+		ArrayList<Semester> allSemesters = aService.findAllSemsters();
+		Semester currentSemester = aService.currentSemester();
+		allSemesters.add(currentSemester);
+		
+		model.addAttribute("allSemesters", allSemesters);
+		model.addAttribute("currentSemester", currentSemester);
 		return "administrator";
+	}
+	
+	@PostMapping("/savecurrentsemester")
+	public String saveCurrentSemester(@ModelAttribute Semester sem, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "administrator";
+		}
+		aService.saveSemester(sem);
+		int graduationThreshold = 20;
+		aService.applyGraduatedStatus(sem, graduationThreshold);
+		return "redirect:/administrator";
 	}
 
 	@GetMapping("/studentmanagement")
@@ -251,11 +266,17 @@ public class AdminController {
 	}
 
 	@PostMapping("/savecourserun")
-	public String saveCourserun(@Valid @ModelAttribute Courserun course, BindingResult bindingResult) {
+	public String saveCourserun(@Valid @ModelAttribute Courserun course, @RequestParam("currentSemester")String semLabel, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "courserunform";
 		}
-
+		if(semLabel != "") {
+			aService.findOrAddSemester(semLabel);
+			course.setSemester(aService.findOrAddSemester(semLabel));
+			String shortSemLabel = concatSemester(semLabel);
+			course = aService.concatCourseNameWithYear(course, shortSemLabel);
+		}
+		
 		aService.saveCourserun(course);
 		return "redirect:/courserunmanagement";
 	}
@@ -263,16 +284,12 @@ public class AdminController {
 	@GetMapping("/addcourserun")
 	public String showAddCourseForm(Model model) {
 		Courserun course = new Courserun();
-		Semester currentSemester = aService.currentSemester();
+		String semLabel=null;
 		ArrayList<Faculty> flist = aService.findAllFaculty();
 		model.addAttribute("flist", flist);
 		model.addAttribute("course", course);
-		model.addAttribute("currentSemester", currentSemester);
-
-		String longSemLabel = currentSemester.getLabel();
-		String shortSemLabel = concatSemester(longSemLabel);
-		model.addAttribute("shortSemLabel", shortSemLabel);
-
+		model.addAttribute("currentSemester", semLabel);
+		
 		return "courserunform";
 	}
 
