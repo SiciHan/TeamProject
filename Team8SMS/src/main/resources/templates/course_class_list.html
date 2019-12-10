@@ -53,15 +53,16 @@
 			</tbody>
 		</table>
 	</div>
+	</div>
 	
-	<div class="col-md-12">
-		<ul class="nav nav-pills">
-			<li><a th:href="@{/faculty/downloadCSV/classlist?coursename=} + ${coursename}" class="glyphicon glyphicon-print"><span>Export</span></a></li>
-			
-			<li><a th:href="@{/email/send?coursename=} + ${coursename}" class="glyphicon glyphicon-envelope"><span>Announcement</span></a></li>
-		</ul>
+	<div class="row" style="margin-left:30px">
+	<div class="col-md-12" style="margin-top:0px">
+			<a th:href="@{/faculty/downloadCSV/classlist?coursename=} + ${coursename}" class="glyphicon glyphicon-print">&nbsp;Export&emsp;</a>	
+			&emsp;&emsp;		
+			<a th:href="@{/email/send?coursename=} + ${coursename}" class="glyphicon glyphicon-envelope">&nbsp;Announcement</a>
 	</div>
 	</div>
+   </br></br></br>
 	<div th:insert="~{home :: copy}">Copy</div>
 </body>
 </html>

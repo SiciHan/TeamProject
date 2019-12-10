@@ -37,7 +37,7 @@
 
 		<form th:object="${student}" th:action="@{/savestudent}"
 			method="post">
-			<div class="form-group">
+			<div class="form-group"> 
 				<label for="studentId">Student ID</label> 
 				<span th:if="${student.name == null}"> 
 					<input type="text" th:value="${newStudentId}" id="studentId" name="studentId" class="form-control" readonly>

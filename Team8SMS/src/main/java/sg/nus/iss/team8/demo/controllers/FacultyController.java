@@ -94,6 +94,12 @@ public class FacultyController {
 
 	}
 	
+	@GetMapping("/mycourses/this_course/class_list")
+	public String getClassList() {
+		
+		return "class_list";
+	}
+	
 	@GetMapping("/grade")
 	public String getGrade(Model model, @RequestParam(value = "coursename", required = false, defaultValue = "-")String coursename) {		
 		Faculty faculty = fservice.findFacultyById(102);
@@ -171,3 +177,5 @@ public class FacultyController {
 		grs.ExportCSV(request, response, students, headers);
 	}
 }
+
+
