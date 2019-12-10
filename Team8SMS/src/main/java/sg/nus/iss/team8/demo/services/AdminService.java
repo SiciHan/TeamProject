@@ -102,4 +102,8 @@ public interface AdminService {
 
 	ArrayList<CourserunStudent> findCoursesByStudentId(int studentid);
 
+	int countPendingCourses();
+
+	int countPendingLeaves();
+
 }

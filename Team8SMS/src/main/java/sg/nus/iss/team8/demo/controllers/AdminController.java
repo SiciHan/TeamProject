@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
@@ -134,21 +135,31 @@ public class AdminController {
 		
 		ArrayList<Semester> allSemesters = aService.findAllSemsters();
 		Semester currentSemester = aService.currentSemester();
-		allSemesters.add(currentSemester);
+		int courseApplicationCounter = aService.countPendingCourses();
+		int leaveApplicationCounter = aService.countPendingLeaves();
 		
+		model.addAttribute("courseApplicationCounter", courseApplicationCounter);
+		model.addAttribute("leaveApplicationCounter", leaveApplicationCounter);
 		model.addAttribute("allSemesters", allSemesters);
 		model.addAttribute("currentSemester", currentSemester);
 		return "administrator";
 	}
 	
 	@PostMapping("/savecurrentsemester")
-	public String saveCurrentSemester(@ModelAttribute Semester sem, BindingResult bindingResult) {
+	public String saveCurrentSemester(@Valid @ModelAttribute Semester sem, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+		redirectAttributes.addFlashAttribute("message", "Failed");
+		redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+		
 		if (bindingResult.hasErrors()) {
 			return "administrator";
 		}
 		aService.saveSemester(sem);
 		int graduationThreshold = 20;
 		aService.applyGraduatedStatus(sem, graduationThreshold);
+		
+		redirectAttributes.addFlashAttribute("message","Success");
+		redirectAttributes.addFlashAttribute("alertClass","alert-success");
+		
 		return "redirect:/administrator";
 	}
 

@@ -36,13 +36,19 @@
 			<a class="btn btn-primary" href="studentform.html" th:href="@{/addstudent}" role="button">Add
 				Student</a>
 			<br/>
-			<div th:if="${studentPage.totalPages > 0}" class="pagination"
-   				 th:each="pageNumber : ${pageNumbers}">
-			    <a th:href="@{/studentmanagement(size=${studentPage.size}, page=${pageNumber})}"
-		        	th:text=${pageNumber}
-			        th:class="${pageNumber==studentPage.number + 1} ? active"></a>
+			<div>
+				<p>List results:
+					<a href="/studentmanagement?size=5&page=1">5</a>
+					<a href="/studentmanagement?size=10&page=1">10</a>
+					<a href="/studentmanagement?size=20&page=1">20</a>
+				</p>
 			</div>
-			<br/>
+			<div th:if="${studentPage.totalPages > 0}" class="pagination mb-2"
+   				 th:each="pageNumber : ${pageNumbers}">
+				    <a th:href="@{/studentmanagement(size=${studentPage.size}, page=${pageNumber})}"
+			        	th:text=${pageNumber}
+				        th:class="${pageNumber==studentPage.number + 1} ? active"></a>
+			</div>
 			<table class="table table-hover">
 				<tbody>
 				<thead>
