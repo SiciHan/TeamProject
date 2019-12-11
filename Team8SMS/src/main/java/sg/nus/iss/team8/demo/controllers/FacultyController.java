@@ -101,8 +101,8 @@ public class FacultyController {
 		model.addAttribute("faculty", faculty);
 		model.addAttribute("coursename", coursename);
 		return "course_class_list";
-
 	}
+
 	
 	@GetMapping("/grade")
 	public String getGrade(Model model, @RequestParam(value = "coursename", required = false, defaultValue = "-")String coursename,HttpServletRequest request) {		
@@ -183,13 +183,16 @@ public class FacultyController {
 			Faculty faculty = fservice.findFacultyById(102);
 			model.addAttribute("faculty", faculty);
 			return "faculty_leave"; 
-		} 
+		}
+		else if(leave.getId().getStartDate().after(leave.getEndDate())){
+			return "end_startDateError";
+		}
 		Status status = staservice.findByStatusId(4);
 		model.addAttribute("status", status);
 		leave.setStatus(status);
 		lservice.saveLeave(leave);
 		
-		return "redirect:/faculty/home";
+		return "LeaveApplicationSubmit";
 	}
 
 	@RequestMapping("/downloadCSV/classlist")

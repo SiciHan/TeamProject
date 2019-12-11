@@ -29,15 +29,13 @@ public class EmailController {
 	@RequestMapping(value = "/send")
     @ResponseBody
     public void sendEmail(HttpServletRequest request, @RequestParam("coursename") String coursename) {
-        MailModel mm = new MailModel();
-        ArrayList<String> emails = eService.findAllEmail(coursename);
+        String  mail_title  = "S";  
+        String  mail_content    = "<a href='http://www.baidu.com'/>";  
+        MailModel email = MailModel.getInstance();     
+        email.sentEmails("845542640@qq.com",mail_title,mail_content); 
+        //ArrayList<String> emails = eService.findAllEmail(coursename);
         //attach
         //String fileNames[] = { "G:/profession/Java/project/aidai/src/main/resources/conf/spring.xml" };
-        //mm.setAttachFileNames(fileNames);
-        mm.setFromAddress("845542640@qq.com");
-        mm.setToAddresses("huangyuzhe2019@163.com;");
-        mm.setContent("这是来自xx的一封信，如果你收到了，证明xxx的邮件功能搞定了！");
-        mm.setSubject("xx测试（来自稀饭的一封信）");
-        mailService.sendAttachMail(mm);
+        
     }
 }
