@@ -3,6 +3,8 @@ package sg.nus.iss.team8.demo.controllers;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequest;
+
 import java.time.LocalDateTime;
 import java.time.Month;
 
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.context.annotation.SessionScope;
 
 import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
@@ -27,16 +32,28 @@ import sg.nus.iss.team8.demo.repositories.SemesterRepository;
 import sg.nus.iss.team8.demo.repositories.StudentRepository;
 
 import sg.nus.iss.team8.demo.models.User;
+import sg.nus.iss.team8.demo.models.UserSession;
 import sg.nus.iss.team8.demo.services.GenerateReportService;
 
 import sg.nus.iss.team8.demo.services.LeaveService;
 import sg.nus.iss.team8.demo.services.LeaveServiceImplementation;
 import sg.nus.iss.team8.demo.services.StudentService;
 import sg.nus.iss.team8.demo.services.StudentServiceImplementation;
+import sg.nus.iss.team8.demo.services.UserService;
+import sg.nus.iss.team8.demo.services.UserServiceImplementation;
 
 @Controller
 @RequestMapping("/student")
 public class StudentController {
+	@Autowired
+	private UserSession user;
+	private UserService us;
+
+	@Autowired
+	public void setUserService(UserServiceImplementation usi) {
+		this.us = usi;
+	}
+
 	private SemesterRepository semrepo;
 	public SemesterRepository getSemrepo() {
 		return semrepo;
@@ -45,7 +62,6 @@ public class StudentController {
 	public void setSemrepo(SemesterRepository semrepo) {
 		this.semrepo = semrepo;
 	}
-
 
 	private StudentRepository srepo;
 	@Autowired
@@ -83,12 +99,14 @@ public class StudentController {
 	public void setGrs(GenerateReportService grs) {
 		this.grs = grs;
 	}
-
-	@GetMapping("/applycourse")
-	public String applyCourse(Model model) {
-		
-		  Integer id=10013;//hardcoded. need to use userid
+	
+	@RequestMapping("/applycourse")
+	public String applyCourse(Model model, HttpServletRequest request) {
+		 //Integer id=(Integer)request.getSession(false).getAttribute("id");
+		  //hardcoded. need to use userid
 		  //display the courserun that
+		sg.nus.iss.team8.demo.models.User usr = us.findUser(user.getName());
+		Integer id=usr.getId();
 		  ArrayList<CourserunStudent> courses1=ss.findCancelledCourserunStudents(id);//all courserunstudent that is cancelled and ready for application.
 		  ArrayList<Courserun> courses1a=ss.findAvailableCourserun(id);//all courserun that not applied yet
 		  ArrayList<CourserunStudent> courses2=ss.findPendingCourserunStudents(id);

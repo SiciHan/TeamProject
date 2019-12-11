@@ -1,5 +1,6 @@
 package sg.nus.iss.team8.demo.controllers;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,10 @@ public class HomeController {
 	}
 
 	@GetMapping("/login/student")
-	public String getStudentLoginPage(Model model) {
-		model.addAttribute("user", new UserSession());
+	public String getStudentLoginPage(Model model, HttpSession session) {
+		UserSession user=new UserSession();
+		
+		model.addAttribute("user",user );
 		return "studentLogin";
 	}
 
@@ -130,7 +133,7 @@ public class HomeController {
 
 	@PostMapping("/authe")
 	public String getStudentAuthentication(@Valid @ModelAttribute("user") UserSession user, BindingResult bindingResult,
-			Model model) {
+			Model model, HttpSession session) {
 		String view = "";
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -151,6 +154,13 @@ public class HomeController {
 				} else {
 					if (input.equals(usr.getUsername())) {
 						if (passwordEncoder.matches(password, usr.getPasswordHash())) {
+							//Hi phyu, I cannot retrieve the usersession through your ways of using @SessionScope 
+							//so I explicitly attach the object to session and time out is to be 10mins.
+							//if you know how to retreive the session object, let us know. @Shutong
+							/*
+							 * session.setAttribute("user", user); session.setAttribute("id", usr.getId());
+							 * session.setMaxInactiveInterval(10*60);//10mins
+							 */							
 							view = "redirect:/student/applycourse";
 						} else {
 							view = "WrongPassword";
