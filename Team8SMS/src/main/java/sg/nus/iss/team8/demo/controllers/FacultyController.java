@@ -11,8 +11,9 @@ import sg.nus.iss.team8.demo.services.*;
 import java.io.*;
 
 import java.io.IOException;
-
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ public class FacultyController {
 	private StatusService staservice;
 	
 	private LeaveService lservice;
+	private UserService userservice;
 	
 
 	public GenerateReportService getGrs() {
@@ -49,61 +51,63 @@ public class FacultyController {
 	}
 
 	@Autowired
-	public void setFacultyService(FacultyServiceImplementation fservice) {
+	public void setFacultyService(FacultyService fservice) {
 		this.fservice = fservice;
+	}
+	@Autowired
+	public void setUserService(UserService userservice) {
+		this.userservice = userservice;
 	}
 	
 	@Autowired
-	public void setStudentService(StudentServiceImplementation sservice) {
+	public void setStudentService(StudentService sservice) {
 		this.sservice = sservice;
 	}
 	
 	@Autowired
-	public void setStatusService(StatusServiceImplementation staservice) {
+	public void setStatusService(StatusService staservice) {
 		this.staservice = staservice;
 	}
 	
 	@Autowired
-	public void setLeaveService(LeaveServiceImplementation lservice) {
+	public void setLeaveService(LeaveService lservice) {
 		this.lservice = lservice;
 	}
 	
 	@GetMapping("/home")
-	public String getHomePage(Model model/* , @SessionAttribute("user") UserSession user */) {
-		Faculty faculty = fservice.findFacultyById(102);
+	public String getHomePage(Model model, HttpServletRequest request) {
+		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
+		Faculty faculty = fservice.findFacultyByUserName(user.getName());
 		model.addAttribute("faculty", faculty);
 
 		return "faculty_home";
 	}
 
 	@GetMapping("/mycourses")
-	public String getCourses(Model model/* , @SessionAttribute("faculty") Faculty faculty */) {
-		Faculty faculty = fservice.findFacultyById(102);
+	public String getCourses(Model model, HttpServletRequest request) {
+		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
+		Faculty faculty = fservice.findFacultyByUserName(user.getName());
 		model.addAttribute("faculty", faculty);
 		return "faculty_courses";
 	}
 
 	
 	@GetMapping("/this_course")
-	public String getThisCourse(Model model, @RequestParam("coursename") String coursename) {
+	public String getThisCourse(Model model, @RequestParam("coursename") String coursename,HttpServletRequest request) {
 		ArrayList<Student> students = sservice.findStudentsByCourseName(coursename);
 		model.addAttribute("students", students);
-		Faculty faculty = fservice.findFacultyById(102);
+		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
+		Faculty faculty = fservice.findFacultyByUserName(user.getName());
 		model.addAttribute("faculty", faculty);
 		model.addAttribute("coursename", coursename);
 		return "course_class_list";
 
 	}
 	
-	@GetMapping("/mycourses/this_course/class_list")
-	public String getClassList() {
-		
-		return "class_list";
-	}
-	
 	@GetMapping("/grade")
-	public String getGrade(Model model, @RequestParam(value = "coursename", required = false, defaultValue = "-")String coursename) {		
-		Faculty faculty = fservice.findFacultyById(102);
+	public String getGrade(Model model, @RequestParam(value = "coursename", required = false, defaultValue = "-")String coursename,HttpServletRequest request) {		
+		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
+		Faculty faculty = fservice.findFacultyByUserName(user.getName());
 		model.addAttribute("faculty", faculty);
 		ArrayList<Courserun> courseruns = fservice.findAllCourserunsByFacultyId(faculty.getFacultyId());
 		model.addAttribute("courseruns", courseruns);
@@ -141,8 +145,25 @@ public class FacultyController {
 	}
 
 	@GetMapping("/movement")
-	public String getMovement() {
-		return "movement";
+	public String movementRegister(Model model, HttpServletRequest request, @RequestParam(required = false, name = "yearmonth") String ymstring) {
+		YearMonth ym = YearMonth.now();
+		if (ymstring != null && !ymstring.isEmpty()) {
+
+			ym = YearMonth.of(Integer.parseInt(ymstring.substring(0, 4)), Integer.parseInt(ymstring.substring(5)));
+		}
+
+		ArrayList<Leave> leaves = lservice.findLeavesByYearMonth(ym);
+		ArrayList<YearMonth> yearMonths = lservice.findAllYearMonths(ym);
+		ArrayList<String> username = lservice.findAllUserName(leaves);
+		HashMap<String, Leave> usernameLeaves = lservice.MergeListToMap(leaves, username);
+		// by default we will display the currentMonth leave
+		model.addAttribute("leaves", usernameLeaves);
+		model.addAttribute("yearMonths", yearMonths);
+		model.addAttribute("selectedmonth", ym);
+		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
+		Faculty faculty = fservice.findFacultyByUserName(user.getName());
+		model.addAttribute("faculty", faculty);
+		return "faculty_movementregister";
 	}
 
 	@GetMapping("/applyleave")
@@ -175,14 +196,29 @@ public class FacultyController {
 	public void downloadCSV(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("coursename") String coursename) throws IOException {
 		// create a list of object
+		
 		List<Student> students = sservice.findStudentsByCourseName(coursename);
 //		for(Student s:students) {
 //			System.out.println(s);
 //		}
 		
 
-		String[] headers=new String[]{"Student ID","Name", "Gender","Birth Date","Degree","Address","Address(2)","Mobile","Email","Semester","Status"};
-		grs.ExportCSV(request, response, students, headers);
+		String[] headers=new String[]{"Student ID","Name", "Gender","Birth Date","Degree","Address","Mobile","Email","Semester","Status"};
+		grs.ExportCSV(request, response,students, headers);
+	}
+	
+	@RequestMapping("/exportGrades")
+	public void downloadGrades(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("coursename") String coursename) throws IOException {
+		// create a list of object
+		List<CourserunStudent> crstudents=fservice.findAllStudents(coursename);
+		//List<Student> students = sservice.findStudentsByCourseName(coursename);
+//		for(Student s:students) {
+//			System.out.println(s);
+//		}
+		
+		String[] headers=new String[]{"Course Name","Student ID","Name", "Degree","Mobile","Email","Grade","Status"};
+		grs.ExportCSV(request, response, crstudents, headers);
 	}
 }
 

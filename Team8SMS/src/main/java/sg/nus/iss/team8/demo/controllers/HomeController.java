@@ -53,7 +53,7 @@ public class HomeController {
 		return "studentLogin";
 	}
 
-	@GetMapping("/login/staff")
+	@GetMapping("/login/faculty")
 	public String getStaffLoginPage(Model model) {
 		model.addAttribute("user", new UserSession());
 		return "staffLogin";
@@ -68,8 +68,8 @@ public class HomeController {
 	
 	  
 	@PostMapping("/authenticate")
-	public String getAuthentication(@Valid @ModelAttribute("user") UserSession user, BindingResult bindingResult,
-			Model model) {
+	public String getAuthentication(@Valid @ModelAttribute("user") UserSession user,BindingResult bindingResult, HttpSession session
+			,Model model) {
 
 		String view = "";
 		String type = "";
@@ -98,7 +98,10 @@ public class HomeController {
 
 					if (user.getName().equals("issl")) {
 						if (passwordEncoder.matches(password, usr.getPasswordHash())) {
-							view = "redirect:/administrator/facultymanagement";
+							//manually added sessions below
+							session.setAttribute("user", user); 
+							session.setMaxInactiveInterval(10*60);//10mins
+							view = "redirect:/administrator";
 						}
 
 						else {
@@ -109,7 +112,10 @@ public class HomeController {
 
 					else if (user.getName().equals(usr.getUsername())) {
 						if (passwordEncoder.matches(password, usr.getPasswordHash())) {
-							view = "redirect:/administrator/addfaculty";
+							//manually added sessions below
+							session.setAttribute("user", user); 
+							session.setMaxInactiveInterval(10*60);//10mins
+							view = "redirect:/faculty/home";
 						} else {
 							view = "WrongPasswordStaff";
 
@@ -154,14 +160,12 @@ public class HomeController {
 				} else {
 					if (input.equals(usr.getUsername())) {
 						if (passwordEncoder.matches(password, usr.getPasswordHash())) {
-							//Hi phyu, I cannot retrieve the usersession through your ways of using @SessionScope 
-							//so I explicitly attach the object to session and time out is to be 10mins.
-							//if you know how to retreive the session object, let us know. @Shutong
-							/*
-							 * session.setAttribute("user", user); session.setAttribute("id", usr.getId());
-							 * session.setMaxInactiveInterval(10*60);//10mins
-							 */							
-							view = "redirect:/student/applycourse";
+						
+							//manually added sessions below
+							  session.setAttribute("user", user); 
+							  session.setMaxInactiveInterval(10*60);//10mins
+							 							
+							view = "redirect:/student/";
 						} else {
 							view = "WrongPassword";
 

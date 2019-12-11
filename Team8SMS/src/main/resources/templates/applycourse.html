@@ -14,14 +14,12 @@
 <body>
 	<!-- Header and Navigation bar -->
 
-	<h1>Welcome</h1>
+	<div th:insert="~{mycourses :: welcome}"></div>
 	<div>
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<a class="navbar-brand"
-						href="http://localhost:8080/student/applycourse">Student
-						Education Record</a>
+					<a class="navbar-brand" href="studentdashboard.html" th:href="@{/student/dashboard}">Student Dashboard</a>
 				</div>
 				<ul class="nav navbar-nav">
 					<li><a href="http://localhost:8080/student/mycourses">My
@@ -33,7 +31,7 @@
 							Transcript</a></li>
 					<li><a href="http://localhost:8080/student/movementregister">Movement
 							Record</a></li>
-					<li><a href="http://localhost:8080/home/logout">Log
+					<li><a href="http://localhost:8080/logout">Log
 							Out</a></li>
 				</ul>
 			</div>
@@ -108,6 +106,6 @@
 		<span th:text=${message}></span>
 	</div>
 
-
+<div th:insert="~{home :: copy}">Copy</div>
 </body>
 </html>

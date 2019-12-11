@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="ISO-8859-1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<title>Student</title>
+</head>
+<body>
+	<!-- Header and Navigation bar -->
+
+	<div th:insert="~{mycourses :: welcome}"></div>
+	<div>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand active" href="studentdashboard.html" th:href="@{/student/dashboard}">Student Dashboard</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li><a href="http://localhost:8080/student/mycourses">My
+							Courses</a></li>
+					<li ><a
+						href="http://localhost:8080/student/applycourse">Apply
+							Courses</a></li>
+					<li><a href="http://localhost:8080/student/transcript">My
+							Transcript</a></li>
+					<li><a href="http://localhost:8080/student/movementregister">Movement
+							Record</a></li>
+					<li><a href="http://localhost:8080/logout">Log
+							Out</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+
+	<!-- Upper part, display all courserun available with apply button -->
+	<div>
+		<h2>Announcement</h2>
+	</div>
+	
+	<div th:insert="~{home :: copy}">Copy</div>
+</body>
+</html>

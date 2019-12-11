@@ -97,6 +97,11 @@ public class FacultyServiceImplementation implements FacultyService {
 	public List<CourserunStudent> saveCourserunStudents(List<CourserunStudent> courserunStudents) {
 		return crsr.saveAll(courserunStudents);
 	}
+	@Override
+	public Faculty findFacultyByUserName(String username) {
+		// TODO Auto-generated method stub
+		return fr.findByUserName(username);
+	}
 	
 
 }

@@ -8,8 +8,11 @@ import org.springframework.stereotype.Repository;
 import sg.nus.iss.team8.demo.models.*;
 
 @Repository
-public interface FacultyRepository extends JpaRepository<Faculty, Integer> {	
-	 @Query("SELECT courserun FROM Courserun courserun")
-	 ArrayList<Courserun> findAllCourseruns();
-	 
+public interface FacultyRepository extends JpaRepository<Faculty, Integer> {
+	@Query("SELECT courserun FROM Courserun courserun")
+	ArrayList<Courserun> findAllCourseruns();
+
+	@Query("select f from Faculty f, User u where f.facultyId=u.id and u.username=:username")
+	Faculty findByUserName(String username);
+
 }

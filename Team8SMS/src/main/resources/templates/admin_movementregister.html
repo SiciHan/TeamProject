@@ -31,7 +31,7 @@
 	<h1>Leaves</h1>
 	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
-			<form action="@{/movementregister}" method="get">
+			<form th:href="@{~/admin_movementregister}" method="get">
 				<select class="form-group" id="yearmonth" name="yearmonth">
 					<option th:each="yearmonth:${yearMonths}" th:value="${yearmonth}"
 						th:text="${yearmonth}" th:selected="${yearmonth==selectedmonth}"></option>

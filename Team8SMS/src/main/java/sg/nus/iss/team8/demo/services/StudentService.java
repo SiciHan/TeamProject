@@ -44,8 +44,20 @@ public interface StudentService {
 	
 	ArrayList<Student> findStudentsByCourseName(String courseName);
 	
-	public double totalScorePoints(int studentid);
-	public int totalCredits(int studentid);
+	/*
+	 * public double totalScorePoints(int studentid); public int totalCredits(int
+	 * studentid);
+	 */
 	public String graduationStatus(int studentid);
+
+	public Student findStudentByName(String username);
+
+	public ArrayList<CourserunStudent> findCurrentCourseByID(Integer id);
+
+	public ArrayList<CourserunStudent> findCompletedCourserunStudentsById(Integer id);
+
+	double totalScorePoints(ArrayList<CourserunStudent> clist);
+
+	int totalCredits(ArrayList<CourserunStudent> clist);
 
 }
