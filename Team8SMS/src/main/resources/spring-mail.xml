@@ -1,41 +1,29 @@
-    <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
-http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
-    default-autowire="byName">
-
-    <!-- implements email function -->
-    <bean id="mimeMessage" class="javax.mail.internet.MimeMessage"
-        factory-bean="javaMailSender" factory-method="createMimeMessage" />
-
-
-    <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="smtp.qq.com" />
-        <property name="username" value="845542640@qq.com" />
-        <!-- //your email address -->
-        <property name="password" value="wozaonilaobaqq" />
-        <!-- //email password -->
-        <property name="javaMailProperties">
-            <props>
-                <prop key="mail.smtp.auth">true</prop>
-                <prop key="mail.smtp.host">smtp.qq.com</prop>
-                <prop key="mail.smtp.timeout">25000</prop>
-                <prop key="mail.smtp.port">25</prop>
-                <prop key="mail.smtp.socketFactory.port">465</prop>
-                <prop key="mail.smtp.socketFactory.fallback">false</prop>
-                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
-            </props>
+<?xml version="1.0" encoding="UTF-8"?>    
+<beans xmlns="http://www.springframework.org/schema/beans"    
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
+       xmlns:aop="http://www.springframework.org/schema/aop"    
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd     
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">    
+       
+    <bean id="mailSender"    
+  class="org.springframework.mail.javamail.JavaMailSenderImpl">    
+        <property name="host">    
+            <value>smtp.163.com</value>    
         </property>
-    </bean>
-
-    <bean id="mailService" class="ssm.aidai.serviceImpl.MailServiceImpl">
-        <property name="mailSender" ref="javaMailSender" />
-        <property name="mimeMessage" ref="mimeMessage" />
-    </bean>
+        <property name="javaMailProperties">    
+            <props>    
+                <prop key="mail.smtp.auth">true</prop>    
+                <prop key="mail.smtp.timeout">50000</prop>    
+              	<prop key="mail.smtp.socketFactory.port">465</prop>  
+              	<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>  
+              	<prop key="mail.smtp.port">465</prop> 
+            </props>    
+        </property>    
+        <property name="username">    
+            <value>huangyuzhe2019@163.com</value>    
+        </property>    
+        <property name="password">    
+            <value>zhangfei123</value>    
+        </property>    
+    </bean>    
 </beans>
