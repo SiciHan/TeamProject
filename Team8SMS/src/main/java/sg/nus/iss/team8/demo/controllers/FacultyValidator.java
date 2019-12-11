@@ -1,9 +1,12 @@
 package sg.nus.iss.team8.demo.controllers;
 
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import sg.nus.iss.team8.demo.models.Courserun;
+import sg.nus.iss.team8.demo.models.Department;
 import sg.nus.iss.team8.demo.models.Faculty;
 import sg.nus.iss.team8.demo.models.Semester;
 import sg.nus.iss.team8.demo.models.Student;
@@ -13,7 +16,9 @@ public class FacultyValidator implements Validator {
 	@Override
 	public boolean supports(Class<?> clazz) {
 		// TODO Auto-generated method stub
-		return Faculty.class.equals(clazz)||Semester.class.equals(clazz) || Student.class.equals(clazz);
+		return Faculty.class.equals(clazz)||Semester.class.equals(clazz) 
+				|| Student.class.equals(clazz)||PageImpl.class.equals(clazz)
+				||Courserun.class.equals(clazz)||Department.class.equals(clazz);
 	}
 
 	@Override

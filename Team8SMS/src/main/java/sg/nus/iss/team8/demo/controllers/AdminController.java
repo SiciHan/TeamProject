@@ -70,7 +70,7 @@ public class AdminController {
 	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
-		//binder.addValidators(new FacultyValidator());
+		binder.addValidators(new FacultyValidator());
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
 	}
 	@GetMapping("/administrator")
