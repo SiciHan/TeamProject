@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -434,15 +435,10 @@ public class AdminController {
 	@RequestMapping("/downloadCSV/classlist")
 	public void downloadCSV(HttpServletRequest request, HttpServletResponse response, 
 			@RequestParam("coursename") String coursename) throws IOException {
-		// create a list of object
+			// create a list of object
 		
-			System.out.println("found " + coursename);
 			ArrayList<CourserunStudent> students = aService.findStudentsByCourseName(coursename);
-			System.out.println("found: " + students.size() + " students");
-			System.out.println("trying to download");
 			String[] headers=new String[]{"Course Name","Student Id", "Student Name", "Degree", "Mobile", "Email", "Grade", "Status"};
-			System.out.println("request: " + request);
-			System.out.println("response: " + response);
 			
 			grs.ExportCSV(request, response, students, headers);
 	}
@@ -457,6 +453,37 @@ public class AdminController {
 		model.addAttribute("coursesPerStudent", coursesPerStudent);
 
 		return "viewstudentcourses";
+	}
+	
+	@RequestMapping("/downloadCSV/gpalist")
+	public void downloadCsvGpa(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+			// create a list of object
+			double gpa;
+			Map<Double, Student> map = new HashMap<>();
+			
+			List<Student> students = aService.findAllStudents();
+			
+			for (Student student : students) {
+				gpa = aService.calculateGPA(student);
+				map.put(gpa, student);
+			}
+			
+			List<String> underGradsWithGpa = map.entrySet()
+												.stream()
+												.map(entry -> entry.getValue().getStudentId() + "," + 
+																entry.getValue().getName() + "," + 
+																entry.getValue().getGender() + "," + 
+																entry.getValue().getMobile() + "," + 
+																entry.getValue().getEmail() + "," + 
+																entry.getValue().getSemester().getLabel() + "," + 
+																entry.getValue().getStatus().getLabel() + "," + 
+																entry.getKey())
+												.sorted()
+												.collect(Collectors.toList());
+			
+			String[] headers=new String[]{"Student_ID","Student_Name", "Gender", "Mobile", "Email", "Semester", "Status", "GPA"};
+			grs.ExportCSV(request, response, underGradsWithGpa, headers);
 	}
 
 }

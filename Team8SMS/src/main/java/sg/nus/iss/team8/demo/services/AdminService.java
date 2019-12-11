@@ -117,4 +117,6 @@ public interface AdminService {
 
 	int countPendingLeaves();
 
+	double calculateGPA(Student student);
+
 }
