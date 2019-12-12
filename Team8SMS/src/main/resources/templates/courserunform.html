@@ -26,7 +26,7 @@
       				<li><a href="courseapplication.html" th:href="@{/courseapplication}">Course Application</a></li>
       				<li><a href="admin_movementregister.html" th:href="@{/admin_movementregister}">Leave Calendar</a></li>
       				<li><a href="leaveapplication.html" th:href="@{/leaveapplication}">Leave Application</a></li>
-      				<li><a href="#">Logout</a></li>
+      				<li><a href="logout.html" th:href="@{/logout}">Log Out</a></li>
     			</ul>
   			</div>
 		</nav>
@@ -37,7 +37,7 @@
 			<span th:if="${course.courseName == null}">Add Course</span> 
 			<span th:unless="${course.courseName == null}">Edit Course</span>
 		</h2>
-		<form th:object="${currentSemester}" th:action="@{/savecourserun}"
+		<form th:object="${course}" th:action="@{/savecourserun}"
 			method="post">
 			<div class="form-inline">
 				<label for="courseName">Course Name</label> 
@@ -48,28 +48,30 @@
 				<span th:unless="${course.courseName == null}"> 
 					<input type="text" th:field="${course.courseName}" class="form-control" readonly>
 					<input type="hidden" th:field="${course.semester.semester}" readonly> 
-					<input type="hidden" th:value="${currentSemester}" name="currentSemester" class="form-control">
+					<input type="hidden" value="" name="currentSemester" class="form-control">
 				</span>
 			</div>
 			<div class="form-group">
 				<label for="courseCode">Course Code</label>
-				<input type="text" th:field="${course.courseCode}" class="form-control" required>
+				<input type="text" th:field="${course.courseCode}" class="form-control" maxlength="8" required>
+				<!-- <p th:if="${#fields.hasErrors('courseCode')}" th:errors="${course.courseCode}" class="alert alert-danger"></p> -->
 			</div>
 			<div class="form-group">
-				<label for="facultyId">Faculty ID</label>
+				<label for="facultyId">Faculty</label>
 				<select th:field="${course.faculty.facultyId}" class="form-control">
 					<option th:each="f : ${flist}" th:value="${f.facultyId}" th:text="${f.name}"></option>
 				</select>
 			</div>
 			<div class="form-group">
 				<label for="courseUnit">Course Units</label>
-				<input type="text" th:field="${course.courseUnit}" class="form-control" required>
+				<input type="number" th:field="${course.courseUnit}" class="form-control" required>
+				<!-- <p th:if="${#fields.hasErrors('courseUnit')}" th:errors="${course.courseUnit}" class="alert alert-danger"></p> -->
 			</div>
 			<div>
 				<button type="submit" class="btn btn-primary">Save</button>
 			</div>
 		</form>
 	</div>
-
+	<div th:insert="~{home :: copy}">Copy</div>
 </body>
 </html>

@@ -82,14 +82,14 @@ public class AdminController {
 			return "redirect:/login/faculty";
 		}
 		
-		ArrayList<Semester> allSemesters = aService.findAllSemsters();
+//		ArrayList<Semester> allSemesters = aService.findAllSemsters();
 		Semester currentSemester = aService.currentSemester();
 		int courseApplicationCounter = aService.countPendingCourses();
 		int leaveApplicationCounter = aService.countPendingLeaves();
 		
 		model.addAttribute("courseApplicationCounter", courseApplicationCounter);
 		model.addAttribute("leaveApplicationCounter", leaveApplicationCounter);
-		model.addAttribute("allSemesters", allSemesters);
+//		model.addAttribute("allSemesters", allSemesters);
 		model.addAttribute("currentSemester", currentSemester);
 		return "administrator";
 	}
@@ -187,16 +187,8 @@ public class AdminController {
 		return "redirect:/facultymanagement";
 	}
 	
-
-	
 	@PostMapping("/savecurrentsemester")
-	public String saveCurrentSemester(@Valid Semester sem, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("message", "Failed");
-		redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
-		
-		if (bindingResult.hasErrors()) {
-			return "administrator";
-		}
+	public String saveCurrentSemester(Semester sem, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		aService.saveSemester(sem);
 		int graduationThreshold = 160;
 		aService.applyGraduatedStatus(sem, graduationThreshold);
@@ -215,16 +207,16 @@ public class AdminController {
 		int pageSize = size.orElse(5);
 		
 		Page<Student> studentPage = aService.pageAllStudents(PageRequest.of(currentPage - 1, pageSize));
-		System.out.println("before binding studentPage");
+//		System.out.println("before binding studentPage");
 		model.addAttribute("studentPage", studentPage);
-		System.out.println("after binding studentPage");
+//		System.out.println("after binding studentPage");
 		
 		int totalPages = studentPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
-        System.out.println("before rendering view");
+//        System.out.println("before rendering view");
         return "studentmanagement";
 	}
 
@@ -327,8 +319,22 @@ public class AdminController {
 		return s1 + s2 + s3 + s4;
 	}
 
+	@GetMapping("/addcourserun")
+	public String showAddCourseForm(Model model) {
+		Courserun course = new Courserun();
+		String semLabel=null;
+		ArrayList<Faculty> flist = aService.findAllFaculty();
+		model.addAttribute("flist", flist);
+		model.addAttribute("course", course);
+		model.addAttribute("currentSemester", semLabel);
+		
+		return "courserunform";
+	}
+	
 	@PostMapping("/savecourserun")
-	public String saveCourserun(@Valid @ModelAttribute Courserun course, @RequestParam("currentSemester")String semLabel, BindingResult bindingResult) {
+	public String saveCourserun(@Valid @ModelAttribute Courserun course, 
+			BindingResult bindingResult,
+			@RequestParam("currentSemester")String semLabel) {
 		if (bindingResult.hasErrors()) {
 			return "courserunform";
 		}
@@ -341,18 +347,6 @@ public class AdminController {
 		
 		aService.saveCourserun(course);
 		return "redirect:/courserunmanagement";
-	}
-	
-	@GetMapping("/addcourserun")
-	public String showAddCourseForm(Model model) {
-		Courserun course = new Courserun();
-		String semLabel=null;
-		ArrayList<Faculty> flist = aService.findAllFaculty();
-		model.addAttribute("flist", flist);
-		model.addAttribute("course", course);
-		model.addAttribute("currentSemester", semLabel);
-		
-		return "courserunform";
 	}
 
 	@GetMapping("/editcourserun/{courseCode}/{semesterid}")
@@ -367,17 +361,21 @@ public class AdminController {
 
 	@GetMapping("/deletecourserun/{courseCode}/{semesterid}")
 	public String deleteCourserun(Model model, @PathVariable(name = "courseCode") String courseCode,
-			@PathVariable(name = "semesterid") int semesterid) {
+			@PathVariable(name = "semesterid") int semesterid,
+			RedirectAttributes redirectAttributes) {
+
 		Courserun course = aService.findCourserun(courseCode, semesterid);
 		// if courserunstudents is not empty, redirect to /viewcourserun/"+courseCode+"/"+semesterid;
 		ArrayList<CourserunStudent> studentsPerCourse = aService.findStudentsByCourseName(course.getCourseName());
 		if(studentsPerCourse.isEmpty()) {
 			aService.removeCourserun(course);
-			return "redirect:/courserunmanagement";
 		} else {
-			return "redirect:/viewcourserun/"+courseCode+"/"+semesterid;
+			redirectAttributes.addFlashAttribute("alertClass","alert-danger");
+			redirectAttributes.addFlashAttribute("message","Failed");
+			redirectAttributes.addFlashAttribute("failedCourse",course);
 		}
 		
+		return "redirect:/courserunmanagement";
 	}
 
 	@GetMapping("/viewcourserun/{courseCode}/{semesterid}")
