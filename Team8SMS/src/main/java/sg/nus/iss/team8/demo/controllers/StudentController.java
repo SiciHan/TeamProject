@@ -172,7 +172,12 @@ public class StudentController {
 		model.addAttribute("clist", clist);
 		double points = ss.totalScorePoints(clist);
 		int totalCredits = ss.totalCredits(clist);
-		double cap = points / totalCredits;
+		double cap;
+		try{
+			cap = points / totalCredits;
+		}catch(Exception e) {
+			cap=0.0;
+		}
 		cap = Math.round(cap * 100.0) / 100.0;
 		String gstatus = ss.graduationStatus(id);
 		// Date today = Calendar.getInstance().getTime();
@@ -193,7 +198,12 @@ public class StudentController {
 		Student student= ss.findStudent(id);
 		double points = ss.totalScorePoints(clist);
 		int totalCredits = ss.totalCredits(clist);
-		double cap = points / totalCredits;
+		double cap;
+		try{
+			cap = points / totalCredits;
+		}catch(Exception e) {
+			cap=0.0;
+		}
 		cap = Math.round(cap * 100.0) / 100.0;
 		String gstatus = ss.graduationStatus(id);;
 		grs.ExportTranscript(request,response,student,clist,totalCredits,cap,gstatus);

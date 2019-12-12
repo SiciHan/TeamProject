@@ -33,6 +33,7 @@ public class FacultyValidator implements Validator {
 			if (f.getStatus().getStatus()==0) {
 				errors.rejectValue("status", "emptyStatus",new Object[] {"status"}, "status must be selected");
 			}
+			
 		}
 		if(target instanceof Semester) {
 			Semester s= (Semester) target;
