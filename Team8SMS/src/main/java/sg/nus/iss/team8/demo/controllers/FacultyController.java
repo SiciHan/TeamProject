@@ -101,18 +101,62 @@ public class FacultyController {
 		List<CourserunStudent> courserunstudents = new ArrayList<>();
 		if(coursename != null && !coursename.equals("-")) courserunstudents = fservice.findAllStudents(coursename);
 		model.addAttribute("courserunstudents", courserunstudents);
-		CourserunStudentListWrapper wrapper = new CourserunStudentListWrapper();
-		wrapper.setList(courserunstudents);
-		model.addAttribute("wrapper", wrapper);
+//		CourserunStudentListWrapper wrapper = new CourserunStudentListWrapper();
+//		wrapper.setList(courserunstudents);
+//		model.addAttribute("wrapper", wrapper);
 		return "faculty_grade";
 	}
 	
-	@PostMapping("/grade/submit")
-	public String submitStudentGrades(@ModelAttribute("wrapper") CourserunStudentListWrapper wrapper, Model model, BindingResult bindingResult) {
-		List<CourserunStudent> courserunStudents = wrapper.getList();
-		fservice.saveCourserunStudents(courserunStudents);
-		return "redirect:/faculty/grade";
+	@GetMapping("/report")
+	public String getReport(Model model, @RequestParam(value = "coursename", required = false, defaultValue = "-")String coursename,@RequestParam(value = "grade", required = false, defaultValue = "-")String grade) {		
+		Faculty faculty = fservice.findFacultyById(102);
+		model.addAttribute("faculty", faculty);
+		ArrayList<Courserun> courseruns = fservice.findAllCourserunsByFacultyId(faculty.getFacultyId());
+		model.addAttribute("courseruns", courseruns);
+		String courseCode = "-";
+		Semester semester = new Semester();
+		for (Courserun c:courseruns) {
+			  if (coursename.equals(c.getCourseName())) { 
+				  courseCode = c.getCourseCode(); 
+				  semester = c.getSemester();
+				  break; 
+				  }
+			}
+		model.addAttribute("courseKey", courseCode + (semester == null ? "" : semester.getSemester()));
+		List<CourserunStudent> courserunstudents = new ArrayList<>();
+		int[] gradeDataArray = new int[10];
+		if(coursename != null && !coursename.equals("-")){
+			courserunstudents = fservice.findAllByCourserunandgrade(coursename,grade);
+			//Mapping bar chart data
+			for (CourserunStudent cs:
+			courserunstudents) {
+				switch (cs.getGrade()){
+					case "A+": gradeDataArray[0]++; break;
+					case "A": gradeDataArray[1]++;break;
+					case "A-": gradeDataArray[2]++;break;
+					case "B+": gradeDataArray[3]++;break;
+					case "B":gradeDataArray[4]++;break;
+					case "B-":gradeDataArray[5]++;break;
+					case "C+":gradeDataArray[6]++;break;
+					case "C":gradeDataArray[7]++;break;
+					case "D+":gradeDataArray[8]++;break;
+					case "D":gradeDataArray[9]++;break;
+				}
+			}
+		}else {
+			coursename = "-";
+		}
+		if(grade == null || grade.equals("-")){
+			grade = "-";
+		}
+		model.addAttribute("coursename", coursename);
+		model.addAttribute("grade", grade);
+		model.addAttribute("gradeDataArray", gradeDataArray);
+		model.addAttribute("courserunstudents", courserunstudents);
+		return "faculty_report";
 	}
+	
+
 
 	@GetMapping("/movement")
 	public String getMovement() {

@@ -11,6 +11,8 @@
 <script src="/moment.min.js"></script>
 <script src="/jquery.daterangepicker.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 <script language="JavaScript" src="/reportChart.js"></script>
 
 <title>Faculty/report</title>
@@ -43,7 +45,7 @@
 			<div class="col-sm-2">
 				<label for="Choose_Courses" class="col-form-label">Courses:</label>
 			</div>
-			<div class="col-sm-9">
+			<div class="col-md-10">
 				<select id="form_Courses" name="dob_Courses"
 					onchange="onSelectChange()">
 					<option id="-" value="-">-</option>
@@ -56,20 +58,25 @@
 		</div>
 
 		<div class="col-md-6">
-			<div class="col-sm-2">
+			<div class="col-md-2">
 				<label for="Choose_Grade" class="col-form-label">Grade:</label>
 			</div>
-			<div class="col-sm-9">
+			<div class="col-md-10">
 				<select id="form_Grade" name="dob_Grade" onchange="onSelectChange()">
-					<option id="-" value="-">-</option>
-					<option th:each="courserun:${courseruns}"
-						th:id="${courserun.courseCode} + ${courserun.semester.semester}"
-						th:value="${courserun.courseName}"
-						th:text="'['+${courserun.courseCode}+']/'+${courserun.courseName}">
+					<option id="grade-" value="-">-</option>
+					<option id="gradeA+" value="A+">A+</option>
+					<option id="gradeA" value="A">A</option>
+					<option id="gradeA-" value="A-">A-</option>
+					<option id="gradeB+" value="B+">B+</option>
+					<option id="gradeB" value="B">B</option>
+					<option id="gradeB-" value="B-">B-</option>
+					<option id="gradeC+" value="C+">C+</option>
+					<option id="gradeC" value="C">C</option>
+					<option id="gradeD+" value="D+">D+</option>
+					<option id="gradeD" value="D">D</option>
 				</select>
 			</div>
 		</div>
-	</div>
 	</div>
 
 
@@ -94,10 +101,10 @@
 					<td th:text="${courseRunStudent.id.courserun.courseName}">courseName</td>
 					<td th:text="${courseRunStudent.id.student.studentId}">studentId</td>
 					<td th:text="${courseRunStudent.id.student.name}">studentName</td>
-					<td th:text="${courseRunStudent.id.student.name}">gender</td>
-					<td th:text="${courseRunStudent.id.student.name}">email</td>
-					<td th:text="${courseRunStudent.id.student.name}">mobile</td>
-					<td th:text="${courseRunStudent.id.student.name}">grade</td>
+					<td th:text="${courseRunStudent.id.student.gender}">gender</td>
+					<td th:text="${courseRunStudent.id.student.email}">email</td>
+					<td th:text="${courseRunStudent.id.student.mobile}">mobile</td>
+					<td th:text="${courseRunStudent.grade}">grade</td>
 				</tr>
 
 				</tbody>
@@ -105,59 +112,122 @@
 		</div>
 	</div>
 
-	<div class="form-group" style="margin-right: 10px">
+	<div class="form-group" style="margin-right: 20px">
 		<div class="input-group col-sm-1 col-sm-offset-11">
 			<a
 				th:href="@{/faculty/downloadCSV/classlist?coursename=} + ${coursename}"
-				class="glyphicon glyphicon-download">&nbsp;Download&emsp;</a>
-			&emsp;&emsp;
+				class="glyphicon glyphicon-download">&nbsp;Download</a> &emsp;&emsp;
 		</div>
 	</div>
 
 	<div class="row">
-		<canvas id="barChart" style="height:20vh;width:60vw;"></canvas>
+		<canvas id="barChart" style="height: 20vh; width: 60vw;"></canvas>
 	</div>
 
-<script>
+	<script th:inline="JavaScript">
+		/*<![CDATA[*/
+			var gradeDataArray = [[${gradeDataArray}]];
+			var coursename = [[${coursename}]];
+			var grade = [[${grade}]];
+			console.log('gradeDataArray', gradeDataArray);
+            console.log('coursename', coursename);
+		/*]]>*/
+
+Chart.plugins.unregister(ChartDataLabels);
 var ctx = document.getElementById('barChart').getContext('2d');
+if(coursename === undefined || coursename === '-'){
+    $("#barChart").css({"display":"none"});
+}
+else if(grade !== undefined && grade !== '-') {
+    $("#barChart").css({"display":"none"});
+}
 var chart = new Chart(ctx, {
-    // The type of chart we want to create
-    type: 'bar',
-
-    // The data for our dataset
-    data: {
-        labels: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'D+', 'D'],
-        datasets: [{
-            label: 'Student Count of Grades',
-            backgroundColor: 'rgb(150, 60, 90)',
-            borderColor: 'rgb(0, 0, 0)',
-            data: [12, 10, 15, 12, 13, 14, 15, 8, 14, 15],
-            borderWidth: 1,
-
-        }],
+    // The type of chart 
+    type : 'bar',
+    hover: {
+        animationDuration: 0
     },
+    // The data for our dataset
+    data : {
+        labels : [ 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'D+',
+                'D' ],
+        datasets : [ {
+            label : 'Number of Student based on Grades',
+            backgroundColor : 'rgb(200, 26, 26)',
+            borderColor : 'rgb(0, 0, 0)',
+            data : gradeDataArray,
+            borderWidth : 1,
 
+        } ],
+    },
+    plugins: [ChartDataLabels],
     // Configuration options go here
-    options: {
-        layout: {
-            padding: {
-                left: 50,
-                right: 50,
-                top: 0,
-                bottom: 0
+    options : {
+        layout : {
+            padding : {
+                left : 50,
+                right : 50,
+                top : 0,
+                bottom : 0
             }
         },
-        scales: {
-            yAxes: [{
-                ticks: {
-                    suggestedMin: 0,
-                    suggestedMax: 30
+        legend: {
+            position: 'bottom'
+        },
+        scales : {
+            yAxes : [ {
+                ticks : {
+                    suggestedMin : 0,
+                    suggestedMax : 10
                 }
 
-            }]
+            } ]
+        },
+        plugins: {
+            // Change options for ALL labels of THIS CHART
+            datalabels: {
+                align: 'end',
+                offset: 5,
+                anchor: 'end'
+            }
         }
     }
 });
-</script>
+	</script>
+
+	<input type="hidden" th:value="${courseKey}" id="hidden_input" />
+	<input type="hidden" th:value="${grade}" id="hidden_input1" />
+	<script>
+		var hidden_input = $('#hidden_input').val();
+		var hidden_input_selector = '#' + hidden_input.toString();
+		var hidden_input1 = $('#hidden_input1').val();
+		var hidden_input1_selector = '#grade' + hidden_input1.toString();
+		console.log(hidden_input_selector);
+		console.log('gradekey',hidden_input1_selector);
+		$(hidden_input_selector).attr("selected", true);
+		$(hidden_input1_selector).attr("selected", true);
+		function onSelectChange() {
+			var courseSelect = document.getElementById("form_Courses");
+			console.log('coursekey',courseSelect);
+			var selectedCoursesName = courseSelect.value;
+			console.log("selected:" + selectedCoursesName);
+			var gradeSelect = document.getElementById("form_Grade");
+			console.log(gradeSelect);
+			var selectedGrade = gradeSelect.value;
+			console.log("selected grade:" + selectedGrade);
+			var hrefValue = 'report';
+			if((hidden_input === undefined || hidden_input === '-')
+					&& (selectedGrade !== undefined && selectedGrade !== '-')){
+				hrefValue = hrefValue + '?grade=' + selectedGrade;
+			}else if((hidden_input !== undefined && hidden_input !== '-')
+					&& (selectedGrade === undefined || selectedGrade === '-')){
+				hrefValue = hrefValue + '?coursename=' + selectedCoursesName;
+			}else if ((hidden_input !== undefined && hidden_input !== '-')
+					&& (selectedGrade !== undefined && selectedGrade !== '-')){
+				hrefValue = hrefValue + '?coursename=' + selectedCoursesName + '&' + 'grade=' + selectedGrade;
+			}
+			window.location.href = hrefValue;
+		}
+	</script>
 </body>
 </html>

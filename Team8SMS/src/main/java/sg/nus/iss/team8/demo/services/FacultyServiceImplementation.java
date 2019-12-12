@@ -23,10 +23,10 @@ public class FacultyServiceImplementation implements FacultyService {
 	@Resource
 	private FacultyRepository fr;
 	private CourserunStudentRepository crsr;
-	private CourserunRepository cr;  //repository mingzi 
+	private CourserunRepository cr; 
 	
 	@Autowired
-	public void setCrsr(CourserunStudentRepository crsr) { //zidong lianjie zhege repository
+	public void setCrsr(CourserunStudentRepository crsr) {
 		this.crsr = crsr;
 	}
 	@Autowired
@@ -37,7 +37,7 @@ public class FacultyServiceImplementation implements FacultyService {
 	public void setCourserunRepository(CourserunRepository cr) {
 		this.cr = cr;
 	}
-	@Override  //chongxie shixian fangfa
+	@Override 
 	public ArrayList<Faculty> findAllFaculty() {
 		ArrayList<Faculty> alf = (ArrayList<Faculty>)fr.findAll();
 		return alf;
@@ -67,7 +67,7 @@ public class FacultyServiceImplementation implements FacultyService {
 	public ArrayList<Courserun> findAllCourseruns(){
 		return fr.findAllCourseruns();
 	}
-	public List<CourserunStudent> findAllStudents(String courserunname) {
+	public List<CourserunStudent> findAllStudents(String courserunname,String grade) {
 		// TODO Auto-generated method stub
 		List<CourserunStudent> result=crsr.findAllByCourserun(courserunname);
 		
@@ -97,6 +97,43 @@ public class FacultyServiceImplementation implements FacultyService {
 	public List<CourserunStudent> saveCourserunStudents(List<CourserunStudent> courserunStudents) {
 		return crsr.saveAll(courserunStudents);
 	}
+	@Override
+	public List<CourserunStudent> findAllStudents(String courserunname) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<CourserunStudent> findAllByCourserunandgrade(String courserunname, String grade) {
+		// TODO Auto-generated method stub
+		List<CourserunStudent> result=fr.findAllByCourserunandgrade(courserunname,grade);
+		if(result==null || result.isEmpty()) {
+			return new ArrayList<CourserunStudent>();
+		}
+		else {
+			return result;
+		}
+  }
+	
+	@Override
+	public List<CourserunStudent>  findAllCourserunStudentList(String courserunname, String grade){
+		// TODO Auto-generated method stub
+		List<CourserunStudent> result = fr.findAllCourserunStudentList();
+		for(CourserunStudent i:result) {
+			if() {
+				return result;}
+			else if() {
+				
+			}
+				
+			}
+		}
+		return fr. findAllCourserunStudentList(courserunname,grade);
+	}
+		
+	}
+	}
+
+
 	
 
-}
+
