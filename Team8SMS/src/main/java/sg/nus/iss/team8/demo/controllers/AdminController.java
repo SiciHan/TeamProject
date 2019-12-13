@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import javax.swing.JOptionPane;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -359,7 +361,7 @@ public class AdminController {
 	
 	@GetMapping("/approveleave/{startDate}/{user}/{id}")
 	public String approveLeaveApplication(@PathVariable("startDate") String startDate, 
-			@PathVariable("user") String user, @PathVariable("id") int id) throws ParseException {
+			@PathVariable("user") String user, @PathVariable("id") int id) {
 		int status = 6;
  		aService.approveLeave(startDate, user, id, status);
 		return "redirect:/leaveapplication";
@@ -409,13 +411,32 @@ public class AdminController {
 	
 	@GetMapping("/deletedepartment/{id}")
 	public String deleteDepartment(@PathVariable("id") Integer id) {
-		Department d = aService.findDepartmentById(id);
-		aService.deleteDepartment(d);
-		return "redirect:departmentmanagement";
+		
+		int gotFaculty = aService.findFacultyInDepartment(id);
+		System.out.println(gotFaculty);
+		System.out.println(gotFaculty == 1);
+		if (gotFaculty == 0) {
+			Department d = aService.findDepartmentById(id);
+			aService.deleteDepartment(d);
+		}else {
+			return "deletedepartmentalert";
+		}
+		
+//		Department d = aService.findDepartmentById(id);
+//		
+//		try {
+//			aService.deleteDepartment(d);
+//		}catch (DataIntegrityViolationException e){
+//			view = "deletedepartmentoncascade/{id}";
+//		}
+//			catch (Exception ex){
+//			view = "deletedepartmentoncascade";
+//		}
+		return "redirect:/departmentmanagement";
 	}
-	
+		
 	@GetMapping("/admin_movementregister")
-	public String movementRegister(Model model, @RequestParam(required=false, name="yearmonth") String ymstring) {
+	public String admin_movementRegister(Model model, @RequestParam(required=false, name="yearmonth") String ymstring) {
 		YearMonth ym=YearMonth.now();
 		if(ymstring!=null && !ymstring.isEmpty()) {
 			

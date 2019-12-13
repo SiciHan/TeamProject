@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body onload="myFunction()">
+<script>
+function myFunction() {
+  var txt;
+  if (confirm("Please remove faculty staff in the department before deleting department.")) {
+    if ( txt = "OK" ){
+    	location.replace("http://localhost:8080/facultymanagement/")
+    }
+  } else {
+	  location.replace("http://localhost:8080/departmentmanagement")
+  }
+}
+</script>
+
+</body>
+</html>

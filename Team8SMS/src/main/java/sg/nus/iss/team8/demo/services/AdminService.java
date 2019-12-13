@@ -104,6 +104,8 @@ public interface AdminService {
 	
 	ArrayList<CourserunStudent> findCoursesByStudentId(int studentid);
 	
+	int findFacultyInDepartment(Integer departmentId);
+	
 	// for movement register 
 	ArrayList<Leave> findLeavesByYearMonth(YearMonth ym);
 	

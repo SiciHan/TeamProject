@@ -288,36 +288,26 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void approveLeave(String startDate, String userType, int id, int status) {
 		Status apprvstatus = statusRepository.findById(status).orElse(null);
-		List<Leave> leaves=leaveRepository.findAll();
+		ArrayList<Leave> leaves=(ArrayList<Leave>) leaveRepository.findAll();
 		for (Leave l : leaves) {
 			//if the leave is equal to startDate, userType and id 
 			// set status to status(approve or reject)
 			if (l.getId().getStartDate().toString().equalsIgnoreCase(startDate) 
 					&& l.getId().getUserType().equals(userType) && l.getId().getId() == id) {
-				l.setStatus(apprvstatus);
-				System.out.println("1st comparison:" +l.getId().getStartDate().toString().equalsIgnoreCase(startDate));
-				System.out.println("2st comparison:" +l.getId().getUserType().equals(userType));
-				System.out.println("3rd comparison:" + l.getStatus().getStatus());
-				System.out.println("4th comparison:" + l.getStatus().getLabel());
-				leaveRepository.saveAndFlush(l);
+				leaveRepository.setStatus(l.getId(), apprvstatus);
 			}
 		}
 	}
 	@Override
 	public void rejectLeave(String startDate, String userType, int id, int status) {
-		Status apprvstatus = statusRepository.findById(status).orElse(null);
+		Status rejectstatus = statusRepository.findById(status).orElse(null);
 		List<Leave> leaves=leaveRepository.findAll();
 		for (Leave l : leaves) {
 			//if the leave is equal to startDate, userType and id 
 			// set status to status(approve or reject)
 			if (l.getId().getStartDate().toString().equalsIgnoreCase(startDate) 
 					&& l.getId().getUserType().equals(userType) && l.getId().getId() == id) {
-				l.setStatus(apprvstatus);
-				System.out.println("1st comparison:" +l.getId().getStartDate().toString().equalsIgnoreCase(startDate));
-				System.out.println("2st comparison:" +l.getId().getUserType().equals(userType));
-				System.out.println("3rd comparison:" + l.getStatus().getStatus());
-				System.out.println("4th comparison:" + l.getStatus().getLabel());
-				leaveRepository.saveAndFlush(l);
+				leaveRepository.setStatus(l.getId(),rejectstatus);
 			}
 		}
 	}
@@ -384,6 +374,18 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void deleteDepartment(Department department) {
 		departmentRepository.delete(department);
+	}
+	
+	@Override
+	public int findFacultyInDepartment(Integer departmentId) {
+		int x;
+		ArrayList<Faculty> f = departmentRepository.findFacultyByDeparmentId(departmentId);
+		if (f.isEmpty())
+			x = 0;
+		else
+			x = 1;
+		System.out.println(f.isEmpty());
+		return x;
 	}
 
 	@Override
