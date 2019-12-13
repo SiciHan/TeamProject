@@ -2,9 +2,12 @@ package sg.nus.iss.team8.demo.controllers;
 
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.*;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import sg.nus.iss.team8.demo.services.*;
 import sg.nus.iss.team8.demo.models.*;
@@ -38,7 +41,11 @@ public class EmailController {
 	}
 	
 	@PostMapping("/save")
-	public String saveEmail(@ModelAttribute("anno") Announcement anno) {
+	public String saveEmail(@Valid @ModelAttribute("anno") Announcement anno, BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) { 
+			model.addAttribute("anno", anno);
+			return "announcement_prompt"; 
+		}
 		eService.saveAnno(anno);
 		return "redirect:/email/send";
 	}
