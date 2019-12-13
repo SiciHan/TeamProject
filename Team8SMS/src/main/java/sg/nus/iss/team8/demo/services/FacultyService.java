@@ -26,6 +26,8 @@ public interface FacultyService {
 	ArrayList<Courserun> findAllCourseruns();
 	ArrayList<Courserun> findAllCourserunsByFacultyId(int facultyId);
 	List<CourserunStudent> findAllStudents(String courserunname);
+	List<CourserunStudent> findAllByCourserunandgrade(String courserunname, String grade);
+	List<CourserunStudent> findAllCourserunStudentList(String courserunname, String grade);
 	
 	CourserunStudent saveCourserunStudent(CourserunStudent courserunStudent);
 	List<CourserunStudent> saveCourserunStudents(List<CourserunStudent> courserunStudents);
