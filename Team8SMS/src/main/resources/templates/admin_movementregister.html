@@ -23,7 +23,7 @@
       				<li><a href="courseapplication.html" th:href="@{/courseapplication}">Course Application</a></li>
       				<li class="active"><a href="admin_movementregister.html" th:href="@{/admin_movementregister}">Leave Calendar</a></li>
       				<li><a href="leaveapplication.html" th:href="@{/leaveapplication}">Leave Application</a></li>
-      				<li><a href="#">Logout</a></li>
+      				<li><a href="logout.html" th:href="@{/logout}">Log Out</a></li>
     			</ul>
   			</div>
 		</nav>
@@ -31,7 +31,7 @@
 	<h1>Leaves</h1>
 	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
-			<form th:href="@{~/admin_movementregister}" method="get">
+			<form action="http://localhost:8080/admin_movementregister" method="get">
 				<select class="form-group" id="yearmonth" name="yearmonth">
 					<option th:each="yearmonth:${yearMonths}" th:value="${yearmonth}"
 						th:text="${yearmonth}" th:selected="${yearmonth==selectedmonth}"></option>
@@ -61,5 +61,6 @@
 			</div>
 		</div>
 	</div>
+	<div th:insert="~{home :: copy}">Copy</div>
 </body>
 </html>

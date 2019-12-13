@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import sg.nus.iss.team8.demo.models.Announcement;
 import sg.nus.iss.team8.demo.models.MailModel;
+import sg.nus.iss.team8.demo.repositories.AnnouncementRepository;
 import sg.nus.iss.team8.demo.repositories.EmailRepository;
 import sg.nus.iss.team8.demo.repositories.StudentRepository;
 
@@ -20,10 +23,16 @@ import sg.nus.iss.team8.demo.repositories.StudentRepository;
 public class MailServiceImplementation implements MailService {
 	@Resource
 	private EmailRepository erepo;
+	private AnnouncementRepository arepo;
 	
 	@Autowired
 	public void setEmailRepository(EmailRepository erepo) {
 		this.erepo = erepo;
+	}
+	
+	@Autowired
+	public void setAnnouncementRepository(AnnouncementRepository arepo) {
+		this.arepo = arepo;
 	}
 
     private JavaMailSender mailSender;
@@ -38,18 +47,14 @@ public class MailServiceImplementation implements MailService {
         this.mimeMessage = mimeMessage;
     }
 
-    /**
-     * 发送html格式的，带附件的邮件
-     */
-    @Override
-    public void sendAttachMail(MailModel mail) {
-
-        
-
-    }
     
     @Override
     public ArrayList<String> findAllEmail(String coursename){
     	return erepo.findAllEmailByCoursename(coursename);
+    }
+    
+    @Override
+    public void saveAnno(Announcement anno) {
+    	arepo.saveAndFlush(anno);
     }
 }

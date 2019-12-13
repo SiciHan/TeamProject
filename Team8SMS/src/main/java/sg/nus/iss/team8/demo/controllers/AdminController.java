@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import javax.swing.JOptionPane;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -82,14 +84,14 @@ public class AdminController {
 			return "redirect:/login/faculty";
 		}
 		
-		ArrayList<Semester> allSemesters = aService.findAllSemsters();
+//		ArrayList<Semester> allSemesters = aService.findAllSemsters();
 		Semester currentSemester = aService.currentSemester();
 		int courseApplicationCounter = aService.countPendingCourses();
 		int leaveApplicationCounter = aService.countPendingLeaves();
 		
 		model.addAttribute("courseApplicationCounter", courseApplicationCounter);
 		model.addAttribute("leaveApplicationCounter", leaveApplicationCounter);
-		model.addAttribute("allSemesters", allSemesters);
+//		model.addAttribute("allSemesters", allSemesters);
 		model.addAttribute("currentSemester", currentSemester);
 		return "administrator";
 	}
@@ -187,16 +189,8 @@ public class AdminController {
 		return "redirect:/facultymanagement";
 	}
 	
-
-	
 	@PostMapping("/savecurrentsemester")
-	public String saveCurrentSemester(@Valid Semester sem, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("message", "Failed");
-		redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
-		
-		if (bindingResult.hasErrors()) {
-			return "administrator";
-		}
+	public String saveCurrentSemester(Semester sem, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		aService.saveSemester(sem);
 		int graduationThreshold = 160;
 		aService.applyGraduatedStatus(sem, graduationThreshold);
@@ -215,16 +209,16 @@ public class AdminController {
 		int pageSize = size.orElse(5);
 		
 		Page<Student> studentPage = aService.pageAllStudents(PageRequest.of(currentPage - 1, pageSize));
-		System.out.println("before binding studentPage");
+//		System.out.println("before binding studentPage");
 		model.addAttribute("studentPage", studentPage);
-		System.out.println("after binding studentPage");
+//		System.out.println("after binding studentPage");
 		
 		int totalPages = studentPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
-        System.out.println("before rendering view");
+//        System.out.println("before rendering view");
         return "studentmanagement";
 	}
 
@@ -327,8 +321,22 @@ public class AdminController {
 		return s1 + s2 + s3 + s4;
 	}
 
+	@GetMapping("/addcourserun")
+	public String showAddCourseForm(Model model) {
+		Courserun course = new Courserun();
+		String semLabel=null;
+		ArrayList<Faculty> flist = aService.findAllFaculty();
+		model.addAttribute("flist", flist);
+		model.addAttribute("course", course);
+		model.addAttribute("currentSemester", semLabel);
+		
+		return "courserunform";
+	}
+	
 	@PostMapping("/savecourserun")
-	public String saveCourserun(@Valid @ModelAttribute Courserun course, @RequestParam("currentSemester")String semLabel, BindingResult bindingResult) {
+	public String saveCourserun(@Valid @ModelAttribute Courserun course, 
+			BindingResult bindingResult,
+			@RequestParam("currentSemester")String semLabel) {
 		if (bindingResult.hasErrors()) {
 			return "courserunform";
 		}
@@ -341,18 +349,6 @@ public class AdminController {
 		
 		aService.saveCourserun(course);
 		return "redirect:/courserunmanagement";
-	}
-	
-	@GetMapping("/addcourserun")
-	public String showAddCourseForm(Model model) {
-		Courserun course = new Courserun();
-		String semLabel=null;
-		ArrayList<Faculty> flist = aService.findAllFaculty();
-		model.addAttribute("flist", flist);
-		model.addAttribute("course", course);
-		model.addAttribute("currentSemester", semLabel);
-		
-		return "courserunform";
 	}
 
 	@GetMapping("/editcourserun/{courseCode}/{semesterid}")
@@ -367,17 +363,21 @@ public class AdminController {
 
 	@GetMapping("/deletecourserun/{courseCode}/{semesterid}")
 	public String deleteCourserun(Model model, @PathVariable(name = "courseCode") String courseCode,
-			@PathVariable(name = "semesterid") int semesterid) {
+			@PathVariable(name = "semesterid") int semesterid,
+			RedirectAttributes redirectAttributes) {
+
 		Courserun course = aService.findCourserun(courseCode, semesterid);
 		// if courserunstudents is not empty, redirect to /viewcourserun/"+courseCode+"/"+semesterid;
 		ArrayList<CourserunStudent> studentsPerCourse = aService.findStudentsByCourseName(course.getCourseName());
 		if(studentsPerCourse.isEmpty()) {
 			aService.removeCourserun(course);
-			return "redirect:/courserunmanagement";
 		} else {
-			return "redirect:/viewcourserun/"+courseCode+"/"+semesterid;
+			redirectAttributes.addFlashAttribute("alertClass","alert-danger");
+			redirectAttributes.addFlashAttribute("message","Failed");
+			redirectAttributes.addFlashAttribute("failedCourse",course);
 		}
 		
+		return "redirect:/courserunmanagement";
 	}
 
 	@GetMapping("/viewcourserun/{courseCode}/{semesterid}")
@@ -402,7 +402,7 @@ public class AdminController {
 	
 	@GetMapping("/approveleave/{startDate}/{user}/{id}")
 	public String approveLeaveApplication(@PathVariable("startDate") String startDate, 
-			@PathVariable("user") String user, @PathVariable("id") int id) throws ParseException {
+			@PathVariable("user") String user, @PathVariable("id") int id) {
 		int status = 6;
  		aService.approveLeave(startDate, user, id, status);
 		return "redirect:/leaveapplication";
@@ -437,8 +437,9 @@ public class AdminController {
 	
 	@PostMapping("/savedepartment")
 	public String saveDepartment(@Valid @ModelAttribute Department department, BindingResult bindingResult) {
+		System.out.println(bindingResult.hasErrors());
 		if (bindingResult.hasErrors())
-			return "departmentManagement";
+			return "departmentform";
 		aService.saveDepartment(department);
 		return "redirect:/departmentmanagement";
 	}
@@ -452,13 +453,32 @@ public class AdminController {
 	
 	@GetMapping("/deletedepartment/{id}")
 	public String deleteDepartment(@PathVariable("id") Integer id) {
-		Department d = aService.findDepartmentById(id);
-		aService.deleteDepartment(d);
-		return "redirect:departmentmanagement";
+		
+		int gotFaculty = aService.findFacultyInDepartment(id);
+		System.out.println(gotFaculty);
+		System.out.println(gotFaculty == 1);
+		if (gotFaculty == 0) {
+			Department d = aService.findDepartmentById(id);
+			aService.deleteDepartment(d);
+		}else {
+			return "deletedepartmentalert";
+		}
+		
+//		Department d = aService.findDepartmentById(id);
+//		
+//		try {
+//			aService.deleteDepartment(d);
+//		}catch (DataIntegrityViolationException e){
+//			view = "deletedepartmentoncascade/{id}";
+//		}
+//			catch (Exception ex){
+//			view = "deletedepartmentoncascade";
+//		}
+		return "redirect:/departmentmanagement";
 	}
-	
+		
 	@GetMapping("/admin_movementregister")
-	public String movementRegister(Model model, @RequestParam(required=false, name="yearmonth") String ymstring) {
+	public String admin_movementRegister(Model model, @RequestParam(required=false, name="yearmonth") String ymstring) {
 		YearMonth ym=YearMonth.now();
 		if(ymstring!=null && !ymstring.isEmpty()) {
 			

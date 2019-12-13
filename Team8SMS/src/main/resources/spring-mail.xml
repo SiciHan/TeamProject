@@ -8,7 +8,7 @@
     <bean id="mailSender"    
   class="org.springframework.mail.javamail.JavaMailSenderImpl">    
         <property name="host">    
-            <value>smtp.163.com</value>    
+            <value>smtp.gmail.com</value>    
         </property>
         <property name="javaMailProperties">    
             <props>    
@@ -20,10 +20,10 @@
             </props>    
         </property>    
         <property name="username">    
-            <value>huangyuzhe2019@163.com</value>    
+            <value>huangyuzhe2019@gmail.com</value>    
         </property>    
         <property name="password">    
-            <value>zhangfei123</value>    
+            <value>woshishenaqq6!</value>    
         </property>    
     </bean>    
 </beans>

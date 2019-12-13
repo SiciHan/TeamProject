@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body onload="myFunction()">
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var txt;
+  if (confirm("Announcement released successfully!")) {
+    if ( txt = "OK" )
+    {
+    	location.replace("http://localhost:8080/faculty/mycourses")
+    }
+  } else {
+	  location.replace("http://localhost:8080/faculty/mycourses")
+  }
+  document.getElementById("demo").innerHTML = txt;
+}
+</script>
+
+</body>
+</html>
