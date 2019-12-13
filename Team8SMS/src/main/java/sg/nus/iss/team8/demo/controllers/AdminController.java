@@ -437,8 +437,9 @@ public class AdminController {
 	
 	@PostMapping("/savedepartment")
 	public String saveDepartment(@Valid @ModelAttribute Department department, BindingResult bindingResult) {
+		System.out.println(bindingResult.hasErrors());
 		if (bindingResult.hasErrors())
-			return "departmentManagement";
+			return "departmentform";
 		aService.saveDepartment(department);
 		return "redirect:/departmentmanagement";
 	}

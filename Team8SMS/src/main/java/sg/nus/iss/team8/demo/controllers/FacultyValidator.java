@@ -33,6 +33,12 @@ public class FacultyValidator implements Validator {
 			if (f.getStatus().getStatus()==0) {
 				errors.rejectValue("status", "emptyStatus",new Object[] {"status"}, "status must be selected");
 			}
+			if (f.getName().isBlank()) {
+				errors.rejectValue("name", "emptyName", new Object[] {"name"}, "Name cannot be blank");
+			}
+			if (f.getFacultyId() < 0) {
+				errors.rejectValue("facultyId", "negativeNumber", new Object[] {"facultyId"}, "Faculty Id cannot be negative");
+			}
 			
 		}
 		if(target instanceof Semester) {
@@ -40,6 +46,12 @@ public class FacultyValidator implements Validator {
 		}
 		if(target instanceof Student) {
 			Student st = (Student) target;
+		}
+		if(target instanceof Department) {
+			Department d= (Department) target;
+			if (d.getName().isBlank()) {
+				errors.rejectValue("name", "emptyName", new Object[] {"name"}, "Name cannot be blank");
+			}
 		}
 	}
 
