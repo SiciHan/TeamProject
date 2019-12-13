@@ -6,10 +6,9 @@ import javax.persistence.*;
 @Table(name = "announcement")
 public class Announcement {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private int id;
+	@EmbeddedId
+	private Announcement_PK id;
+	
 	
 	private String message;
 
@@ -21,11 +20,11 @@ public class Announcement {
 		this.message = message;
 	}
 
-	public int getId() {
+	public Announcement_PK getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Announcement_PK id) {
 		this.id = id;
 	}
 

@@ -2,16 +2,51 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="/daterangepicker.min.css" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="/moment.min.js"></script>
+<script src="/jquery.daterangepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+<script language="JavaScript" src="/reportChart.js"></script>
 <title>Release Announcement</title>
 </head>
 <body>
-	<form th:action="@{/email/save}" th:object="${anno}" method="post">
-		Input Announcement:
-		<input type="text" th:field="*{message}" />
-		<button type="submit" name="btn_dark" id="btn_apply" class="btn btn-primary"
-								style="width: 40%; float: right;">Release</button>
+	<form style="margin-left: 5%; margin-top: 2%" method="post"
+		th:action="@{/email/save}" th:object="${anno}">
+		<div class="form-group row">
+			<label for="inputAnnouncement" class="col-sm-2 col-form-label">Release
+				Announcement:</label>
+
+			<div class="row">
+				<div class="col-sm-4">
+					<textarea type="text" th:field="*{message}" class="form-control"
+						id="inputAnnouncement" placeholder="Enter your Announcement"
+						style="height: 200px"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="input-group col-sm-3 col-sm-offset-3">
+				<button type="submit" name="btn_dark" id="btn_apply"
+					class="btn btn-primary" style="width: 23%; float: right;">Publish</button>
+				<button name="btn_dark" type="reset" id="btn_cancel"
+					class="btn btn-dark"
+					style="margin-right: 3%; width: 23%; float: right;"
+					onclick="window.location.href='/faculty/mycourses'">Cancel</button>
+			</div>
+		</div>
+		<input type="hidden" name="id.courserunname" id="id.courserunname"
+			th:value="${coursename}" readonly />
 	</form>
-	<button name="btn_dark" id="btn_cancel" class="btn btn-dark"
-								style="margin-right: 3%; width: 40%; float: right;" onclick="window.location.href='/faculty/mycourses'">Cancel</button>
+
+
+
 </body>
 </html>

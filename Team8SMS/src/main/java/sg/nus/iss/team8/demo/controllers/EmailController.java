@@ -19,9 +19,6 @@ public class EmailController {
 		this.eService = eService;
 	}
 	
-	@Autowired
-    private MailService mailService;
-	
 	@RequestMapping(value = "/send")
     public String sendEmail(HttpServletRequest request) {
         String  mail_title  = "New Announcement";  
@@ -36,6 +33,7 @@ public class EmailController {
     public String promptEmail(@RequestParam("coursename") String coursename, Model model) {
 		Announcement anno = new Announcement();
 		model.addAttribute("anno", anno);
+		model.addAttribute("coursename", coursename);
 		return "announcement_prompt";
 	}
 	
