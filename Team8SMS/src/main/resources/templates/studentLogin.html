@@ -22,7 +22,7 @@
 			Password: <input type="password" th:field="*{password}"
 					class="w3-input">
 			<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password cannot be empty.</p>
-			</p>
+			
 		</fieldset>
 		<fieldset>
 			<button type="submit" class="w3-btn w3-navy">Submit</button>

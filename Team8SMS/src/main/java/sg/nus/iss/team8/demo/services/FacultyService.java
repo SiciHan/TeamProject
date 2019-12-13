@@ -12,6 +12,7 @@ import sg.nus.iss.team8.demo.models.CourserunStudent;
 
 import sg.nus.iss.team8.demo.models.Faculty;
 import sg.nus.iss.team8.demo.models.Semester;
+import sg.nus.iss.team8.demo.models.Student;
 @Service
 public interface FacultyService {
 
@@ -30,6 +31,7 @@ public interface FacultyService {
 	
 	CourserunStudent saveCourserunStudent(CourserunStudent courserunStudent);
 	List<CourserunStudent> saveCourserunStudents(List<CourserunStudent> courserunStudents);
+	Faculty findFacultyByUserName(String username);
 }
 
 

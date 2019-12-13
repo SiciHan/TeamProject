@@ -22,8 +22,7 @@
 					class="glyphicon glyphicon-home"> <span>Home</span>
 				</a></li>
 				<li><a href="faculty_courses.html" th:href="@{/faculty/mycourses}" class="glyphicon glyphicon-list-alt"> <span>Course</span></a></li>
-				<li><a href="http://localhost:8080/faculty/grade"
-					class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
+				<li><a href="faculty_grade.html" th:href="@{/faculty/grade}" class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
 				<li><a href="#" class="glyphicon glyphicon-stats"> <span>Report</span></a></li>
 				<li><a href="#" class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
 			</ul>
@@ -33,16 +32,23 @@
 	<div class="form container" >	
 		<div class="row">	
 			<div class="col-sm-12 col-sm-offset-4" style="margin-bottom:20px; margin-top:40px">
-				<label for="Start" class="col-sm-2 col-form-label">Start Date:</label>
-				<input type="date" placeholder="" th:type="date" th:field="*{id.startDate}"/>
+
+				<label for="Start" class="col-sm-2 col-form-label">Start Date</label>
+				<input type="date" placeholder="" th:type="date" th:field="${leave.id.startDate}" />
+				<p th:if="${#fields.hasErrors('${leave.id.startDate}')}" th:errors="${leave.id.startDate}"></p> 
+
 			</div>
 			
 			<div class="col-sm-12 col-sm-offset-4" style="margin-bottom:20px">
-				<label for="End" class="col-sm-2 col-form-label">End Date:</label>
-				<input type="date" placeholder="" th:type="date" th:field="*{endDate}"/>
+				<label for="End" class="col-sm-2 col-form-label">End Date</label>
+				<input type="date" placeholder="" th:type="date" th:field="${leave.endDate}" />
+				<p th:if="${#fields.hasErrors('${leave.endDate}')}" th:errors="${leave.endDate}"></p> 
 			</div>
-			<input type="hidden" th:field="*{id.id}" th:value="${faculty.facultyId}" />
-			<input type="hidden" th:field="*{id.userType}" value="Faculty" />
+			
+			<div class="col-sm-12 col-sm-offset-4" style="margin-bottom:20px">
+				<label for="Id" class="col-sm-2 col-form-label">ID</label>
+				<input type="text" name="id.id" id="id.id" th:value="${faculty.facultyId}" readonly />
+			</div>
 		</div>
 	</div>
     <div class="form-group col-sm-12 col-sm-offset-4">
@@ -56,6 +62,16 @@
 					<option value="Medical leave">No reason</option>
 				</select>
 			</div>
+			<p th:if="${#fields.hasErrors('${leave.reason}')}" th:errors="${leave.reason}"></p>
+    </div>
+    <div class="form-group col-sm-12 col-sm-offset-4">
+        <label for="select" class="col-sm-2 control-label">User Type</label>
+            <div class="input-group col-sm-4">
+				<select id="select" class="col-sm-5" th:field="*{id.userType}">
+					<option value="Faculty">Faculty</option>
+				</select>
+			</div>
+			<!--  <p th:if="${#fields.hasErrors('${leave.reason}')}" th:errors="${leave.reason}"></p>-->
     </div>
 	
 	<div class="form-group" style="margin-top: 3%;">

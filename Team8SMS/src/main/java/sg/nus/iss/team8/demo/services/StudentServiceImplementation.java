@@ -216,8 +216,8 @@ public class StudentServiceImplementation implements StudentService {
 
 	
 	@Override
-	public int totalCredits(int studentid) {
-		ArrayList<CourserunStudent>clist=courserunStudentRepository.findCourseGradebyId(studentid);
+	public int totalCredits(ArrayList<CourserunStudent> clist) {
+		//ArrayList<CourserunStudent>clist=courserunStudentRepository.findCourseGradebyId(studentid);
 		double totalCredits=0;
 		for(CourserunStudent c:clist) {
 			totalCredits+=c.getId().getCourserun().getCourseUnit();
@@ -226,7 +226,7 @@ public class StudentServiceImplementation implements StudentService {
 	}
 	@Override
 	public String graduationStatus(int studentid) {
-		if(totalCredits(studentid)<160) {
+		if(totalCredits(this.findCompletedCourserunStudentsById(studentid))<160) {
 			return "Not fulfill graduation requirement, please contact your home falculty for further assistance if necessary.";
 		}
 		else {
@@ -236,8 +236,7 @@ public class StudentServiceImplementation implements StudentService {
 		
 	}
 	@Override
-	public double totalScorePoints(int studentid) {
-		ArrayList<CourserunStudent>clist=courserunStudentRepository.findCourseGradebyId(studentid);
+	public double totalScorePoints(ArrayList<CourserunStudent> clist) {
 		double sum=0;
 		for(CourserunStudent c:clist) {
 			if(c.getGrade().equals("A+") || c.getGrade().equals("A")) {
@@ -274,5 +273,26 @@ public class StudentServiceImplementation implements StudentService {
 		return sum;
 	}
 	
+	@Override
+	public void saveCourserunStudent(CourserunStudent crs) {
+		courserunStudentRepository.saveAndFlush(crs);
+	}
 
+	@Override
+	public Student findStudentByName(String username) {
+		// TODO Auto-generated method stub
+		return studentRepository.findByUserName(username);
+	}
+
+	@Override
+	public ArrayList<CourserunStudent> findCurrentCourseByID(Integer id) {
+		// TODO Auto-generated method stub
+		return courserunStudentRepository.findCourseById(id);
+	}
+
+	@Override
+	public ArrayList<CourserunStudent> findCompletedCourserunStudentsById(Integer id) {
+		// TODO Auto-generated method stub
+		return (ArrayList<CourserunStudent>) courserunStudentRepository.findCourseByIdAndStatus(id, 9);
+	}
 }

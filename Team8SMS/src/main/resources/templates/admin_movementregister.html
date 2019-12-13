@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="ISO-8859-1">
-<title>Add Faculty Form</title>
+<title>Movement Register</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -21,42 +21,43 @@
       				<li><a href="departmentmanagement.html" th:href="@{/departmentmanagement}">Departments</a></li>
       				<li><a href="courserunmanagement.html" th:href="@{/courserunmanagement}">Courses</a></li>
       				<li><a href="courseapplication.html" th:href="@{/courseapplication}">Course Application</a></li>
-      				<li><a href="admin_movementregister.html" th:href="@{/admin_movementregister}">Leave Calendar</a></li>
+      				<li class="active"><a href="admin_movementregister.html" th:href="@{/admin_movementregister}">Leave Calendar</a></li>
       				<li><a href="leaveapplication.html" th:href="@{/leaveapplication}">Leave Application</a></li>
       				<li><a href="#">Logout</a></li>
     			</ul>
   			</div>
 		</nav>
 	</div>
-	<br/>
-	<div class="container">
-		<h2>
-			<span th:if="${department.name == null}">Add Department</span>
-			<span th:unless="${department.name == null}">Edit Department</span>
-		</h2>
-		<div class="card">
-			<div class="card-body">
-				<div class="col-md-10">
-					<form th:object="${department}" th:action="@{/savedepartment}" method="post">
-						<div class="form-group">
-						<label for="departmentId">Department ID</label>
-							<span th:if="${department.name == null}">
-								<input type="text" th:value="${newDepartmentId}" id="departmentId" name="departmentId" class="form-control" readonly>
-							</span>
-							<span th:unless="${department.name == null}">
-								<input type="text" th:field="*{departmentId}" class="form-control">
-							</span>
-						</div>
-						<div class="form-group">
-						<label for="name">Name</label>
-							<input type="text" th:field="*{name}" class="form-control">
-							<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"></p>
-						</div>
-						<div>
-							<button type="submit" class="btn btn-primary">Save</button>
-						</div> 
-					</form>
-				</div>
+	<h1>Leaves</h1>
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<form th:href="@{~/admin_movementregister}" method="get">
+				<select class="form-group" id="yearmonth" name="yearmonth">
+					<option th:each="yearmonth:${yearMonths}" th:value="${yearmonth}"
+						th:text="${yearmonth}" th:selected="${yearmonth==selectedmonth}"></option>
+				</select> <input class="btn btn-primary" type="submit">
+			</form>
+			<div th:if="${leaves != null and !leaves.isEmpty()}">
+				<table class="table table-striped">
+					<tr>
+						<th>Start date</th>
+						<th>User Type</th>
+						<th>User ID</th>
+						<th>User Name</th>
+						<th>End Date</th>
+						<th>Reason</th>
+						<th>Status</th>
+					</tr>
+					<tr th:each="key:${leaves.keySet()}">
+						<td th:text="${leaves.get(key).id.startDate}"></td>
+						<td th:text="${leaves.get(key).id.UserType}"></td>
+						<td th:text="${leaves.get(key).id.id}"></td>
+						<td th:text="${key}"></td>
+						<td th:text="${leaves.get(key).endDate}"></td>
+						<td th:text="${leaves.get(key).reason}"></td>
+						<td th:text="${leaves.get(key).status.label}"></td>
+					</tr>
+				</table>
 			</div>
 		</div>
 	</div>

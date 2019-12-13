@@ -11,18 +11,21 @@
 <body>
 	<div>
 		<nav class="navbar navbar-default">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="#">Home</a>
-				</div>
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="/facultymanagement">Faculty
-							Management</a></li>
-					<li><a href="#">Page 1</a></li>
-					<li><a href="#">Page 2</a></li>
-					<li><a href="#">Page 3</a></li>
-				</ul>
-			</div>
+  			<div class="container-fluid">
+    			<div class="navbar-header">
+      				<a class="navbar-brand" href="#" th:href="@{/administrator}">Home</a>
+    			</div>
+    			<ul class="nav navbar-nav">
+      				<li><a href="facultymanagement.html" th:href="@{/facultymanagement}">Faculties</a></li>
+      				<li><a href="studentmanagement.html" th:href="@{/studentmanagement}">Students</a></li>
+      				<li><a href="departmentmanagement.html" th:href="@{/departmentmanagement}">Departments</a></li>
+      				<li><a href="courserunmanagement.html" th:href="@{/courserunmanagement}">Courses</a></li>
+      				<li><a href="courseapplication.html" th:href="@{/courseapplication}">Course Application</a></li>
+      				<li><a href="admin_movementregister.html" th:href="@{/admin_movementregister}">Leave Calendar</a></li>
+      				<li><a href="leaveapplication.html" th:href="@{/leaveapplication}">Leave Application</a></li>
+      				<li><a href="#">Logout</a></li>
+    			</ul>
+  			</div>
 		</nav>
 	</div>
 	<br/>
@@ -55,6 +58,7 @@
 							th:value="${department.departmentId}" th:text="${department.name}">
 					</option>
 				</select>
+				<p th:if="${#fields.hasErrors('department')}" th:errors="*{department}" class="alert alert-danger"></p>
 			</div>
 			<div class="form-group">
 			<label for="status.status">Status</label>
@@ -65,6 +69,7 @@
 							th:value="${status.status}" th:text="${status.label}">
 					</option>
 				</select>
+				<p th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="alert alert-danger"></p>
 			</div>
 			<div>
 				<button type="submit" class="btn btn-primary">Save</button>

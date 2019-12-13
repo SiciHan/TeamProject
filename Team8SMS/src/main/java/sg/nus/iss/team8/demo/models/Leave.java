@@ -1,6 +1,9 @@
 package sg.nus.iss.team8.demo.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,9 +18,12 @@ public class Leave {
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false, name="enddate")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Future(message = "Invalid Date!")
+	@NotNull(message = "End Date is required!")
 	private Date endDate;
 	
 	@Column(length = 100, nullable = false)
+	@NotBlank(message = "Reason is required!")
 	private String reason;
 	
 	@ManyToOne

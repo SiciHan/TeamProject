@@ -1,6 +1,10 @@
 package sg.nus.iss.team8.demo.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import java.util.*;
 
 @Entity
@@ -8,8 +12,10 @@ import java.util.*;
 public class Department {
 	@Id
 	@Column(name="id")
+	
 	private int departmentId;
 	
+	@Size(min=2, max=50, message="Name should be between 2 and 30 characters")
 	@Column(length = 50, nullable = false)
 	private String name;
 	

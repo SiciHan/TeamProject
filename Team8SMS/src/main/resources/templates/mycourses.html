@@ -11,8 +11,8 @@
 <title>My Courses</title>
 </head>
 <body>
-	<div class="row" style="margin: 20px">
-		<div class="col-md-12">
+	<div th:fragment="welcome" class="row" style="margin: 20px">
+		<div  class="col-md-12">
 			<h2 style="color: 000033">Hello <span th:text="${student.name}">username</span> Welcome Back</h2>
 			<h2 >Matriculation No: <span th:text="${student.studentId}">userid</span></h2>
 		</div>
@@ -21,14 +21,14 @@
 		<nav class="navbar navbar-default">
   			<div class="container-fluid">
     			<div class="navbar-header">
-      				<a class="navbar-brand" href="studenteducation.html" th:href="@{/student/stuedu}">Student Education Record</a>
+      				<a class="navbar-brand" href="studentdashboard.html" th:href="@{/student/dashboard}">Student Dashboard</a>
     			</div>
     			<ul class="nav navbar-nav">
       				<li class="active"><a href="mycourses.html" th:href="@{/student/mycourses}">My Courses</a></li>
       				<li><a href="applycourses.html" th:href="@{/student/applycourse}">Apply Courses</a></li>
       				<li><a href="mytranscript.html" th:href="@{/student/transcript}">My Transcript</a></li>
       				<li><a href="movementrecord.html" th:href="@{/student/movementregister}">Movement Record</a></li>
-      				<li><a href="logout.html" th:href="@{/student/logout}">Log Out</a></li>
+      				<li><a href="logout.html" th:href="@{/logout}">Log Out</a></li>
     			</ul>
   			</div>
 		</nav>
@@ -57,5 +57,6 @@
 			</table>
 		</div>
 	</div>
+	<div th:insert="~{home :: copy}">Copy</div>
 </body>
 </html>
