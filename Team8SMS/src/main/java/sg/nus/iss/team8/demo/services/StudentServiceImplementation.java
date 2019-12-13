@@ -15,10 +15,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import sg.nus.iss.team8.demo.models.Announcement;
 import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.CourserunStudent_PK;
+import sg.nus.iss.team8.demo.repositories.AnnouncementRepository;
 import sg.nus.iss.team8.demo.repositories.CourserunRepository;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
 import sg.nus.iss.team8.demo.repositories.LeaveRepository;
@@ -34,6 +36,13 @@ public class StudentServiceImplementation implements StudentService {
 	private CourserunRepository courserunRepository;
 	private SemesterRepository semesterRepository;
 	private StatusRepository statusRepository;
+	private AnnouncementRepository announcementRepo;
+
+
+@Autowired
+	public void setAnnouncementRepo(AnnouncementRepository announcementRepo) {
+		this.announcementRepo = announcementRepo;
+	}
 
 	@Autowired
 	public void setStudentRepository(StudentRepository studentRepository) {
@@ -294,5 +303,16 @@ public class StudentServiceImplementation implements StudentService {
 	public ArrayList<CourserunStudent> findCompletedCourserunStudentsById(Integer id) {
 		// TODO Auto-generated method stub
 		return (ArrayList<CourserunStudent>) courserunStudentRepository.findCourseByIdAndStatus(id, 9);
+	}
+
+	@Override
+	public ArrayList<Announcement> findAllAnnoucements(List<CourserunStudent> courseruns) {
+		// TODO Auto-generated method stub
+		ArrayList<Announcement> announcements=new ArrayList<Announcement>();
+		for(CourserunStudent crs:courseruns) {
+			String coursename=crs.getId().getCourserun().getCourseName();
+			announcements.addAll(announcementRepo.findByCourserunName(coursename));
+		}
+		return announcements;
 	}
 }

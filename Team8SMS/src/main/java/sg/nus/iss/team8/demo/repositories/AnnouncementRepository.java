@@ -10,5 +10,6 @@ import sg.nus.iss.team8.demo.models.*;
 
 @Repository
 public interface AnnouncementRepository extends JpaRepository<Announcement,Integer> {
-
+	
+	public ArrayList<Announcement> findByCourserunName(String courserunName);
 }

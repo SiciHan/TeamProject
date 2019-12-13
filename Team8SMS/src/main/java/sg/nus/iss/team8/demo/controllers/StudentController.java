@@ -2,6 +2,7 @@ package sg.nus.iss.team8.demo.controllers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.context.annotation.SessionScope;
 
+import sg.nus.iss.team8.demo.models.Announcement;
 import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Leave;
@@ -80,6 +82,9 @@ public class StudentController {
 		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
 		Integer id = ss.findStudentByName(user.getName()).getStudentId();
 		model.addAttribute("student", ss.findStudent(id));
+		List<CourserunStudent> courseruns=ss.findCurrentCourseByID(id);
+		ArrayList<Announcement> announcements=ss.findAllAnnoucements(courseruns);
+		model.addAttribute("announcement",announcements);
 		return "studentdashboard";
 	}
 

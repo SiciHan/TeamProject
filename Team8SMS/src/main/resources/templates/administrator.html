@@ -56,6 +56,24 @@
 			<a th:href="@{/downloadCSV/gpalist}" class="btn btn-primary">Download Student GPA</a>
 		</div>
 	</div>
+
+<!-- print report here -->
+<div class="container">
+  <h2>Print Student GPA based on Courses</h2>
+  <p>Select the Courses</p>
+  <form action=printReports >
+    <div th:each="{course:courseruns}" class="checkbox">
+      <label><input type="checkbox" value="">Option 1</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" value="">Option 2</label>
+    </div>
+    <div class="checkbox disabled">
+      <label><input type="checkbox" value="" disabled>Option 3</label>
+    </div>
+  </form>
+</div>
+
 	<div th:insert="~{home :: copy}">Copy</div>
 </body>
 </html>

@@ -19,30 +19,46 @@
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<a class="navbar-brand active" href="studentdashboard.html" th:href="@{/student/dashboard}">Student Dashboard</a>
+					<a class="navbar-brand active" href="studentdashboard.html"
+						th:href="@{/student/dashboard}">Student Dashboard</a>
 				</div>
 				<ul class="nav navbar-nav">
 					<li><a href="http://localhost:8080/student/mycourses">My
 							Courses</a></li>
-					<li ><a
-						href="http://localhost:8080/student/applycourse">Apply
+					<li><a href="http://localhost:8080/student/applycourse">Apply
 							Courses</a></li>
 					<li><a href="http://localhost:8080/student/transcript">My
 							Transcript</a></li>
 					<li><a href="http://localhost:8080/student/movementregister">Movement
 							Record</a></li>
-					<li><a href="http://localhost:8080/logout">Log
-							Out</a></li>
+					<li><a href="http://localhost:8080/logout">Log Out</a></li>
 				</ul>
 			</div>
 		</nav>
 	</div>
 
-	<!-- Upper part, display all courserun available with apply button -->
 	<div>
 		<h2>Announcement</h2>
 	</div>
-	
-	<div th:insert="~{home :: copy}">Copy</div>
+
+	<div th:if="${announcement!=null and !announcement.isEmpty()}">
+		<table>
+			<tr>
+				<th>No</th>
+				<th>Announcement</th>
+				<th>From Course</th>
+			</tr>
+			<tr th:each="a:${announcement}">
+				<td th:text="${a.id}"></td>
+				<td th:text="${a.message}"></td>
+				<td th:text="${a.courserunName}"></td>
+			</tr>
+		</table>
+	</div>
+	<div th:if="${announcement==null or announcement.isEmpty()}">
+		<span>No Announcement</span>
+	</div>
+
+<div th:insert="~{home :: copy}"></div>
 </body>
 </html>

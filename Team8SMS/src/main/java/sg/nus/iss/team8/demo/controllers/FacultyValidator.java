@@ -33,7 +33,7 @@ public class FacultyValidator implements Validator {
 			if (f.getStatus().getStatus()==0) {
 				errors.rejectValue("status", "emptyStatus",new Object[] {"status"}, "status must be selected");
 			}
-			if (f.getName().isBlank()) {
+			if (f.getName().isEmpty()||f.getName()==null) {
 				errors.rejectValue("name", "emptyName", new Object[] {"name"}, "Name cannot be blank");
 			}
 			if (f.getFacultyId() < 0) {
@@ -49,7 +49,7 @@ public class FacultyValidator implements Validator {
 		}
 		if(target instanceof Department) {
 			Department d= (Department) target;
-			if (d.getName().isBlank()) {
+			if (d.getName().isEmpty() ||d.getName()==null) {
 				errors.rejectValue("name", "emptyName", new Object[] {"name"}, "Name cannot be blank");
 			}
 		}

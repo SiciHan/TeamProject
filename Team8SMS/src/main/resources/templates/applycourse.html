@@ -46,8 +46,8 @@
 	<div th:if="${courses1 != null and !courses1.isEmpty()}">
 		<table class="table table-striped">
 			<tr>
-			<th class="col-6">Course Name</th>
-			<th class="col-6">Action</th>
+				<th class="col-6">Course Name</th>
+				<th class="col-6">Action</th>
 			</tr>
 			<tr th:each="course:${courses1}">
 				<td class="col-6" th:text="${course.id.courserun.courseName}"></td>
