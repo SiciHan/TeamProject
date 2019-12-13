@@ -19,13 +19,13 @@
 <title>Faculty/report</title>
 </head>
 <body>
-	<div class="row" style="margin:20px">
+	<div class="row" style="margin: 20px">
 		<div class="col-md-12">
 			<h2 style="color: 000000">
 				Hello,
 				<text th:text="${faculty.name}">Name</text>
 			</h2>
-			
+
 			<ul class="nav nav-pills">
 				<li><a href="http://localhost:8080/faculty/home"
 					class="glyphicon glyphicon-home"> <span>Home</span>
@@ -34,8 +34,9 @@
 					class="glyphicon glyphicon-list-alt"> <span>Course</span></a></li>
 				<li><a href="http://localhost:8080/faculty/grade"
 					class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
-				<li class="active"><a
-					href="http://localhost:8080/faculty/report"
+				<li><a href="http://localhost:8080/faculty/movement"
+					class="glyphicon glyphicon-tasks"> <span>Movement</span></a></li>
+				<li class="active"><a href="faculty_report.html" th:href="@{/faculty/report}"
 					class="glyphicon glyphicon-stats"> <span>Report</span></a></li>
 				<li><a href="#" class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
 			</ul>

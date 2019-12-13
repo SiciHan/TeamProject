@@ -83,6 +83,7 @@ public class FacultyController {
 
 		return "faculty_home";
 	}
+	
 
 	@GetMapping("/mycourses")
 	public String getCourses(Model model, HttpServletRequest request) {
@@ -262,7 +263,7 @@ public class FacultyController {
 		model.addAttribute("leaves", usernameLeaves);
 		model.addAttribute("yearMonths", yearMonths);
 		model.addAttribute("selectedmonth", ym);
-		UserSession user = (UserSession) request.getSession(false).getAttribute("user");
+		UserSession user = (UserSession) request.getSession(false).getAttribute("user");		
 		Faculty faculty = fservice.findFacultyByUserName(user.getName());
 		model.addAttribute("faculty", faculty);
 		return "faculty_movementregister";
