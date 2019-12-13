@@ -29,8 +29,8 @@ public interface CourserunStudentRepository extends JpaRepository<CourserunStude
 	  public List<CourserunStudent> findCourseByStatus(@Param("status") Integer status);
 	  
 	  		// SH
-		  @Query("Select c From CourserunStudent c where c.id.student.studentId=?1 and (c.status.status=6 or c.status.status=8)")
-		  public ArrayList<CourserunStudent>findCourseById(int studentid);
+	  @Query("Select c From CourserunStudent c where c.id.student.studentId=?1 and (c.status.status=6 or c.status.status=8)")
+	  public ArrayList<CourserunStudent>findCourseById(int studentid);
 		  // SH
 	/*
 	 * @Query("Select c from CourserunStudent c where c.id.student.studentId=?1 and c.status.status=9"

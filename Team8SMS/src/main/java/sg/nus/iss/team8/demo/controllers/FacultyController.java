@@ -126,8 +126,9 @@ public class FacultyController {
 		}
 		model.addAttribute("courseKey", courseCode + (semester == null ? "" : semester.getSemester()));
 		List<CourserunStudent> courserunstudents = new ArrayList<>();
-		if (coursename != null && !coursename.equals("-"))
+		if (coursename != null && !coursename.equals("-")) {
 			courserunstudents = fservice.findAllStudents(coursename);
+		}
 		model.addAttribute("courserunstudents", courserunstudents);
 		CourserunStudentListWrapper wrapper = new CourserunStudentListWrapper();
 		wrapper.setCourserunStudents(courserunstudents);
@@ -138,8 +139,10 @@ public class FacultyController {
 	@GetMapping("/report")
 	public String getReport(Model model,
 			@RequestParam(value = "coursename", required = false, defaultValue = "-") String coursename,
-			@RequestParam(value = "grade", required = false, defaultValue = "-") String grade) {
-		Faculty faculty = fservice.findFacultyById(102);
+			@RequestParam(value = "grade", required = false, defaultValue = "-") String grade,
+			HttpServletRequest request) {
+		UserSession user = (UserSession) request.getSession(false).getAttribute("user");
+		Faculty faculty = fservice.findFacultyByUserName(user.getName());
 		model.addAttribute("faculty", faculty);
 		ArrayList<Courserun> courseruns = fservice.findAllCourserunsByFacultyId(faculty.getFacultyId());
 		model.addAttribute("courseruns", courseruns);

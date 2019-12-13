@@ -108,7 +108,7 @@ public class FacultyServiceImplementation implements FacultyService {
 	@Override
 	public List<CourserunStudent> findAllStudents(String courserunname) {
 		// TODO Auto-generated method stub
-		return null;
+		return crsr.findStudentsByCourseName(courserunname);
 	}
 
 	@Override
