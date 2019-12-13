@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface MailService {
 
-	public void sendAttachMail(MailModel mail);
-	
 	public ArrayList<String> findAllEmail(String coursename);
+	
+	public void saveAnno(Announcement anno);
 }

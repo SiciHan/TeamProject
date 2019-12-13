@@ -40,9 +40,10 @@ public class MailModel {
         for(int i=0;i<email.length;i++) {  
             try {     
                 mail.setTo(email[i]);
-                mail.setFrom("huangyuzhe2019@163.com");   
-                mail.setSubject("New Announcement");
-                mail.setText("You received a new announcement !");  
+                mail.setFrom("huangyuzhe2019@gmail.com");   
+                mail.setSubject(subject);
+                mail.setText(text);  
+                
                 sender.send(mail);     
             } catch (Exception e) {     
                 e.printStackTrace();    
