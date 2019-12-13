@@ -25,7 +25,7 @@
       				<li><a href="courseapplication.html" th:href="@{/courseapplication}">Course Application</a></li>
       				<li><a href="admin_movementregister.html" th:href="@{/admin_movementregister}">Leave Calendar</a></li>
       				<li><a href="leaveapplication.html" th:href="@{/leaveapplication}">Leave Application</a></li>
-      				<li><a href="#">Logout</a></li>
+      				<li><a href="logout.html" th:href="@{/logout}">Log Out</a></li>
     			</ul>
   			</div>
 		</nav>
@@ -63,7 +63,13 @@
 						<td><a th:href="${'/deletecourserun/' + course.courseCode + '/' + course.semester.semester}">Delete</a></td>
 				</tbody>
 			</table>
+			<div th:if="${message == 'Failed'}" class="alert alert-danger">
+				<strong>Failed to delete<br/>
+				<a th:href="${'/viewcourserun/' + failedCourse.courseCode + '/' + failedCourse.semester.semester}"} th:text="${failedCourse.courseName}"></a></strong><br/>
+				Course contains enrolled students
+			</div>
 		</div>
 	</div>
+	<div th:insert="~{home :: copy}">Copy</div>
 </body>
 </html>

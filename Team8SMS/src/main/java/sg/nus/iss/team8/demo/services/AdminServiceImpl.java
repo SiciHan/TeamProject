@@ -440,7 +440,8 @@ public class AdminServiceImpl implements AdminService {
 		ArrayList<Student> students = findAllStudents();
 		
 		for (Student student : students) {
-			ArrayList<CourserunStudent>clist=courserunStudentRepository.findCourseGradebyId(student.getStudentId());
+			//ArrayList<CourserunStudent>clist=courserunStudentRepository.findCourseGradebyId(student.getStudentId());
+			ArrayList<CourserunStudent> clist=(ArrayList<CourserunStudent>) courserunStudentRepository.findCourseByIdAndStatus(student.getStudentId(), 9);//9 is completed
 			double totalCompletedCredits=0;
 			for(CourserunStudent c:clist) {
 				totalCompletedCredits+=c.getId().getCourserun().getCourseUnit();
@@ -547,12 +548,12 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public double calculateGPA(Student student) {
-		ArrayList<CourserunStudent>clist=courserunStudentRepository.findCourseGradebyId(student.getStudentId());
+		ArrayList<CourserunStudent> clist=(ArrayList<CourserunStudent>) courserunStudentRepository.findCourseByIdAndStatus(student.getStudentId(), 9);//9 is completed
 		double totalCompletedCredits=0;
 		for(CourserunStudent c:clist) {
 			totalCompletedCredits+=c.getId().getCourserun().getCourseUnit();
 		}
-		double points=studentService.totalScorePoints(student.getStudentId());
+		double points=studentService.totalScorePoints(clist);
 		double cap;
 		cap=points/totalCompletedCredits;
 		cap=Math.round(cap*100.0)/100.0;

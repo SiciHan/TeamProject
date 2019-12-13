@@ -23,7 +23,7 @@
       				<li><a href="courseapplication.html" th:href="@{/courseapplication}">Course Application</a></li>
       				<li><a href="admin_movementregister.html" th:href="@{/admin_movementregister}">Leave Calendar</a></li>
       				<li><a href="leaveapplication.html" th:href="@{/leaveapplication}">Leave Application</a></li>
-      				<li><a href="#">Logout</a></li>
+      				<li><a href="logout.html" th:href="@{/logout}">Log Out</a></li>
     			</ul>
   			</div>
 		</nav>
@@ -60,5 +60,6 @@
 			</div>
 		</div>
 	</div>
+	<div th:insert="~{home :: copy}">Copy</div>
 </body>
 </html>

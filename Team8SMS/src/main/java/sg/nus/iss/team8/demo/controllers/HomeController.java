@@ -1,5 +1,6 @@
 package sg.nus.iss.team8.demo.controllers;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +46,14 @@ public class HomeController {
 	}
 
 	@GetMapping("/login/student")
-	public String getStudentLoginPage(Model model) {
-		model.addAttribute("user", new UserSession());
+	public String getStudentLoginPage(Model model, HttpSession session) {
+		UserSession user=new UserSession();
+		
+		model.addAttribute("user",user );
 		return "studentLogin";
 	}
 
-	@GetMapping("/login/staff")
+	@GetMapping("/login/faculty")
 	public String getStaffLoginPage(Model model) {
 		model.addAttribute("user", new UserSession());
 		return "staffLogin";
@@ -65,8 +68,8 @@ public class HomeController {
 	
 	  
 	@PostMapping("/authenticate")
-	public String getAuthentication(@Valid @ModelAttribute("user") UserSession user, BindingResult bindingResult,
-			Model model) {
+	public String getAuthentication(@Valid @ModelAttribute("user") UserSession user,BindingResult bindingResult, HttpSession session
+			,Model model) {
 
 		String view = "";
 		String type = "";
@@ -95,7 +98,10 @@ public class HomeController {
 
 					if (user.getName().equals("issl")) {
 						if (passwordEncoder.matches(password, usr.getPasswordHash())) {
-							view = "redirect:/administrator/facultymanagement";
+							//manually added sessions below
+							session.setAttribute("user", user); 
+							session.setMaxInactiveInterval(10*60);//10mins
+							view = "redirect:/administrator";
 						}
 
 						else {
@@ -106,7 +112,10 @@ public class HomeController {
 
 					else if (user.getName().equals(usr.getUsername())) {
 						if (passwordEncoder.matches(password, usr.getPasswordHash())) {
-							view = "redirect:/administrator/addfaculty";
+							//manually added sessions below
+							session.setAttribute("user", user); 
+							session.setMaxInactiveInterval(10*60);//10mins
+							view = "redirect:/faculty/home";
 						} else {
 							view = "WrongPasswordStaff";
 
@@ -130,7 +139,7 @@ public class HomeController {
 
 	@PostMapping("/authe")
 	public String getStudentAuthentication(@Valid @ModelAttribute("user") UserSession user, BindingResult bindingResult,
-			Model model) {
+			Model model, HttpSession session) {
 		String view = "";
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -151,7 +160,12 @@ public class HomeController {
 				} else {
 					if (input.equals(usr.getUsername())) {
 						if (passwordEncoder.matches(password, usr.getPasswordHash())) {
-							view = "redirect:/student/applycourse";
+						
+							//manually added sessions below
+							  session.setAttribute("user", user); 
+							  session.setMaxInactiveInterval(10*60);//10mins
+							 							
+							view = "redirect:/student/";
 						} else {
 							view = "WrongPassword";
 

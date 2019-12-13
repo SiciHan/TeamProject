@@ -12,6 +12,9 @@ public interface StudentRepository extends JpaRepository<Student,Integer>{
 	public ArrayList<Student> findStudentsByCourseName(String name);
 	
 	@Query("Select distinct s From Student s where s.studentId=?1")
-	 public Student findNameById(int id);
+	public Student findNameById(int id);
+	
+	@Query("select s from Student s, User u where s.studentId=u.id and u.username=:username")
+	public Student findByUserName(String username);
 }
  

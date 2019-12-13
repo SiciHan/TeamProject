@@ -1,11 +1,9 @@
 package sg.nus.iss.team8.demo.controllers;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,8 +23,8 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -44,10 +42,10 @@ import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Department;
 import sg.nus.iss.team8.demo.models.Faculty;
 import sg.nus.iss.team8.demo.models.Leave;
-import sg.nus.iss.team8.demo.models.Leave_PK;
 import sg.nus.iss.team8.demo.models.Semester;
 import sg.nus.iss.team8.demo.models.Status;
 import sg.nus.iss.team8.demo.models.Student;
+import sg.nus.iss.team8.demo.models.UserSession;
 import sg.nus.iss.team8.demo.services.AdminService;
 import sg.nus.iss.team8.demo.services.AdminServiceImpl;
 import sg.nus.iss.team8.demo.services.GenerateReportService;
@@ -60,7 +58,6 @@ public class AdminController {
 	private AdminService aService;
 	private GenerateReportService grs;
 
-	// injection of faculty service
 	@Autowired
 	public void setAdminService(AdminServiceImpl aService) {
 		this.aService = aService;
@@ -71,27 +68,56 @@ public class AdminController {
 		this.grs = grs;
 	}
 
-	@InitBinder
-	private void initUserBinder(WebDataBinder binder) {
-	}
+
 	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
-//		binder.addValidators(studentValidator);
-		// binder.addValidators(new ProductValidator());
+		binder.addValidators(new FacultyValidator());
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
 	}
-
+	@GetMapping("/administrator")
+	public String getAdmin(Model model, HttpServletRequest request) {
+		try{
+			UserSession user=(UserSession)request.getSession(false).getAttribute("user");
+			if(!user.getName().equals("issl")) throw new Exception("invalid user");
+		}catch(Exception e) {
+			return "redirect:/login/faculty";
+		}
+		
+//		ArrayList<Semester> allSemesters = aService.findAllSemsters();
+		Semester currentSemester = aService.currentSemester();
+		int courseApplicationCounter = aService.countPendingCourses();
+		int leaveApplicationCounter = aService.countPendingLeaves();
+		
+		model.addAttribute("courseApplicationCounter", courseApplicationCounter);
+		model.addAttribute("leaveApplicationCounter", leaveApplicationCounter);
+//		model.addAttribute("allSemesters", allSemesters);
+		model.addAttribute("currentSemester", currentSemester);
+		return "administrator";
+	}
 	@GetMapping("/facultymanagement")
-	public String getFacultyManagement(Model model) {
+	public String getFacultyManagement(Model model,HttpServletRequest request) {
+		try{
+			UserSession user=(UserSession)request.getSession(false).getAttribute("user");
+			if(!user.getName().equals("issl")) throw new Exception("invalid user");
+		}catch(Exception e) {
+			return "redirect:/login/faculty";
+		}
+		
 		ArrayList<Faculty> flist = new ArrayList<Faculty>();
 		flist.addAll(aService.findAllFaculty());
 		model.addAttribute("faculty", flist);
 		return "facultymanagement";
 	}
-
+	@Transactional
 	@GetMapping("/addfaculty")
-	public String addFaculty(Model model) {
+	public String addFaculty(Model model, HttpServletRequest request) {
+		try{
+			UserSession user=(UserSession)request.getSession(false).getAttribute("user");
+			if(!user.getName().equals("issl")) throw new Exception("invalid user");
+		}catch(Exception e) {
+			return "redirect:/login/faculty";
+		}
 		ArrayList<Status> slist = new ArrayList<Status>();
 		ArrayList<Department> dlist = new ArrayList<Department>();
 		Integer newFacultyId = aService.newFacultyId();
@@ -104,17 +130,41 @@ public class AdminController {
 		model.addAttribute("faculty", f);
 		return "facultyform";
 	}
-
+	//@Transactional
 	@PostMapping("/savefaculty")
-	public String saveFaculty(@Valid @ModelAttribute Faculty faculty, BindingResult bindingResult) {
+	public String saveFaculty(@Valid Faculty faculty,BindingResult bindingResult, HttpServletRequest request, Model model) {
+		try{
+			UserSession user=(UserSession)request.getSession(false).getAttribute("user");
+			if(!user.getName().equals("issl")) throw new Exception("invalid user");
+		}catch(Exception e) {
+			return "redirect:/login/faculty";
+		}
 		if (bindingResult.hasErrors())
-			return "facultyform";
+			{System.out.println("has error");
+			ArrayList<Status> slist = new ArrayList<Status>();
+			ArrayList<Department> dlist = new ArrayList<Department>();
+			Integer newFacultyId = aService.newFacultyId();
+			slist.addAll(aService.findAllStatuses());
+			dlist.addAll(aService.findAllDepartments());
+			model.addAttribute("statuses", slist);
+			model.addAttribute("departments", dlist);
+			model.addAttribute("newFacultyId", newFacultyId);
+			model.addAttribute("faculty", faculty);
+			return "facultyform";}
+		System.out.println("no error");
 		aService.saveFaculty(faculty);
 		return "redirect:/facultymanagement";
 	}
 
+	@Transactional
 	@GetMapping("/editfaculty/{id}")
-	public String editFaculty(Model model, @PathVariable("id") Integer id) {
+	public String editFaculty(Model model, @PathVariable("id") Integer id, HttpServletRequest request) {
+		try{
+			UserSession user=(UserSession)request.getSession(false).getAttribute("user");
+			if(!user.getName().equals("issl")) throw new Exception("invalid user");
+		}catch(Exception e) {
+			return "redirect:/login/faculty";
+		}
 		Faculty f = aService.findFacultyById(id);
 		model.addAttribute("faculty", f);
 		ArrayList<Status> slist = new ArrayList<Status>();
@@ -127,37 +177,22 @@ public class AdminController {
 	}
 
 	@GetMapping("/deletefaculty/{id}")
-	public String deleteFaculty(@PathVariable("id") Integer id) {
+	public String deleteFaculty(@PathVariable("id") Integer id, HttpServletRequest request) {
+		try{
+			UserSession user=(UserSession)request.getSession(false).getAttribute("user");
+			if(!user.getName().equals("issl")) throw new Exception("invalid user");
+		}catch(Exception e) {
+			return "redirect:/login/faculty";
+		}
 		Faculty f = aService.findFacultyById(id);
 		aService.deleteFaculty(f);
 		return "redirect:/facultymanagement";
 	}
 	
-	@GetMapping("/administrator")
-	public String getAdmin(Model model) {
-		
-		ArrayList<Semester> allSemesters = aService.findAllSemsters();
-		Semester currentSemester = aService.currentSemester();
-		int courseApplicationCounter = aService.countPendingCourses();
-		int leaveApplicationCounter = aService.countPendingLeaves();
-		
-		model.addAttribute("courseApplicationCounter", courseApplicationCounter);
-		model.addAttribute("leaveApplicationCounter", leaveApplicationCounter);
-		model.addAttribute("allSemesters", allSemesters);
-		model.addAttribute("currentSemester", currentSemester);
-		return "administrator";
-	}
-	
 	@PostMapping("/savecurrentsemester")
-	public String saveCurrentSemester(@Valid @ModelAttribute Semester sem, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("message", "Failed");
-		redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
-		
-		if (bindingResult.hasErrors()) {
-			return "administrator";
-		}
+	public String saveCurrentSemester(Semester sem, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		aService.saveSemester(sem);
-		int graduationThreshold = 20;
+		int graduationThreshold = 160;
 		aService.applyGraduatedStatus(sem, graduationThreshold);
 		
 		redirectAttributes.addFlashAttribute("message","Success");
@@ -172,17 +207,18 @@ public class AdminController {
 
 		int currentPage = page.orElse(1);
 		int pageSize = size.orElse(5);
-
+		
 		Page<Student> studentPage = aService.pageAllStudents(PageRequest.of(currentPage - 1, pageSize));
-
+//		System.out.println("before binding studentPage");
 		model.addAttribute("studentPage", studentPage);
+//		System.out.println("after binding studentPage");
 		
 		int totalPages = studentPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
-        
+//        System.out.println("before rendering view");
         return "studentmanagement";
 	}
 
@@ -263,7 +299,6 @@ public class AdminController {
 		int currentPage = page.orElse(1);
 		int pageSize = size.orElse(5);
 
-
 		Page<Courserun> courserunPage = aService.pageCourserun(PageRequest.of(currentPage - 1, pageSize));
 
 		model.addAttribute("courserunPage", courserunPage);
@@ -286,8 +321,22 @@ public class AdminController {
 		return s1 + s2 + s3 + s4;
 	}
 
+	@GetMapping("/addcourserun")
+	public String showAddCourseForm(Model model) {
+		Courserun course = new Courserun();
+		String semLabel=null;
+		ArrayList<Faculty> flist = aService.findAllFaculty();
+		model.addAttribute("flist", flist);
+		model.addAttribute("course", course);
+		model.addAttribute("currentSemester", semLabel);
+		
+		return "courserunform";
+	}
+	
 	@PostMapping("/savecourserun")
-	public String saveCourserun(@Valid @ModelAttribute Courserun course, @RequestParam("currentSemester")String semLabel, BindingResult bindingResult) {
+	public String saveCourserun(@Valid @ModelAttribute Courserun course, 
+			BindingResult bindingResult,
+			@RequestParam("currentSemester")String semLabel) {
 		if (bindingResult.hasErrors()) {
 			return "courserunform";
 		}
@@ -300,18 +349,6 @@ public class AdminController {
 		
 		aService.saveCourserun(course);
 		return "redirect:/courserunmanagement";
-	}
-	
-	@GetMapping("/addcourserun")
-	public String showAddCourseForm(Model model) {
-		Courserun course = new Courserun();
-		String semLabel=null;
-		ArrayList<Faculty> flist = aService.findAllFaculty();
-		model.addAttribute("flist", flist);
-		model.addAttribute("course", course);
-		model.addAttribute("currentSemester", semLabel);
-		
-		return "courserunform";
 	}
 
 	@GetMapping("/editcourserun/{courseCode}/{semesterid}")
@@ -326,17 +363,21 @@ public class AdminController {
 
 	@GetMapping("/deletecourserun/{courseCode}/{semesterid}")
 	public String deleteCourserun(Model model, @PathVariable(name = "courseCode") String courseCode,
-			@PathVariable(name = "semesterid") int semesterid) {
+			@PathVariable(name = "semesterid") int semesterid,
+			RedirectAttributes redirectAttributes) {
+
 		Courserun course = aService.findCourserun(courseCode, semesterid);
 		// if courserunstudents is not empty, redirect to /viewcourserun/"+courseCode+"/"+semesterid;
 		ArrayList<CourserunStudent> studentsPerCourse = aService.findStudentsByCourseName(course.getCourseName());
 		if(studentsPerCourse.isEmpty()) {
 			aService.removeCourserun(course);
-			return "redirect:/courserunmanagement";
 		} else {
-			return "redirect:/viewcourserun/"+courseCode+"/"+semesterid;
+			redirectAttributes.addFlashAttribute("alertClass","alert-danger");
+			redirectAttributes.addFlashAttribute("message","Failed");
+			redirectAttributes.addFlashAttribute("failedCourse",course);
 		}
 		
+		return "redirect:/courserunmanagement";
 	}
 
 	@GetMapping("/viewcourserun/{courseCode}/{semesterid}")

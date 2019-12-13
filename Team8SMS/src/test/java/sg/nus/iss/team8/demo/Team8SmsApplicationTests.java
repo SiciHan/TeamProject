@@ -7,22 +7,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import sg.nus.iss.team8.demo.models.MailModel;
+
 @SpringBootTest
 
 class Team8SmsApplicationTests {
 
-	@Autowired
-	private JavaMailSender mailSender;
+	
 
 	@Test
 	public void sendSimpleMail() throws Exception {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom("845542640@qq.com");
-		message.setTo("huangyuzhe2019@163.com");
-		message.setSubject("主题：简单邮件");
-		message.setText("测试邮件内容");
-
-		mailSender.send(message);
+		String  mail_title  = "S";  
+        String  mail_content    = "<a href='http://www.baidu.com'/>";  
+        MailModel email = MailModel.getInstance();     
+        email.sentEmails("845542640@qq.com",mail_title,mail_content); 
 	}
 
 }

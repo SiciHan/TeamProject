@@ -1,6 +1,8 @@
 package sg.nus.iss.team8.demo.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+
 import java.util.*;
 
 @Entity
@@ -8,6 +10,7 @@ import java.util.*;
 public class Status {
 	@Id
 	@Column(name="statusid")
+	
 	private int status;
 	
 	@Column(length = 45, nullable = false)

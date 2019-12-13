@@ -23,7 +23,7 @@
       				<li><a href="courseapplication.html" th:href="@{/courseapplication}">Course Application</a></li>
       				<li><a href="admin_movementregister.html" th:href="@{/admin_movementregister}">Leave Calendar</a></li>
       				<li><a href="leaveapplication.html" th:href="@{/leaveapplication}">Leave Application</a></li>
-      				<li><a href="#">Logout</a></li>
+      				<li><a href="logout.html" th:href="@{/logout}">Log Out</a></li>
     			</ul>
   			</div>
 		</nav>
@@ -34,26 +34,17 @@
 		<p>Current Semester: <span th:text="${currentSemester.label}"></span></p>
 		
 		
-		<div class="col-md-3">
+		<div class="col-md-4">
 			<form th:object="${currentSemester}" th:action="@{/savecurrentsemester}" method="post">
 				<div class="form-group mb-2">
-					<label for="currentSemester">Set Current Sem and Grad Status</label>
-					<select th:field="*{semester}" class="form-control" id="editSemLabel" th:onchange="selectedSemLabel();">
-						<option th:value="*{semester}" th:text="*{label}" selected></option>
-						<option th:each="cs : ${allSemesters}" th:value="${cs.semester}" th:text="${cs.label}"></option>
-					</select>
-					<input type="hidden" th:value="*{label}" id="label" name="label">
-					<div th:switch="${message}">
-						<div th:case="'Success'" class="alert alert-success">
-							<strong>Successfully</strong> set current semester and checked for graduating students
-						</div>
-						<div th:case="'Failed'" class="alert alert-danger">
-							<strong>Failed</strong> in setting semester
-						</div>
-					</div>
+					<input type="hidden" th:field="*{semester}">
+					<input type="hidden" th:field="*{label}">
+					<button type="submit" class="btn btn-primary">Set Current Sem & Grad Status</button>
 				</div>
 				<div>
-					<button type="submit" class="btn btn-primary">Apply</button>
+					<div th:if="${message == 'Success'}" class="alert alert-success">
+						<strong>Successfully</strong> set current semester and checked for graduating students
+					</div>
 				</div>
 			</form>
 		</div>
@@ -65,13 +56,6 @@
 			<a th:href="@{/downloadCSV/gpalist}" class="btn btn-primary">Download Student GPA</a>
 		</div>
 	</div>
+	<div th:insert="~{home :: copy}">Copy</div>
 </body>
-<script>
-	function selectedSemLabel()
-	{
-	   let txt = $("#editSemLabel option:selected").text();
-	   console.log(txt);
-	   $("#label").val(txt);
-	}
-</script>
 </html>
