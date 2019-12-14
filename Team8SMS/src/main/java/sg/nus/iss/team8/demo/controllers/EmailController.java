@@ -22,17 +22,6 @@ public class EmailController {
 		this.eService = eService;
 	}
 	
-//	@RequestMapping(value = "/send")
-//    public String sendEmail(HttpServletRequest request, @ModelAttribute("anno") Announcement anno, Model model) {
-//        anno = (Announcement) model.getAttribute("anno");
-//		String  mail_title  = "New Announcement !";  
-//        String  mail_content = anno.getMessage();  
-//        MailModel email = MailModel.getInstance();     
-//        email.sentEmails("huangyuzhe2019@163.com",mail_title,mail_content); 
-//        //ArrayList<String> emails = eService.findAllEmail(coursename);
-//        return "release_successful";
-//    }
-	
 	@RequestMapping(value = "/prompt")
     public String promptEmail(@RequestParam("coursename") String coursename, Model model) {
 		Announcement anno = new Announcement();
@@ -49,9 +38,6 @@ public class EmailController {
 		}
 		eService.saveAnno(anno);
 		ArrayList<String> addresses = eService.findAllEmail(anno.getId().getCourserunname());
-//		addresses.add("E0457801@u.nus.edu");
-//		addresses.add("E0457834@u.nus.edu");
-//		addresses.add("E0003064@u.nus.edu");
 		String  mail_title  = "New Announcement !";  
         String  mail_content = anno.getMessage();
         mail_content += "\nPlease login to check:\n'http://localhost:8080/login/student'";

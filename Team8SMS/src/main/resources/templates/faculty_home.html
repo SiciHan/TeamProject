@@ -14,37 +14,82 @@
 <body>
 	<div class="row" style="margin: 10px">
 		<div class="col-md-12">
-			<h2 style="color:#000000; margin-bottom: 20px">Hello, <text th:text="${faculty.name}">Name</text></h2>
+			<h2 style="color: #000000; margin-bottom: 20px">
+				Hello,
+				<text th:text="${faculty.name}">Name</text>
+			</h2>
 			<ul class="nav nav-pills">
-				<li class="active"><a href="faculty_home.html" th:href="@{/faculty/home}"
-					class="glyphicon glyphicon-home"> <span>Home</span>
+				<li class="active"><a href="faculty_home.html"
+					th:href="@{/faculty/home}" class="glyphicon glyphicon-home"> <span>Home</span>
 				</a></li>
-				<li><a href="faculty_courses.html" th:href="@{/faculty/mycourses}" class="glyphicon glyphicon-list-alt"> <span>Course</span></a></li>
-				<li><a href="faculty_grade.html" th:href="@{/faculty/grade}" class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
-				<li><a href="faculty_movementregister.html" th:href="@{/faculty/movement}" class="glyphicon glyphicon-stats"> <span>Movement</span></a></li>
-				<li><a href="staffLogin.html" th:href="@{/logout}" class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
+				<li><a href="faculty_courses.html"
+					th:href="@{/faculty/mycourses}"
+					class="glyphicon glyphicon-list-alt"> <span>Course</span></a></li>
+				<li><a href="faculty_grade.html" th:href="@{/faculty/grade}"
+					class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
+				<li><a href="faculty_movementregister.html"
+					th:href="@{/faculty/movement}" class="glyphicon glyphicon-tasks">
+						<span>Movement</span>
+				</a></li>
+				<li><a href="faculty_report.html" th:href="@{/faculty/report}"
+					class="glyphicon glyphicon-stats"> <span>Report</span></a></li>
+				<li><a href="staffLogin.html" th:href="@{/logout}"
+					class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
 			</ul>
 		</div>
 	</div>
-	<div class="row" style="margin-top: 10vh">
-		<div class="col-md-4 col-md-offset-4">
-			<div class="row">
-				<div>
-					<h3>Name: <text th:text="${faculty.name}">123</text></h3>
-					<h3>Department: <text th:text="${faculty.department.name}">123</text></h3>
-					<h3>Status: <text th:text="${faculty.status.label}">123</text></h3>
+	<div>
+		<div class="row" style="margin-top: 28vh" id="words">
+			<div class="col-md-12 col-md-offset-12">
+				<div class="row">
+					<div style="font-family: Georgia; font-weight: 5px; color: #6C7E9D;" >
+						<h3 style="padding-left:20%">
+							<i>Name:&emsp;&emsp;&ensp; </i>
+							<text th:text="${faculty.name}">123</text>
+						</h3>
+						<h3 style="padding-left:20%">
+							<i>Status:&emsp; &emsp;&ensp;</i>
+							<text th:text="${faculty.status.label}">123</text>
+						</h3>
+						<h3 style="padding-left:20%">
+							<i>Department:</i>
+							<text th:text="${faculty.department.name}">123</text>
+						</h3>						
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<br/>
-	<div class="row" style="text-align: right">
-		<div class="col-md-10 col-md-offset-1">
-			<h4>
-				<a href="faculty_leave.html" th:href="@{/faculty/applyleave}"><i><u>Apply for leave >></u></i></a>
-			</h4>
+		<div class="col-md-12">
+			<img src="/splash.png"
+				style="object-fit: cover;" id="pic">
 		</div>
-	</div>
-	<div th:insert="~{home :: copy}">Copy</div>
+
+
+		<br />
+		<div class="row" style="text-align: right; margin: 20px">
+			<div class="col-md-10 col-md-offset-2">
+				<h4>
+					<a href="faculty_leave.html" th:href="@{/faculty/applyleave}"><i><u>Apply
+								for leave >></u></i></a>
+				</h4>
+			</div>
+		</div>
+		<div th:insert="~{home :: copy}">Copy</div>
 </body>
+<style>
+#words {
+	width: 500px;
+	height: 300px;
+	position: absolute;
+	top: 50px;
+	z-index: 10;
+}
+
+#pic {
+	position: relative;
+	width: 1390px;
+	height: 380px;
+	z-index: 1;
+}
+</style>
 </html>

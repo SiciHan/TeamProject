@@ -23,23 +23,26 @@ public class FacultyServiceImplementation implements FacultyService {
 	@Resource
 	private FacultyRepository fr;
 	private CourserunStudentRepository crsr;
-	private CourserunRepository cr;  //repository mingzi 
-	
+	private CourserunRepository cr;
+
 	@Autowired
-	public void setCrsr(CourserunStudentRepository crsr) { //zidong lianjie zhege repository
+	public void setCrsr(CourserunStudentRepository crsr) {
 		this.crsr = crsr;
 	}
+
 	@Autowired
 	public void setFacultyRepository(FacultyRepository fr) {
 		this.fr = fr;
 	}
+
 	@Autowired
 	public void setCourserunRepository(CourserunRepository cr) {
 		this.cr = cr;
 	}
-	@Override  //chongxie shixian fangfa
+
+	@Override
 	public ArrayList<Faculty> findAllFaculty() {
-		ArrayList<Faculty> alf = (ArrayList<Faculty>)fr.findAll();
+		ArrayList<Faculty> alf = (ArrayList<Faculty>) fr.findAll();
 		return alf;
 	}
 
@@ -63,45 +66,98 @@ public class FacultyServiceImplementation implements FacultyService {
 	public void deleteFaculty(Faculty f) {
 		fr.delete(f);
 	}
+
 	@Override
-	public ArrayList<Courserun> findAllCourseruns(){
+	public ArrayList<Courserun> findAllCourseruns() {
 		return fr.findAllCourseruns();
 	}
-	public List<CourserunStudent> findAllStudents(String courserunname) {
+
+	public List<CourserunStudent> findAllStudents(String courserunname, String grade) {
 		// TODO Auto-generated method stub
-		List<CourserunStudent> result=crsr.findAllByCourserun(courserunname);
-		
-		if(result==null || result.isEmpty()) {
+		List<CourserunStudent> result = crsr.findAllByCourserun(courserunname);
+
+		if (result == null || result.isEmpty()) {
 			return crsr.findAll();
-		}
-		else
+		} else
 			return result;
 
 	}
+
 	@Override
 	public ArrayList<Semester> findAllSemesters() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
-	public ArrayList<Courserun> findAllCourserunsByFacultyId(int facultyId){
+	public ArrayList<Courserun> findAllCourserunsByFacultyId(int facultyId) {
 		return cr.findCoursesById(facultyId);
 	}
+
 	@Override
 	public CourserunStudent saveCourserunStudent(CourserunStudent courserunStudent) {
 		return crsr.saveAndFlush(courserunStudent);
-		
+
 	}
+
 	@Override
 	public List<CourserunStudent> saveCourserunStudents(List<CourserunStudent> courserunStudents) {
 		return crsr.saveAll(courserunStudents);
 	}
+
+	@Override
+	public List<CourserunStudent> findAllStudents(String courserunname) {
+		// TODO Auto-generated method stub
+		return crsr.findStudentsByCourseName(courserunname);
+	}
+
+	@Override
+	public List<CourserunStudent> findAllByCourserunandgrade(String courserunname, String grade) {
+		// TODO Auto-generated method stub
+		List<CourserunStudent> result = fr.findAllByCourserunandgrade(courserunname, grade);
+		if (result == null || result.isEmpty()) {
+			return new ArrayList<CourserunStudent>();
+		} else {
+			return result;
+		}
+	}
+
+	@Override
+	public List<CourserunStudent>  findAllCourserunStudentList(String courserunname, String grade){
+
+		List<CourserunStudent> result = fr.findAllCourserunStudentList();
+		List<CourserunStudent> new_res = new ArrayList<>();
+		if(courserunname.equals("-") || courserunname == null) {
+			if(grade.equals("-") || grade == null) {
+				return new_res;
+			}
+			else {
+				for(CourserunStudent i : result) {
+					if(i.getGrade().equals(grade)) {
+						new_res.add(i);
+					}
+				}
+			}
+		}
+		else {
+			if(grade.equals("-") || grade == null) {
+				for(CourserunStudent i : result) {
+					if(i.getId().getCourserun().getCourseName().equals(courserunname)) {
+						new_res.add(i);
+					}
+				}
+			}
+			else {
+				new_res = fr.findAllByCourserunandgrade(courserunname, grade);
+			}
+		}
+		return new_res;
+	}
+
 	@Override
 	public Faculty findFacultyByUserName(String username) {
 		// TODO Auto-generated method stub
 		return fr.findByUserName(username);
 	}
-	
 
 }

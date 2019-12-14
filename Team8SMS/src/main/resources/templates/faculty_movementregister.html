@@ -15,69 +15,81 @@
 	<!-- Header and Navigation bar -->
 	<div class="row" style="margin: 10px">
 		<div class="col-md-12">
-			<h2 style="color:#000000; margin-bottom: 20px">Hello, <text th:text="${faculty.name}">Name</text></h2>
+			<h2 style="color: #000000; margin-bottom: 20px">
+				Hello,
+				<text th:text="${faculty.name}">Name</text>
+			</h2>
 			<ul class="nav nav-pills">
 				<li><a href="faculty_home.html" th:href="@{/faculty/home}"
 					class="glyphicon glyphicon-home"> <span>Home</span>
 				</a></li>
-				<li><a href="faculty_courses.html" th:href="@{/faculty/mycourses}" class="glyphicon glyphicon-list-alt"> <span>Course</span></a></li>
-				<li><a href="faculty_grade.html" th:href="@{/faculty/grade}" class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
-				<li class="active"><a href="faculty_movementregister.html" th:href="@{/faculty/movement}" class="glyphicon glyphicon-stats"> <span>Movement</span></a></li>
-				<li><a href="staffLogin.html" th:href="@{/logout}" class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
+				<li><a href="faculty_courses.html"
+					th:href="@{/faculty/mycourses}"
+					class="glyphicon glyphicon-list-alt"> <span>Course</span></a></li>
+				<li><a href="faculty_grade.html" th:href="@{/faculty/grade}"
+					class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
+				<li class="active"><a href="faculty_movementregister.html"
+					th:href="@{/faculty/movement}" class="glyphicon glyphicon-tasks">
+						<span>Movement</span></a></li>
+				<li><a href="faculty_report.html" th:href="@{/faculty/report}"
+					class="glyphicon glyphicon-stats"> <span>Report</span></a></li>
+				<li><a href="staffLogin.html" th:href="@{/logout}"
+					class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
 			</ul>
 		</div>
 	</div>
 
-	<div >
+	<div class="row" style="margin: 20px">
 		<h2>Leaves</h2>
 
+
+
+		<!-- display details of all students and faculty on leave during the current month -->
+		<!-- users can also navigate to the previous and next month using the drop down choice list -->
+
+		<form action="http://localhost:8080/faculty/movement/" method="get">
+			<select class="form-control" id="yearmonth" name="yearmonth">
+				<option th:each="yearmonth:${yearMonths}" th:value="${yearmonth}"
+					th:text="${yearmonth}" th:selected="${yearmonth==selectedmonth}"></option>
+			</select> <input class="btn btn-primary" type="submit">
+		</form>
+
+		<div th:if="${leaves != null and !leaves.isEmpty()}">
+			<table class="table table-striped">
+				<tr>
+					<th>Start date</th>
+					<th>User Type</th>
+					<th>User ID</th>
+					<th>User Name</th>
+					<th>End Date</th>
+					<th>Reason</th>
+					<th>Status</th>
+				</tr>
+				<tr th:each="key:${leaves.keySet()}">
+					<td th:text="${leaves.get(key).id.startDate}"></td>
+					<td th:text="${leaves.get(key).id.UserType}"></td>
+					<td th:text="${leaves.get(key).id.id}"></td>
+					<td th:text="${key}"></td>
+					<td th:text="${leaves.get(key).endDate}"></td>
+					<td th:text="${leaves.get(key).reason}"></td>
+					<td th:text="${leaves.get(key).status.label}"></td>
+				</tr>
+			</table>
+		</div>
 	</div>
-
-	<!-- display details of all students and faculty on leave during the current month -->
-	<!-- users can also navigate to the previous and next month using the drop down choice list -->
-
-	<form action="http://localhost:8080/faculty/movement/" method="get">
-		<select class="form-control" id="yearmonth" name="yearmonth">
-			<option th:each="yearmonth:${yearMonths}" th:value="${yearmonth}"
-				th:text="${yearmonth}" th:selected="${yearmonth==selectedmonth}"></option>
-		</select> <input class="btn btn-primary" type="submit">
-	</form>
-
-	<div th:if="${leaves != null and !leaves.isEmpty()}">
-		<table class="table table-striped">
-			<tr>
-				<th>Start date</th>
-				<th>User Type</th>
-				<th>User ID</th>
-				<th>User Name</th>
-				<th>End Date</th>
-				<th>Reason</th>
-				<th>Status</th>
-			</tr>
-			<tr th:each="key:${leaves.keySet()}">
-				<td th:text="${leaves.get(key).id.startDate}"></td>
-				<td th:text="${leaves.get(key).id.UserType}"></td>
-				<td th:text="${leaves.get(key).id.id}"></td>
-				<td th:text="${key}"></td>
-				<td th:text="${leaves.get(key).endDate}"></td>
-				<td th:text="${leaves.get(key).reason}"></td>
-				<td th:text="${leaves.get(key).status.label}"></td>
-			</tr>
-		</table>
-	</div>
-<div th:insert="~{home :: copy}">Copy</div>
-<script type="text/javascript">
-/* 		var hidden_input = $('#hidden_input').val();
-		var hidden_input_selector = '#' + hidden_input.toString();
-		console.log(hidden_input_selector);
-		$(hidden_input_selector).attr("selected", true)
-		function onSelectChange() {
-			var courseSelect = document.getElementById("form_Courses");
-			console.log(courseSelect);
-			var selectedCoursesName = courseSelect.value;
-			console.log("selected:" + selectedCoursesName);
-			window.location.href = 'grade?coursename=' + selectedCoursesName;
-		} */
-</script>
+	<div th:insert="~{home :: copy}">Copy</div>
+	<script type="text/javascript">
+		/* 		var hidden_input = $('#hidden_input').val();
+		 var hidden_input_selector = '#' + hidden_input.toString();
+		 console.log(hidden_input_selector);
+		 $(hidden_input_selector).attr("selected", true)
+		 function onSelectChange() {
+		 var courseSelect = document.getElementById("form_Courses");
+		 console.log(courseSelect);
+		 var selectedCoursesName = courseSelect.value;
+		 console.log("selected:" + selectedCoursesName);
+		 window.location.href = 'grade?coursename=' + selectedCoursesName;
+		 } */
+	</script>
 </body>
 </html>

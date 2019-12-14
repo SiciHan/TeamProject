@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="/daterangepicker.min.css" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="/moment.min.js"></script>
+<script src="/jquery.daterangepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+<script language="JavaScript" src="/reportChart.js"></script>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<title>Faculty/report</title>
+</head>
+<body>
+	<div class="row" style="margin: 10px">
+		<div class="col-md-12">
+			<h2 style="color: 000000; margin-bottom: 20px">
+				Hello,
+				<text th:text="${faculty.name}">Name</text>
+			</h2>
+
+			<ul class="nav nav-pills">
+				<li><a href="faculty_home.html"
+					th:href="@{/faculty/home}" class="glyphicon glyphicon-home"> <span>Home</span>
+				</a></li>
+				<li><a href="faculty_courses.html"
+					th:href="@{/faculty/mycourses}"
+					class="glyphicon glyphicon-list-alt"> <span>Course</span></a></li>
+				<li><a href="faculty_grade.html" th:href="@{/faculty/grade}"
+					class="glyphicon glyphicon-oil"> <span>Grade</span></a></li>
+				<li><a href="faculty_movementregister.html"
+					th:href="@{/faculty/movement}" class="glyphicon glyphicon-tasks">
+						<span>Movement</span>
+				</a></li>
+				<li class="active"><a href="faculty_report.html" th:href="@{/faculty/report}"
+					class="glyphicon glyphicon-stats"> <span>Report</span></a></li>
+				<li><a href="staffLogin.html" th:href="@{/logout}"
+					class="glyphicon glyphicon-log-out"> <span>Logout</span></a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="row" style="margin: 20px">
+		<div class="col-md-5">
+			<div class="col-sm-2">
+				<label for="Choose_Courses" class="col-form-label">Courses:</label>
+			</div>
+			<div class="col-md-10">
+				<select id="form_Courses" name="dob_Courses"
+					onchange="onSelectChange()">
+					<option id="-" value="-">-</option>
+					<option th:each="courserun:${courseruns}"
+						th:id="${courserun.courseCode} + ${courserun.semester.semester}"
+						th:value="${courserun.courseName}"
+						th:text="'['+${courserun.courseCode}+']/'+${courserun.courseName}">
+				</select>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="col-md-2">
+				<label for="Choose_Grade" class="col-form-label">Grade:</label>
+			</div>
+			<div class="col-md-10">
+				<select id="form_Grade" name="dob_Grade" onchange="onSelectChange()">
+					<option id="grade-" value="-">-</option>
+					<option id="gradeA+" value="A%2B">A+</option>
+					<option id="gradeA" value="A">A</option>
+					<option id="gradeA-" value="A-">A-</option>
+					<option id="gradeB+" value="B%2B">B+</option>
+					<option id="gradeB" value="B">B</option>
+					<option id="gradeB-" value="B-">B-</option>
+					<option id="gradeC+" value="C%2B">C+</option>
+					<option id="gradeC" value="C">C</option>
+					<option id="gradeD+" value="D%2B">D+</option>
+					<option id="gradeD" value="D">D</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-md-3 text-right">
+			<div class="col-md-2"></div>
+			<label for="Choose_Grade" class="col-form-label">AVG GPA: </label>
+			<text th:text="${avg}"></text>
+		</div>
+	</div>
+
+
+
+	<div class="row" style="margin: 20px">
+		<div class="col-md-12">
+			<table class="table table-bordered table-hover">
+				<tbody>
+				<thead>
+					<th>COURSE ID</th>
+					<th>COURSE NAME</th>
+					<th>STUDENT ID</th>
+					<th>STUDENT NAME</th>
+					<th>GENDER</th>
+					<th>EMAIL</th>
+					<th>MOBILE</th>
+					<th>GRADE</th>
+
+				</thead>
+				<tr th:each="courseRunStudent, stat:${courserunstudents}">
+					<td th:text="${courseRunStudent.id.courserun.courseCode}">courseCode</td>
+					<td th:text="${courseRunStudent.id.courserun.courseName}">courseName</td>
+					<td th:text="${courseRunStudent.id.student.studentId}">studentId</td>
+					<td th:text="${courseRunStudent.id.student.name}">studentName</td>
+					<td th:text="${courseRunStudent.id.student.gender}">gender</td>
+					<td th:text="${courseRunStudent.id.student.email}">email</td>
+					<td th:text="${courseRunStudent.id.student.mobile}">mobile</td>
+					<td th:text="${courseRunStudent.grade}">grade</td>
+				</tr>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="row">
+		<canvas id="barChart" style="height: 20vh; width: 60vw;"></canvas>
+	</div>
+
+	<script th:inline="JavaScript">
+		/*<![CDATA[*/
+			var gradeDataArray = [[${gradeDataArray}]];
+			var coursename = [[${coursename}]];
+			var grade = [[${grade}]];
+			console.log('gradeDataArray', gradeDataArray);
+            console.log('coursename', coursename);
+		/*]]>*/
+
+Chart.plugins.unregister(ChartDataLabels);
+var ctx = document.getElementById('barChart').getContext('2d');
+if(coursename === undefined || coursename === '-'){
+    $("#barChart").css({"display":"none"});
+}
+else if(grade !== undefined && grade !== '-') {
+    $("#barChart").css({"display":"none"});
+}
+var chart = new Chart(ctx, {
+    // The type of chart 
+    type : 'bar',
+    hover: {
+        animationDuration: 0
+    },
+    // The data for our dataset
+    data : {
+        labels : [ 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'D+',
+                'D' ],
+        datasets : [ {
+            label : 'Number of Student based on Grades',
+            backgroundColor : 'rgb(148, 78, 52)',
+            borderColor : 'rgb(0, 0, 0)',
+            data : gradeDataArray,
+            borderWidth : 0,
+
+        } ],
+    },
+    plugins: [ChartDataLabels],
+    // Configuration options go here
+    options : {
+        layout : {
+            padding : {
+                left : 50,
+                right : 50,
+                top : 0,
+                bottom : 0
+            }
+        },
+        legend: {
+            position: 'bottom'
+        },
+        scales : {
+            yAxes : [ {
+                ticks : {
+                    suggestedMin : 0,
+                    suggestedMax : 10
+                }
+
+            } ]
+        },
+        plugins: {
+            // Change options for ALL labels of THIS CHART
+            datalabels: {
+                align: 'end',
+                offset: 5,
+                anchor: 'end'
+            }
+        }
+    }
+});
+	</script>
+
+	<input type="hidden" th:value="${courseKey}" id="hidden_input" />
+	<input type="hidden" th:value="${grade}" id="hidden_input1" />
+	<script>
+		var hidden_input = $('#hidden_input').val();
+		var hidden_input_selector = '#' + hidden_input.toString();
+		var hidden_input1 = $('#hidden_input1').val();
+		var hidden_input1_selector = '#grade' + hidden_input1.toString();
+		console.log(hidden_input_selector);
+		console.log('gradekey',hidden_input1_selector);
+		$(hidden_input_selector).attr("selected", true);
+		$(hidden_input1_selector).attr("selected", true);
+		function onSelectChange() {
+			var courseSelect = document.getElementById("form_Courses");
+			console.log('coursekey',courseSelect);
+			var selectedCoursesName = courseSelect.value;
+			console.log("selected:" + selectedCoursesName);
+			var gradeSelect = document.getElementById("form_Grade");
+			console.log(gradeSelect);
+			var selectedGrade = gradeSelect.value;
+			console.log("selected grade:" + selectedGrade);
+			var hrefValue = 'report';
+			if((hidden_input === undefined || hidden_input === '-')
+					&& (selectedGrade !== undefined && selectedGrade !== '-')){
+				hrefValue = hrefValue + '?grade=' + selectedGrade;
+			}else if((hidden_input !== undefined && hidden_input !== '-')
+					&& (selectedGrade === undefined || selectedGrade === '-')){
+				hrefValue = hrefValue + '?coursename=' + selectedCoursesName;
+			}else if ((hidden_input !== undefined && hidden_input !== '-')
+					&& (selectedGrade !== undefined && selectedGrade !== '-')){
+				hrefValue = hrefValue + '?coursename=' + selectedCoursesName + '&' + 'grade=' + selectedGrade;
+			}
+			window.location.href = hrefValue;
+		}
+	</script>
+</body>
+</html>
