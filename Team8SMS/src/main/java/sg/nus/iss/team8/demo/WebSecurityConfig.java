@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -63,6 +65,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 				.authorizeRequests() // need to authorize the requests
 				.antMatchers("/home").permitAll() // home can accessed by all
+				.antMatchers("/logout").permitAll()
+				.antMatchers("/logoutSuccess").permitAll()
 				.antMatchers(staticResources).permitAll()				
 				.antMatchers("/administrator/*").hasAuthority("Admin")
 				.antMatchers("/facultymanagement").hasAuthority("Admin")
@@ -105,11 +109,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.successHandler(successHandler)
 				.and()
 				.exceptionHandling().accessDeniedHandler(accessDeniedHandler())
-				.and()
-				.logout()
 				.and();
 				
-		http.sessionManagement().invalidSessionUrl("/UserNotFound");
+		http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+		.logoutSuccessUrl("/logoutSuccess")
+		.logoutSuccessHandler(logoutSuccessHandler());
+		
+	//	.logoutSuccessHandler(logoutSuccessHandler());
+		//http.sessionManagement().invalidSessionUrl("/UserNotFound");
 		
 	}
 
@@ -127,6 +134,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public AccessDeniedHandler accessDeniedHandler(){
 	    return new CustomAccessDeniedHandler();
+	}
+	
+	@Bean
+	public LogoutSuccessHandler logoutSuccessHandler() {
+	    return new CustomLogoutSuccessHandler();
 	}
 	 
 

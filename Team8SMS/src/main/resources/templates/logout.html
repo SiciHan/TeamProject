@@ -5,6 +5,16 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 <style>
+.legend {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin-bottom: .5rem;
+    font-size: 40;
+    color: inherit;
+    white-space: normal;
+}
 	body{
 		height: 100%;
 		width: 100%;
@@ -29,6 +39,8 @@
 		margin: 10px;
 		padding: 5px;
 		width: 300px;
+		margin-top: 180;
+		margin-left: 60;
 	}
 	
 	.row {
@@ -43,7 +55,7 @@
 	<div class="container" id="main-container">
 		<div class="row">
 			<div th:fragment="content" id="login-form" class="col-md-4">
-				<form>
+				<form name="f" th:action="@{/logout}" method="post">
 					<fieldset>
 						<div>
 							<legend>Team 8 SMS</legend>

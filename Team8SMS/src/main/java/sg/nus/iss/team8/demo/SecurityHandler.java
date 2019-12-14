@@ -38,7 +38,7 @@ public class SecurityHandler extends SimpleUrlAuthenticationSuccessHandler imple
 		}
 
 		
-		session.setMaxInactiveInterval(30*60); //30 mins
+		session.setMaxInactiveInterval(5); //30 mins
 	
 		
 		
