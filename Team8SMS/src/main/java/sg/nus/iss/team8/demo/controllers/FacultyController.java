@@ -196,7 +196,7 @@ public class FacultyController {
 				break;
 			}
 		}
-		model.addAttribute("courseKey", courseCode + (semester == null ? "" : semester.getSemester()));
+		model.addAttribute("courseKey", courseCode + (semester==null ? "" : semester.getSemester()));
 		List<CourserunStudent> courserunstudents = new ArrayList<>();
 		courserunstudents = fservice.findAllCourserunStudentList(coursename, grade);
 		int[] gradeDataArray = new int[10];

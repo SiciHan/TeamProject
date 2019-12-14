@@ -129,16 +129,17 @@ public class AdminController {
 	}
 
 	@RequestMapping("admin/generatereport/export")
-	public RedirectView exportCombinedCSV(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+	public String exportCombinedCSV(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws IOException {
 		// create a list of object
 		if (session.getAttribute("toprintlist") == null) {
-			return new RedirectView("http://localhost:8080/administrator");
+			return "redirect:/administrator";
 		}
 		ArrayList<Courserun> toprintlist = (ArrayList<Courserun>) session.getAttribute("toprintlist");
 		grs.ExportCombinedCSV(request, response, toprintlist);
 		session.removeAttribute("toprintlist");
-		return new RedirectView("http://localhost:8080/administrator");
+		//return new RedirectView("http://localhost:8080/administrator");
+		return null;
 	}
 
 	@GetMapping("/facultymanagement")

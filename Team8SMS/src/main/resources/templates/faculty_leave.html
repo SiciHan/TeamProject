@@ -35,7 +35,7 @@
 			<div class="col-sm-12 col-sm-offset-4" style="margin-bottom:20px; margin-top:40px">
 
 				<label for="Start" class="col-sm-2 col-form-label">Start Date</label>
-				<input type="date" placeholder="" th:type="date" th:field="${leave.id.startDate}" />
+				<input type="date" placeholder="" th:type="date" th:field="${leave.id.startDate}" required/>
 				<p th:if="${#fields.hasErrors('${leave.id.startDate}')}" th:errors="${leave.id.startDate}"></p> 
 
 			</div>
