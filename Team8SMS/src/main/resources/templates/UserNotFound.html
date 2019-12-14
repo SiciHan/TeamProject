@@ -7,13 +7,13 @@
 <script>
 function myFunction() {
   var txt;
-  if (confirm("User not Found!Try to LogIn again")) {
+  if (alert("You are not authorised to view this page!Try to LogIn again")) {
     if ( txt = "OK" )
     {
-    	location.replace("http://localhost:8080/login/staff")
+    	location.replace("http://localhost:8080/login")
     }
   } else {
-	  location.replace("http://localhost:8080/login/staff")
+	  location.replace("http://localhost:8080/home")
   }
   document.getElementById("demo").innerHTML = txt;
 }

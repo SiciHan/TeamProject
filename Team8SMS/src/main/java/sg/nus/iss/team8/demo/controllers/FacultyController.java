@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.security.core.Authentication;
 
 @Controller
 @RequestMapping("/faculty")
@@ -75,31 +76,59 @@ public class FacultyController {
 		this.lservice = lservice;
 	}
 
+	// phyu here
+	private UserService us;
+
+	@Autowired
+	public void setUserService(UserServiceImplementation usi) {
+		this.us = usi;
+	}
+
 	@GetMapping("/home")
-	public String getHomePage(Model model, HttpServletRequest request) {
-		UserSession user = (UserSession) request.getSession(false).getAttribute("user");
-		Faculty faculty = fservice.findFacultyByUserName(user.getName());
+	public String getHomePage(Model model, Authentication authentication) {
+
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		String user = usr.getUsername();
+
+		// UserSession user = (UserSession)
+		// request.getSession(false).getAttribute("user");
+
+		Faculty faculty = fservice.findFacultyByUserName(user);
 		model.addAttribute("faculty", faculty);
 
 		return "faculty_home";
 	}
-	
 
 	@GetMapping("/mycourses")
-	public String getCourses(Model model, HttpServletRequest request) {
-		UserSession user = (UserSession) request.getSession(false).getAttribute("user");
-		Faculty faculty = fservice.findFacultyByUserName(user.getName());
+	public String getCourses(Model model, Authentication authentication) {
+
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		String user = usr.getUsername();
+
+		// UserSession user = (UserSession)
+		// request.getSession(false).getAttribute("user");
+
+		Faculty faculty = fservice.findFacultyByUserName(user);
+
 		model.addAttribute("faculty", faculty);
 		return "faculty_courses";
 	}
 
 	@GetMapping("/this_course")
 	public String getThisCourse(Model model, @RequestParam("coursename") String coursename,
-			HttpServletRequest request) {
+			Authentication authentication) {
+
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		String user = usr.getUsername();
+
 		ArrayList<Student> students = sservice.findStudentsByCourseName(coursename);
 		model.addAttribute("students", students);
-		UserSession user = (UserSession) request.getSession(false).getAttribute("user");
-		Faculty faculty = fservice.findFacultyByUserName(user.getName());
+		// UserSession user = (UserSession)
+		// request.getSession(false).getAttribute("user");
+		Faculty faculty = fservice.findFacultyByUserName(user);
 		model.addAttribute("faculty", faculty);
 		model.addAttribute("coursename", coursename);
 		return "course_class_list";
@@ -109,9 +138,15 @@ public class FacultyController {
 	@GetMapping("/grade")
 	public String getGrade(Model model,
 			@RequestParam(value = "coursename", required = false, defaultValue = "-") String coursename,
-			HttpServletRequest request) {
-		UserSession user = (UserSession) request.getSession(false).getAttribute("user");
-		Faculty faculty = fservice.findFacultyByUserName(user.getName());
+			Authentication authentication) {
+
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		String user = usr.getUsername();
+
+		// UserSession user = (UserSession)
+		// request.getSession(false).getAttribute("user");
+		Faculty faculty = fservice.findFacultyByUserName(user);
 		model.addAttribute("faculty", faculty);
 		ArrayList<Courserun> courseruns = fservice.findAllCourserunsByFacultyId(faculty.getFacultyId());
 		model.addAttribute("courseruns", courseruns);
@@ -140,9 +175,15 @@ public class FacultyController {
 	public String getReport(Model model,
 			@RequestParam(value = "coursename", required = false, defaultValue = "-") String coursename,
 			@RequestParam(value = "grade", required = false, defaultValue = "-") String grade,
-			HttpServletRequest request) {
-		UserSession user = (UserSession) request.getSession(false).getAttribute("user");
-		Faculty faculty = fservice.findFacultyByUserName(user.getName());
+			Authentication authentication) {
+
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		String user = usr.getUsername();
+
+		// UserSession user = (UserSession)
+		// request.getSession(false).getAttribute("user");
+		Faculty faculty = fservice.findFacultyByUserName(user);
 		model.addAttribute("faculty", faculty);
 		ArrayList<Courserun> courseruns = fservice.findAllCourserunsByFacultyId(faculty.getFacultyId());
 		model.addAttribute("courseruns", courseruns);
@@ -219,16 +260,15 @@ public class FacultyController {
 		model.addAttribute("gradeDataArray", gradeDataArray);
 		model.addAttribute("courserunstudents", courserunstudents);
 		try {
-			avg = avg/courserunstudents.size();
-		}
-		catch(Exception e) {
+			avg = avg / courserunstudents.size();
+		} catch (Exception e) {
 			avg = 0.0;
 			double a = avg.doubleValue();
 			String res_avg = String.format("%.2f", a);
 			model.addAttribute("avg", res_avg);
 			return "faculty_report";
 		}
-		//avg = avg/courserunstudents.size();
+		// avg = avg/courserunstudents.size();
 		double a = avg.doubleValue();
 		String res_avg = String.format("%.2f", a);
 		model.addAttribute("avg", res_avg);
@@ -250,7 +290,7 @@ public class FacultyController {
 	}
 
 	@GetMapping("/movement")
-	public String movementRegister(Model model, HttpServletRequest request,
+	public String movementRegister(Model model, Authentication authentication,
 			@RequestParam(required = false, name = "yearmonth") String ymstring) {
 		YearMonth ym = YearMonth.now();
 		if (ymstring != null && !ymstring.isEmpty()) {
@@ -266,27 +306,43 @@ public class FacultyController {
 		model.addAttribute("leaves", usernameLeaves);
 		model.addAttribute("yearMonths", yearMonths);
 		model.addAttribute("selectedmonth", ym);
-		UserSession user = (UserSession) request.getSession(false).getAttribute("user");		
-		Faculty faculty = fservice.findFacultyByUserName(user.getName());
+
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		String user = usr.getUsername();
+
+		// UserSession user = (UserSession)
+		// request.getSession(false).getAttribute("user");
+		Faculty faculty = fservice.findFacultyByUserName(user);
 		model.addAttribute("faculty", faculty);
 		return "faculty_movementregister";
 	}
 
 	@GetMapping("/applyleave")
-	public String getLeave(Model model) {
+	public String getLeave(Model model, Authentication authentication) {
+
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		int id = usr.getId();
+
 		Leave leave = new Leave();
 		model.addAttribute("leave", leave);
-		Faculty faculty = fservice.findFacultyById(102);
+		Faculty faculty = fservice.findFacultyById(id);
 		model.addAttribute("faculty", faculty);
 		return "faculty_leave";
 	}
 
 	@PostMapping("/createleave")
-	public String createLeave(@Valid @ModelAttribute("leave") Leave leave, BindingResult bindingResult, Model model) {
+	public String createLeave(@Valid @ModelAttribute("leave") Leave leave, BindingResult bindingResult, Model model,
+			Authentication authentication) {
+
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		int id = usr.getId();
 		// leave.setStatus(status);
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("leave", leave);
-			Faculty faculty = fservice.findFacultyById(102);
+			Faculty faculty = fservice.findFacultyById(id);
 			model.addAttribute("faculty", faculty);
 			return "faculty_leave";
 		} else if (leave.getId().getStartDate().after(leave.getEndDate())) {

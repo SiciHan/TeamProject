@@ -62,7 +62,7 @@ public class HomeController {
 	@GetMapping("/logout")
 	public String getLogoutPage(SessionStatus status) {
 		status.setComplete();
-		return "home";
+		return "logout";
 	}
 
 	

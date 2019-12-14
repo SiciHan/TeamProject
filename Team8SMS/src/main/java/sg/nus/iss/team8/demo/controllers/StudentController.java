@@ -15,6 +15,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +51,7 @@ import sg.nus.iss.team8.demo.services.UserServiceImplementation;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
-	
+
 	private StudentService ss;
 	private LeaveService ls;
 	private GenerateReportService grs;
@@ -69,31 +70,41 @@ public class StudentController {
 	public void setGrs(GenerateReportService grs) {
 		this.grs = grs;
 	}
-	
+	// phyu here
+	private UserService us;
+
 	@Autowired
 	public void setUserService(UserServiceImplementation usi) {
+		this.us = usi;
 	}
+
 	@RequestMapping("/")
 	public String studentHome() {
 		return "redirect:/student/dashboard";
 	}
 	@RequestMapping("/dashboard")
-	public String showDashboard(Model model, HttpServletRequest request) {
-		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
-		Integer id = ss.findStudentByName(user.getName()).getStudentId();
+	public String showDashboard(Model model, Authentication authentication) {
+		
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		int id = usr.getId();
+		
+		
+	//	UserSession user=(UserSession) request.getSession(false).getAttribute("user");
+	//	Integer id = ss.findStudentByName(user.getName()).getStudentId();
 		model.addAttribute("student", ss.findStudent(id));
-		List<CourserunStudent> courseruns=ss.findCurrentCourseByID(id);
-		System.out.println("the courses is empty"+(courseruns.isEmpty()||courseruns==null));
-		ArrayList<Announcement> announcements=ss.findAllAnnoucements(courseruns);
-		model.addAttribute("announcement",announcements);
-		System.out.println("the annoucement is empty"+(announcements.isEmpty()||announcements==null));
 		return "studentdashboard";
 	}
-
 	@RequestMapping("/applycourse")
-	public String applyCourse(Model model, HttpServletRequest request) {
-		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
-		Integer id = ss.findStudentByName(user.getName()).getStudentId();
+	public String applyCourse(Model model, Authentication authentication) {
+		
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		int id = usr.getId();
+		
+		
+	//	UserSession user=(UserSession) request.getSession(false).getAttribute("user");
+	//	Integer id = ss.findStudentByName(user.getName()).getStudentId();
 		ArrayList<CourserunStudent> courses1 = ss.findCancelledCourserunStudents(id);
 		ArrayList<Courserun> courses1a = ss.findAvailableCourserun(id);
 		ArrayList<CourserunStudent> courses2 = ss.findPendingCourserunStudents(id);
@@ -109,7 +120,7 @@ public class StudentController {
 		model.addAttribute("student", ss.findStudent(id));
 		return "applycourse";
 	}
-
+	
 	@GetMapping("/apply/{id}/{courseCode}/{semesterid}")
 	public String applyCourseTest(@PathVariable(name = "id") int id,
 			@PathVariable(name = "courseCode") String courseCode, @PathVariable(name = "semesterid") int semesterid) {
@@ -137,7 +148,7 @@ public class StudentController {
 	}
 
 	@GetMapping("/movementregister")
-	public String movementRegister(Model model, HttpServletRequest request, @RequestParam(required = false, name = "yearmonth") String ymstring) {
+	public String movementRegister(Model model, Authentication authentication, @RequestParam(required = false, name = "yearmonth") String ymstring) {
 		YearMonth ym = YearMonth.now();
 		if (ymstring != null && !ymstring.isEmpty()) {
 
@@ -152,16 +163,24 @@ public class StudentController {
 		model.addAttribute("leaves", usernameLeaves);
 		model.addAttribute("yearMonths", yearMonths);
 		model.addAttribute("selectedmonth", ym);
-		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
-		Integer id = ss.findStudentByName(user.getName()).getStudentId();
+		
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		int id = usr.getId();
+	//	UserSession user=(UserSession) request.getSession(false).getAttribute("user");
+	//	Integer id = ss.findStudentByName(user.getName()).getStudentId();
 		model.addAttribute("student", ss.findStudent(id));
 		return "movementregister";
 	}
 
 	@GetMapping("/mycourses")
-	public String MyCourses(Model model, HttpServletRequest request) {
-		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
-		Integer id = ss.findStudentByName(user.getName()).getStudentId();
+	public String MyCourses(Model model,Authentication authentication) {
+		
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		int id = usr.getId();
+	//	UserSession user=(UserSession) request.getSession(false).getAttribute("user");
+	//	Integer id = ss.findStudentByName(user.getName()).getStudentId();
 		Student s=ss.findStudent(id);
 		model.addAttribute("student", s);
 		ArrayList<CourserunStudent> courserunstudentlist = ss.findCurrentCourseByID(id);
@@ -171,9 +190,14 @@ public class StudentController {
 	}
 
 	@GetMapping("/transcript")
-	public String MyTranscript(Model model,HttpServletRequest request) {
-		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
-		Integer id = ss.findStudentByName(user.getName()).getStudentId();
+	public String MyTranscript(Model model,Authentication authentication) {
+		
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		int id = usr.getId();
+		
+	//	UserSession user=(UserSession) request.getSession(false).getAttribute("user");
+	//	Integer id = ss.findStudentByName(user.getName()).getStudentId();
 		ArrayList<CourserunStudent> clist= ss.findCompletedCourserunStudentsById(id);
 		model.addAttribute("student", ss.findStudent(id));
 		model.addAttribute("clist", clist);
@@ -197,10 +221,15 @@ public class StudentController {
 		model.addAttribute("today", today);
 		return "mytranscript";
 	}
+
 	@GetMapping("/printtranscript")
-	public void printTranscript(HttpServletRequest request,HttpServletResponse response) throws IOException {
-		UserSession user=(UserSession) request.getSession(false).getAttribute("user");
-		Integer id = ss.findStudentByName(user.getName()).getStudentId();
+	public void printTranscript(HttpServletRequest request,HttpServletResponse response,Authentication authentication) throws IOException {
+		
+		String name = authentication.getName();
+		User usr = us.findUser(name);
+		int id = usr.getId();
+	//	UserSession user=(UserSession) request.getSession(false).getAttribute("user");
+	//	Integer id = ss.findStudentByName(user.getName()).getStudentId();
 		ArrayList<CourserunStudent> clist= ss.findCompletedCourserunStudentsById(id);
 		Student student= ss.findStudent(id);
 		double points = ss.totalScorePoints(clist);
