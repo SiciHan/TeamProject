@@ -280,6 +280,9 @@ public class FacultyController {
 		List<CourserunStudent> courserunstudents = wrapper.getCourserunStudents();
 		// fservice.saveCourserunStudents(courserunStudents);
 		Status status = staservice.findByStatusId(9);
+		if(courserunstudents == null) {
+			return "redirect:/faculty/grade";
+		}
 		for (CourserunStudent crs : courserunstudents) {
 			if (crs.getGrade() != "N") {
 				crs.setStatus(status);

@@ -23,7 +23,7 @@ public class MvcConfig implements WebMvcConfigurer {
      driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
      driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/ca?useSSL=false&serverTimezone=UTC&useLegacy=false");
      driverManagerDataSource.setUsername("root");
-     driverManagerDataSource.setPassword("Hewlett27!");
+     driverManagerDataSource.setPassword("woshishenaqq6!");
      return driverManagerDataSource;
  }
 	
