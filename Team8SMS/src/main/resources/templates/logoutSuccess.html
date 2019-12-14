@@ -1,0 +1,69 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<title>Log Out</title>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<style>
+	body{
+		height: 100%;
+		width: 100%;
+		font-weight: normal;
+		font-family: "Segoe UI", "Segoe", "SegoeUI-Regular-final", Tahoma, Helvetica, Arial, sans-serif;
+		background-image: url("https://images.unsplash.com/photo-1520467795206-62e33627e6ce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80")
+	}
+	
+	#main-container{
+		height:100%;
+		width:30%;
+		margin-right: 0;
+		background-color:inherit;
+	}
+	#login-form {
+		margin-left: 15px;
+		margin-top: 100px;
+		display: block;
+		width: 300px;
+	}
+	#login-form div {
+		margin: 10px;
+		padding: 5px;
+		width: 300px;
+		margin-top: 180;
+	}
+	
+	.row {
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+</head>
+<body>
+	<div class="container" id="main-container">
+		<div class="row">
+			<div th:fragment="content" id="login-form" class="col-md-4">
+				<form name="f" th:action="@{/logout}" method="post">
+					<fieldset>
+						<div>
+							<legend>Team 8 SMS</legend>
+							
+							
+							<p>You have successfully signed out.</p>					
+						</div>
+		
+
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
+
