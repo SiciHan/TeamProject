@@ -19,5 +19,7 @@ public interface CourserunRepository extends JpaRepository<Courserun,String> {
 
 	@Query("select f.Courseruns from Faculty f where f.facultyId = ?1")
 	public ArrayList<Courserun> findCoursesById(int facultyId);
+
+	Courserun findByCourseName(String course);
 	
 }

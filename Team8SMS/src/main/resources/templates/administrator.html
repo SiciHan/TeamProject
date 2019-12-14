@@ -57,23 +57,36 @@
 		</div>
 	</div>
 
-<!-- print report here -->
+<!-- add course for printting here -->
 <div class="container">
   <h2>Print Student GPA based on Courses</h2>
-  <p>Select the Courses</p>
-  <form action=printReports >
-    <div th:each="{course:courseruns}" class="checkbox">
-      <label><input type="checkbox" value="">Option 1</label>
-    </div>
-    <div class="checkbox">
-      <label><input type="checkbox" value="">Option 2</label>
-    </div>
-    <div class="checkbox disabled">
-      <label><input type="checkbox" value="" disabled>Option 3</label>
-    </div>
-  </form>
+  <p>Select the Courses to be compared</p>
+	<form th:action="@{/admin/generatereport/add}" th:object="${courserun}"method="post">
+		<select class="form-control" th:field="*{courseName}">
+			<option th:each="course:${courseruns}" th:value="${course.courseName}"
+				th:text="${course.courseName}"></option>
+		</select> <input class="btn btn-primary" type="submit" value="Add Course for Generating Report">
+	</form>
 </div>
+<!-- Display selected courses here -->
 
+	<div class="container">
+		<table>
+			<tr th:each="course:${toprintlist}">
+				<td th:text="${course.courseName}"></td>
+				<td>
+				<a th:href="${'/admin/generatereport/remove?coursename='+course.courseName}"
+					class="btn">Remove</a>
+					</td>
+			</tr>
+	</table>
+	</div>
+<!-- Export button here -->
+
+<div class="container">
+	<a th:href="${'/admin/generatereport/export'}"
+					class="btn btn-danger">Export Compiled Report</a>
+</div>
 	<div th:insert="~{home :: copy}">Copy</div>
 </body>
 </html>

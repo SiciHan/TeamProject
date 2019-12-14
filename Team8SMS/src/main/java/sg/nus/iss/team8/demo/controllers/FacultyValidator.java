@@ -1,5 +1,7 @@
 package sg.nus.iss.team8.demo.controllers;
 
+import java.util.ArrayList;
+
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -18,7 +20,7 @@ public class FacultyValidator implements Validator {
 		// TODO Auto-generated method stub
 		return Faculty.class.equals(clazz)||Semester.class.equals(clazz) 
 				|| Student.class.equals(clazz)||PageImpl.class.equals(clazz)
-				||Courserun.class.equals(clazz)||Department.class.equals(clazz);
+				||Courserun.class.equals(clazz)||Department.class.equals(clazz)||ArrayList.class.equals(clazz)||String.class.equals(clazz);
 	}
 
 	@Override

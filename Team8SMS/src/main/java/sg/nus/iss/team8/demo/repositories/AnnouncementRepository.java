@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 import sg.nus.iss.team8.demo.models.*;
 
 @Repository
-public interface AnnouncementRepository extends JpaRepository<Announcement,Integer> {
+public interface AnnouncementRepository extends JpaRepository<Announcement,Announcement_PK> {
 	
+	@Query("Select a from Announcement a where a.id.courserunname=:courserunName")
 	public ArrayList<Announcement> findByCourserunName(String courserunName);
 }

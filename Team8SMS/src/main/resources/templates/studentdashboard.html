@@ -42,16 +42,16 @@
 	</div>
 
 	<div th:if="${announcement!=null and !announcement.isEmpty()}">
-		<table>
+		<table class="table table-bordered">
 			<tr>
-				<th>No</th>
-				<th>Announcement</th>
-				<th>From Course</th>
+				<th class="col-1">No</th>
+				<th class="col-9">Announcement</th>
+				<th class="">From Course</th>
 			</tr>
 			<tr th:each="a:${announcement}">
-				<td th:text="${a.id}"></td>
+				<td th:text="${a.id.id}"></td>
 				<td th:text="${a.message}"></td>
-				<td th:text="${a.courserunName}"></td>
+				<td th:text="${a.id.courserunname}"></td>
 			</tr>
 		</table>
 	</div>

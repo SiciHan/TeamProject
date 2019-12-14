@@ -10,16 +10,22 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.opencsv.CSVWriter;
 
+import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Student;
+import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
 
 @Service
 public class GenerateReportServiceImpl implements GenerateReportService {
-
+	
+	@Autowired
+	private CourserunStudentRepository crsr;
+	
 	@Override
 	public <T> void ExportCSV(HttpServletRequest request, HttpServletResponse response, List<T> list, String[] headers)
 			throws IOException {
@@ -87,5 +93,28 @@ public class GenerateReportServiceImpl implements GenerateReportService {
 		String[] row7=new String[] {"Graduation Status",gstatus};
 		writer.writeNext(row7);
 		writer.close();
+	}
+
+	@Override
+	public void ExportCombinedCSV(HttpServletRequest request, HttpServletResponse response,
+			ArrayList<Courserun> toprintlist) throws IOException {
+		// TODO Auto-generated method stub
+		String headerKey = "Content-Disposition";
+		String headerValue = String.format("attachment;filename=output.csv");
+		response.setContentType("text/csv");
+		response.setHeader(headerKey, headerValue);
+		CSVWriter writer = new CSVWriter(response.getWriter());
+		String[] headers=new String[]{"Course Name","Student Id", "Student Name", "Degree", "Mobile", "Email", "Grade", "Status"};
+		writer.writeNext(headers);
+		for(Courserun cr:toprintlist) {
+			String n=cr.getCourseName();
+			List<CourserunStudent> list=crsr.findAllByCourserun(n);
+			for (CourserunStudent entry : list) {
+				String[] output = entry.toString().split(",");
+				writer.writeNext(output);
+			}
+		}
+		writer.close();
+		
 	}
 }

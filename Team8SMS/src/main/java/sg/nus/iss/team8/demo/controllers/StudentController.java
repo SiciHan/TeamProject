@@ -83,8 +83,10 @@ public class StudentController {
 		Integer id = ss.findStudentByName(user.getName()).getStudentId();
 		model.addAttribute("student", ss.findStudent(id));
 		List<CourserunStudent> courseruns=ss.findCurrentCourseByID(id);
+		System.out.println("the courses is empty"+(courseruns.isEmpty()||courseruns==null));
 		ArrayList<Announcement> announcements=ss.findAllAnnoucements(courseruns);
 		model.addAttribute("announcement",announcements);
+		System.out.println("the annoucement is empty"+(announcements.isEmpty()||announcements==null));
 		return "studentdashboard";
 	}
 

@@ -121,4 +121,8 @@ public interface AdminService {
 
 	double calculateGPA(Student student);
 
+	ArrayList<Courserun> findAllCourserun();
+
+	Courserun findCourserunByName(String course);
+
 }

@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,12 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
@@ -76,7 +80,7 @@ public class AdminController {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
 	}
 	@GetMapping("/administrator")
-	public String getAdmin(Model model, HttpServletRequest request) {
+	public String getAdmin(Model model, HttpServletRequest request, HttpSession session) {
 		try{
 			UserSession user=(UserSession)request.getSession(false).getAttribute("user");
 			if(!user.getName().equals("issl")) throw new Exception("invalid user");
@@ -88,13 +92,55 @@ public class AdminController {
 		Semester currentSemester = aService.currentSemester();
 		int courseApplicationCounter = aService.countPendingCourses();
 		int leaveApplicationCounter = aService.countPendingLeaves();
-		
+		ArrayList<Courserun> courseruns=aService.findAllCourserun();
+		ArrayList<Courserun> toprintlist;
+		if(session.getAttribute("toprintlist")==null) {
+			toprintlist=new ArrayList<Courserun> ();
+		}
+		else {
+			toprintlist=(ArrayList<Courserun>) session.getAttribute("toprintlist");
+		}
 		model.addAttribute("courseApplicationCounter", courseApplicationCounter);
 		model.addAttribute("leaveApplicationCounter", leaveApplicationCounter);
 //		model.addAttribute("allSemesters", allSemesters);
 		model.addAttribute("currentSemester", currentSemester);
+		model.addAttribute("courseruns", courseruns);
+		model.addAttribute("toprintlist",toprintlist);
+		session.setAttribute("toprintlist", toprintlist);
+		model.addAttribute("courserun",new Courserun());
 		return "administrator";
 	}
+	@PostMapping("admin/generatereport/add")
+	public RedirectView addCourseForPrinting(Courserun courserun,HttpSession session) {
+		String course=courserun.getCourseName();
+		Courserun cr=aService.findCourserunByName(course);
+		ArrayList<Courserun> toprintlist=(ArrayList<Courserun>)session.getAttribute("toprintlist");
+		System.out.println(toprintlist.size());
+		System.out.println(toprintlist==null);
+		toprintlist.add(cr);
+		return new RedirectView("http://localhost:8080/administrator");
+	}
+	@GetMapping("admin/generatereport/remove")
+	public RedirectView removeCourseForPrinting(@RequestParam("coursename") String coursename,HttpSession session) {
+		Courserun cr=aService.findCourserunByName(coursename);
+		ArrayList<Courserun> toprintlist=(ArrayList<Courserun>)session.getAttribute("toprintlist");
+		toprintlist.remove(cr);
+		return new RedirectView("http://localhost:8080/administrator");
+	}
+	
+	@RequestMapping("admin/generatereport/export")
+	public RedirectView exportCombinedCSV(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws IOException {
+		// create a list of object
+		if(session.getAttribute("toprintlist")==null)
+		{
+			return new RedirectView("http://localhost:8080/administrator");
+		}
+		ArrayList<Courserun> toprintlist=(ArrayList<Courserun>)session.getAttribute("toprintlist");
+        grs.ExportCombinedCSV(request, response,toprintlist);
+		session.removeAttribute("toprintlist");
+		return new RedirectView("http://localhost:8080/administrator");
+	}
+	
 	@GetMapping("/facultymanagement")
 	public String getFacultyManagement(Model model,HttpServletRequest request) {
 		try{
@@ -495,6 +541,7 @@ public class AdminController {
 		model.addAttribute("selectedmonth",ym);
 		return "admin_movementregister";
 	}
+	
 	
 	@RequestMapping("/downloadCSV/classlist")
 	public void downloadCSV(HttpServletRequest request, HttpServletResponse response, 

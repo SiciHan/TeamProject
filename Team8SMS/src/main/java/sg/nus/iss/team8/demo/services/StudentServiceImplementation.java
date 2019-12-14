@@ -311,6 +311,7 @@ public class StudentServiceImplementation implements StudentService {
 		ArrayList<Announcement> announcements=new ArrayList<Announcement>();
 		for(CourserunStudent crs:courseruns) {
 			String coursename=crs.getId().getCourserun().getCourseName();
+			System.out.println("the coursename is "+coursename);
 			announcements.addAll(announcementRepo.findByCourserunName(coursename));
 		}
 		return announcements;

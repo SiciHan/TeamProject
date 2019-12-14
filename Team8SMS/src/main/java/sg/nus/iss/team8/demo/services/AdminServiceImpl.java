@@ -559,4 +559,17 @@ public class AdminServiceImpl implements AdminService {
 		cap=Math.round(cap*100.0)/100.0;
 		return cap;
 	}
+
+	@Override
+	public ArrayList<Courserun> findAllCourserun() {
+		// TODO Auto-generated method stub
+		return (ArrayList<Courserun>) courserunRepository.findAll();
+	}
+
+	@Override
+	public Courserun findCourserunByName(String course) {
+		// TODO Auto-generated method stub
+		return courserunRepository.findByCourseName(course);
+	
+	}
 }

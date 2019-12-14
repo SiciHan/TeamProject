@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Service;
 
+import sg.nus.iss.team8.demo.models.Courserun;
 import sg.nus.iss.team8.demo.models.CourserunStudent;
 import sg.nus.iss.team8.demo.models.Student;
 
@@ -21,4 +22,8 @@ public interface GenerateReportService {
 
 	void ExportTranscript(HttpServletRequest request, HttpServletResponse response, Student student,
 			ArrayList<CourserunStudent> clist, int totalCredits, double cap, String gstatus) throws IOException;
+
+
+	public void ExportCombinedCSV(HttpServletRequest request, HttpServletResponse response,
+			ArrayList<Courserun> toprintlist) throws IOException;
 }

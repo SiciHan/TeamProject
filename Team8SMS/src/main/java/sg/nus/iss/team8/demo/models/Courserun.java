@@ -5,6 +5,53 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Courseruns")
 public class Courserun {
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((courseCode == null) ? 0 : courseCode.hashCode());
+		result = prime * result + ((courseName == null) ? 0 : courseName.hashCode());
+		result = prime * result + courseUnit;
+		result = prime * result + ((faculty == null) ? 0 : faculty.hashCode());
+		result = prime * result + ((semester == null) ? 0 : semester.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Courserun other = (Courserun) obj;
+		if(courseName.equals(other.courseName)) return true;
+		if (courseCode == null) {
+			if (other.courseCode != null)
+				return false;
+		} else if (!courseCode.equals(other.courseCode))
+			return false;
+		if (courseName == null) {
+			if (other.courseName != null)
+				return false;
+		} else if (!courseName.equals(other.courseName))
+			return false;
+		if (courseUnit != other.courseUnit)
+			return false;
+		if (faculty == null) {
+			if (other.faculty != null)
+				return false;
+		} else if (!faculty.equals(other.faculty))
+			return false;
+		if (semester == null) {
+			if (other.semester != null)
+				return false;
+		} else if (!semester.equals(other.semester))
+			return false;
+		return true;
+	}
+
 	@Id
 	@Column(length = 50, name="coursename")
 	
