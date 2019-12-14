@@ -196,7 +196,7 @@ public class FacultyController {
 				break;
 			}
 		}
-		model.addAttribute("courseKey", courseCode + (semester == null ? "" : semester.getSemester()));
+		model.addAttribute("courseKey", courseCode + (semester==null ? "" : semester.getSemester()));
 		List<CourserunStudent> courserunstudents = new ArrayList<>();
 		courserunstudents = fservice.findAllCourserunStudentList(coursename, grade);
 		int[] gradeDataArray = new int[10];
@@ -250,6 +250,41 @@ public class FacultyController {
 			}
 		} else {
 			coursename = "-";
+			for (CourserunStudent cs : courserunstudents) {
+				switch (cs.getGrade()) {
+				case "A+":
+					avg += 5.0;
+					break;
+				case "A":
+					avg += 5.0;
+					break;
+				case "A-":
+					avg += 4.5;
+					break;
+				case "B+":
+					avg += 4.0;
+					break;
+				case "B":
+					avg += 3.5;
+					break;
+				case "B-":
+					avg += 3.0;
+					break;
+				case "C+":
+					avg += 2.5;
+					break;
+				case "C":
+					avg += 2.0;
+					break;
+				case "D+":
+					avg += 1.5;
+					break;
+				case "D":
+					avg += 1.0;
+					break;
+				}
+			}
+			
 		}
 		if (grade == null || grade.equals("-")) {
 			grade = "-";
@@ -280,6 +315,9 @@ public class FacultyController {
 		List<CourserunStudent> courserunstudents = wrapper.getCourserunStudents();
 		// fservice.saveCourserunStudents(courserunStudents);
 		Status status = staservice.findByStatusId(9);
+		if(courserunstudents == null) {
+			return "redirect:/faculty/grade";
+		}
 		for (CourserunStudent crs : courserunstudents) {
 			if (crs.getGrade() != "N") {
 				crs.setStatus(status);

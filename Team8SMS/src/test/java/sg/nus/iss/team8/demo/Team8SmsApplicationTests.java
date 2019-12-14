@@ -17,10 +17,10 @@ class Team8SmsApplicationTests {
 
 	@Test
 	public void sendSimpleMail() throws Exception {
-		String  mail_title  = "S";  
-        String  mail_content    = "<a href='http://www.baidu.com'/>";  
-        MailModel email = MailModel.getInstance();     
-        email.sentEmails("845542640@qq.com",mail_title,mail_content); 
+		String  mail_title  = "S";
+        String  mail_content    = "<a href='http://www.baidu.com'/>"; 
+        MailModel email = MailModel.getInstance();
+        email.sentEmails("845542640@qq.com",mail_title,mail_content);
 	}
 
 }
