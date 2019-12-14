@@ -250,6 +250,41 @@ public class FacultyController {
 			}
 		} else {
 			coursename = "-";
+			for (CourserunStudent cs : courserunstudents) {
+				switch (cs.getGrade()) {
+				case "A+":
+					avg += 5.0;
+					break;
+				case "A":
+					avg += 5.0;
+					break;
+				case "A-":
+					avg += 4.5;
+					break;
+				case "B+":
+					avg += 4.0;
+					break;
+				case "B":
+					avg += 3.5;
+					break;
+				case "B-":
+					avg += 3.0;
+					break;
+				case "C+":
+					avg += 2.5;
+					break;
+				case "C":
+					avg += 2.0;
+					break;
+				case "D+":
+					avg += 1.5;
+					break;
+				case "D":
+					avg += 1.0;
+					break;
+				}
+			}
+			
 		}
 		if (grade == null || grade.equals("-")) {
 			grade = "-";
