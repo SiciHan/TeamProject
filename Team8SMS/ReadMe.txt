@@ -19,3 +19,10 @@ Once you make some changes to the code and want to upload:
 2.Select "Open a SQL Script file in a new query tab"
 3.Select the script files provided 
 4.Run the scrip to seed the database
+
+
+3. If any MySQL database accessing errors with the password:
+
+Try to change username/password in both:
+/Team8SMS/src/main/java/sg/nus/iss/team8/demo/MvcConfig.java
+/Team8SMS/src/main/resources/application.properties
