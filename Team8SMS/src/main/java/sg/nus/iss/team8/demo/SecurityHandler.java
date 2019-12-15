@@ -38,7 +38,7 @@ public class SecurityHandler extends SimpleUrlAuthenticationSuccessHandler imple
 		}
 
 		
-		session.setMaxInactiveInterval(5); //30 mins
+		session.setMaxInactiveInterval(1800); //30 mins
 	
 		
 		
@@ -81,7 +81,7 @@ public class SecurityHandler extends SimpleUrlAuthenticationSuccessHandler imple
 		if (isStudent) {
 			return "/student/applycourse";
 		} else if (isAdmin) {
-			return "/facultymanagement"; // change to administrator 
+			return "/administrator"; // change to administrator 
 		} else if (isFaculty) {
 			return "/faculty/home";
 		} else {

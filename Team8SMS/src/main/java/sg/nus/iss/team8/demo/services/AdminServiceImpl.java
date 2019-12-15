@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import sg.nus.iss.team8.demo.models.Courserun;
@@ -30,6 +31,7 @@ import sg.nus.iss.team8.demo.models.Leave_PK;
 import sg.nus.iss.team8.demo.models.Semester;
 import sg.nus.iss.team8.demo.models.Status;
 import sg.nus.iss.team8.demo.models.Student;
+import sg.nus.iss.team8.demo.models.User;
 import sg.nus.iss.team8.demo.repositories.CourserunRepository;
 import sg.nus.iss.team8.demo.repositories.CourserunStudentRepository;
 import sg.nus.iss.team8.demo.repositories.DepartmentRepository;
@@ -38,6 +40,7 @@ import sg.nus.iss.team8.demo.repositories.LeaveRepository;
 import sg.nus.iss.team8.demo.repositories.SemesterRepository;
 import sg.nus.iss.team8.demo.repositories.StatusRepository;
 import sg.nus.iss.team8.demo.repositories.StudentRepository;
+import sg.nus.iss.team8.demo.repositories.UserRepository;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -51,6 +54,10 @@ public class AdminServiceImpl implements AdminService {
 	private FacultyRepository fr;
 	private DepartmentRepository departmentRepository;
 	private StudentService studentService;
+	private UserRepository userRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	public void setStudentService(StudentServiceImplementation studentService) {
@@ -96,6 +103,11 @@ public class AdminServiceImpl implements AdminService {
 	public void setDepartmentRepository(DepartmentRepository departmentRepository) {
 		this.departmentRepository = departmentRepository;
 	}
+	
+	@Autowired
+	public void setUserRepository(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
 	@Override
 	public ArrayList<Student> findAllStudents() {
@@ -132,11 +144,23 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public Student saveStudent(Student student) {
+		User user = new User();
+		user.setUsername("nhs"+student.getStudentId());
+		user.setPasswordHash(passwordEncoder.encode("password"));
+		user.setUserType("Student");
+		user.setId(student.getStudentId());
+		user.setEnabled(1);
+		System.out.println("before saving, new user: "+user.getUsername()+", with password: " +user.getPasswordHash());
+		user = userRepository.saveAndFlush(user);
+		System.out.println("successfully saved new user: "+user.getUsername()+", with password: " +user.getPasswordHash());
+		
 		return studentRepository.saveAndFlush(student);
 	}
 
 	@Override
 	public void removeStudent(Student student) {
+		User user = userRepository.findByUserId(student.getStudentId());
+		userRepository.delete(user);
 		studentRepository.delete(student);
 	}
 
@@ -159,11 +183,24 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public Faculty saveFaculty(Faculty f) {
+		User user = new User();
+		user.setUsername("iss"+f.getFacultyId());
+		user.setPasswordHash(passwordEncoder.encode("password"));
+		user.setUserType("Faculty");
+		user.setId(f.getFacultyId());
+		user.setEnabled(1);
+		System.out.println("before saving, new user: "+user.getUsername()+", with password: " +user.getPasswordHash());
+		user = userRepository.saveAndFlush(user);
+		System.out.println("successfully saved new user: "+user.getUsername()+", with password: " +user.getPasswordHash());
+		
 		return fr.saveAndFlush(f);
 	}
 
 	@Override
 	public void deleteFaculty(Faculty f) {
+		User user = userRepository.findByUserId(f.getFacultyId());
+		userRepository.delete(user);
+
 		fr.delete(f);
 	}
 	

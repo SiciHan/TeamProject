@@ -33,6 +33,12 @@
 		<div class="col-md-12">
 			<a class="btn btn-primary" role="button" href="facultyform.html" th:href="@{/addfaculty}">Add Faculty</a>
 			<br/>
+			<br/>
+			<div th:if="${message == 'Failed'}" class="alert alert-danger">
+				<strong>Failed to delete<br/>
+				<span th:text="${existFaculty.name}"></span></strong><br/>
+				Faculty currently teaching course(s)
+			</div>
 			<table class="table table-hover">
 				<tr>
 					<th>Faculty Id</th>

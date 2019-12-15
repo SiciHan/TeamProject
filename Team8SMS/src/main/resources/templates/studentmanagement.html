@@ -54,6 +54,13 @@
 			        	th:text=${pageNumber}
 				        th:class="${pageNumber==studentPage.number + 1} ? active"></a>
 			</div>
+			
+			<div th:if="${message == 'Failed'}" class="alert alert-danger">
+				<strong>Failed to delete<br/>
+				<a th:href="${'/viewstudentcourses/' + existStudent.studentId}"} th:text="${existStudent.name}"></a></strong><br/>
+				Student currently enrolled in courses
+			</div>
+			
 			<table class="table table-hover">
 				<tbody>
 				<thead>

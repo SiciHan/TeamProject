@@ -52,6 +52,7 @@ import sg.nus.iss.team8.demo.models.Student;
 import sg.nus.iss.team8.demo.models.UserSession;
 import sg.nus.iss.team8.demo.services.AdminService;
 import sg.nus.iss.team8.demo.services.AdminServiceImpl;
+import sg.nus.iss.team8.demo.services.FacultyService;
 import sg.nus.iss.team8.demo.services.GenerateReportService;
 import sg.nus.iss.team8.demo.services.GenerateReportServiceImpl;
 
@@ -60,15 +61,21 @@ public class AdminController {
 
 	private AdminService aService;
 	private GenerateReportService grs;
+	private FacultyService fService;
 
 	@Autowired
-	public void setAdminService(AdminServiceImpl aService) {
+	public void setAdminService(AdminService aService) {
 		this.aService = aService;
 	}
 
 	@Autowired
-	public void setGrs(GenerateReportServiceImpl grs) {
+	public void setGrs(GenerateReportService grs) {
 		this.grs = grs;
+	}
+
+	@Autowired
+	public void setFacultyService(FacultyService fService) {
+		this.fService = fService;
 	}
 
 	@InitBinder
@@ -228,7 +235,7 @@ public class AdminController {
 	}
 
 	@GetMapping("/deletefaculty/{id}")
-	public String deleteFaculty(@PathVariable("id") Integer id, HttpServletRequest request) {
+	public String deleteFaculty(@PathVariable("id") Integer id, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 //			try{
 //				UserSession user=(UserSession)request.getSession(false).getAttribute("user");
 //				if(!user.getName().equals("issl")) throw new Exception("invalid user");
@@ -236,7 +243,15 @@ public class AdminController {
 //				return "redirect:/login/faculty";
 //			}
 		Faculty f = aService.findFacultyById(id);
-		aService.deleteFaculty(f);
+		ArrayList<Courserun> coursesPerFaculty = fService.findAllCourserunsByFacultyId(id);
+		if (coursesPerFaculty.isEmpty()) {
+			aService.deleteFaculty(f);
+		} else {
+			redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+			redirectAttributes.addFlashAttribute("message", "Failed");
+			redirectAttributes.addFlashAttribute("existFaculty", f);
+		}
+
 		return "redirect:/facultymanagement";
 	}
 
@@ -303,9 +318,18 @@ public class AdminController {
 	}
 
 	@GetMapping("/deletestudent/{id}")
-	public String deleteStudent(Model model, @PathVariable("id") Integer id) {
+	public String deleteStudent(Model model, @PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+		
 		Student student = aService.findStudent(id);
-		aService.removeStudent(student);
+		ArrayList<CourserunStudent> coursesPerStudent = aService.findCoursesByStudentId(id);
+		if (coursesPerStudent.isEmpty()) {
+			aService.removeStudent(student);
+		} else {
+			redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+			redirectAttributes.addFlashAttribute("message", "Failed");
+			redirectAttributes.addFlashAttribute("existStudent", student);
+		}
+		
 		return "redirect:/studentmanagement";
 	}
 
@@ -561,7 +585,7 @@ public class AdminController {
 	}
 
 	@GetMapping("/viewstudentcourses/{studentid}")
-	public String viewCourserun(Model model, @PathVariable(name = "studentid") int studentid) {
+	public String viewStudentCourses(Model model, @PathVariable(name = "studentid") int studentid) {
 		Student student = aService.findStudent(studentid);
 		ArrayList<CourserunStudent> coursesPerStudent = aService.findCoursesByStudentId(studentid);
 

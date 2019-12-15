@@ -12,7 +12,7 @@ public class User {
 	@Column(length = 30)
 	private String username;
 	
-	@Column(length = 30, nullable = false,name="passwordhash")
+	@Column(length = 60, nullable = false,name="passwordhash")
 	@NotEmpty
 	private String passwordHash;
 	
@@ -21,6 +21,8 @@ public class User {
 	
 	@Column(nullable = false)
 	private int id;
+	
+	private int enabled;
 	
 	public User() {
 		super();
@@ -59,6 +61,12 @@ public class User {
 		this.id = id;
 	}
 	
-	
+	public int getEnabled() {
+		return enabled;
+		}
+
+	public void setEnabled(int enabled) {
+		this.enabled = enabled;
+	}
 
 }
