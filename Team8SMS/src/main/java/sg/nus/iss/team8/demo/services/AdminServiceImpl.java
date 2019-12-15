@@ -144,15 +144,20 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public Student saveStudent(Student student) {
+		
 		User user = new User();
-		user.setUsername("nhs"+student.getStudentId());
-		user.setPasswordHash(passwordEncoder.encode("password"));
-		user.setUserType("Student");
-		user.setId(student.getStudentId());
-		user.setEnabled(1);
-		System.out.println("before saving, new user: "+user.getUsername()+", with password: " +user.getPasswordHash());
-		user = userRepository.saveAndFlush(user);
-		System.out.println("successfully saved new user: "+user.getUsername()+", with password: " +user.getPasswordHash());
+		//if studentid already exists in the username table, use that existing username, else use auto generated username
+
+		if(userRepository.findByUserId(student.getStudentId()) == null) {
+			user.setUsername("nhs"+student.getStudentId());
+			user.setPasswordHash(passwordEncoder.encode("password"));
+			user.setUserType("Student");
+			user.setId(student.getStudentId());
+			user.setEnabled(1);
+			System.out.println("before saving, new user: "+user.getUsername()+", with password: " +user.getPasswordHash());
+			user = userRepository.saveAndFlush(user);
+			System.out.println("successfully saved new user: "+user.getUsername()+", with password: " +user.getPasswordHash());
+		}
 		
 		return studentRepository.saveAndFlush(student);
 	}
